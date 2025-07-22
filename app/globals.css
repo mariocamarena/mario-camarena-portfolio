@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background-color: #0a0a0f;
+  color: #ffffff;
+}
+
+/* custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00d4ff;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00b8e6;
+}
+
+/* smooth transitions for everything */
+* {
+  transition-property: transform, opacity, background-color, border-color, color, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* glassmorphism effect */
+.glass {
+  backdrop-filter: blur(16px);
+  background: rgba(26, 26, 46, 0.8);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+/* gradient text effect */
+.gradient-text {
+  background: linear-gradient(135deg, #00d4ff, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* floating animation */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-12px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(-6px) rotate(-1deg);
+  }
+}
+
+.float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* pulsing glow animation */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 212, 255, 0.8), 0 0 60px rgba(124, 58, 237, 0.4);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* 3D card flip utilities */
+.perspective-800 {
+  perspective: 800px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Text clamp utility */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* focus states */
+input:focus,
+textarea:focus,
+button:focus {
+  outline: 2px solid #00d4ff;
+  outline-offset: 2px;
+}
+
+/* hover effects */
+button:hover,
+a:hover {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 4px 8px rgba(0, 212, 255, 0.3));
+}
+
+/* card shadows */
+.card-shadow {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.card-shadow:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 212, 255, 0.2);
+}
+
+/* typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+p {
+  line-height: 1.6;
+  color: #b4bcd0;
+}
+
+/* text selection styling */
+::selection {
+  background-color: rgba(0, 212, 255, 0.3);
+  color: #ffffff;
+}
+
+/* reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* high contrast mode */
+@media (prefers-contrast: high) {
+  .glass {
+    background: rgba(26, 26, 46, 0.95);
+    border: 2px solid #00d4ff;
+  }
+}
+
+/* border animation */
+@keyframes neon-border {
+  0%,
+  100% {
+    border-color: rgba(0, 212, 255, 0.5);
+  }
+  50% {
+    border-color: rgba(0, 212, 255, 1);
+  }
+}
+
+.neon-border {
+  animation: neon-border 2s ease-in-out infinite;
+}
+
+/* text glow effect */
+.glow-text {
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+/* button styles */
+.btn-primary {
+  background: linear-gradient(135deg, #ff6b35, #00d4ff);
+  border: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+}
