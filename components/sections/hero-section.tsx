@@ -52,7 +52,7 @@ export const HeroSection = ({ onScrollToProjects }: HeroSectionProps) => {
             <MagneticBtn
               onClick={() => {
                 const link = document.createElement("a")
-                link.href = "/placeholder.svg"
+                link.href = "/updated_resume_MarioCamarena.pdf"
                 link.download = "Mario_Camarena_Resume.pdf"
                 link.click()
               }}
