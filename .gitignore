@@ -157,8 +157,6 @@ $RECYCLE.BIN/
 *.sqlite
 *.sqlite3
 
-# Local development files
-.vercel
 
 # Testing
 /coverage
