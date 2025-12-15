@@ -1,0 +1,35 @@
+{
+  "id": "01",
+  "title": "Typography Update",
+  "description": "Replace Inter with modern geometric font (Satoshi or Cabinet Grotesk)",
+  "priority": "high",
+  "status": "completed",
+  "files_to_modify": [
+    "app/layout.tsx",
+    "app/globals.css",
+    "tailwind.config.ts"
+  ],
+  "changes": {
+    "remove": {
+      "font": "Inter",
+      "import": "google fonts inter"
+    },
+    "add": {
+      "primary_font": "Satoshi",
+      "fallback": "system-ui, -apple-system, sans-serif",
+      "source": "https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap"
+    }
+  },
+  "font_weights": {
+    "regular": 400,
+    "medium": 500,
+    "bold": 700,
+    "black": 900
+  },
+  "notes": [
+    "Satoshi is free from Fontshare",
+    "Alternative: Cabinet Grotesk for bolder personality",
+    "Use 900 weight sparingly for hero text",
+    "Body text stays at 400"
+  ]
+}

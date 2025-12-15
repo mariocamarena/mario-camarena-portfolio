@@ -20,23 +20,19 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // Modern Dark Retro-Tech Color Palette
-        background: "#0a0a0f", // Very dark navy/black
-        surface: "#1a1a2e", // Dark navy - cards, elevated surfaces
-        elevated: "#16213e", // Slightly lighter navy - hover states
-        accent: "#00d4ff", // Bright cyan - main accent
-        secondary: "#7c3aed", // Electric purple - secondary actions
-        success: "#00ff88", // Bright green - success states
-        textPrimary: "#ffffff", // Pure white - headings
-        textSecondary: "#b4bcd0", // Light gray-blue - body text
-        textMuted: "#6b7280", // Medium gray - subtle text
-        border: "#2d3748", // Dark gray - borders
-        cta: "#ff6b35", // Bright orange - CTA buttons
-        warning: "#fbbf24", // Amber - warnings
-        error: "#ef4444", // Red - errors
-        overlay: "#000000", // Pure black for overlays
+        // Refined Monochrome Palette
+        background: "#0f0f0f",
+        surface: "#1a1a1a",
+        elevated: "#252525",
+        textPrimary: "#f5f5f5",
+        textSecondary: "#a0a0a0",
+        textMuted: "#666666",
+        border: "#2a2a2a",
+        borderHover: "#3a3a3a",
+        accent: "#ffffff",
+        accentDim: "#cccccc",
 
-        // Shadcn compatibility (dark theme variants)
+        // Shadcn compatibility
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -83,8 +79,7 @@ const config: Config = {
           "monospace",
         ],
         sans: [
-          "Inter",
-          "ui-sans-serif",
+          "Satoshi",
           "system-ui",
           "-apple-system",
           "BlinkMacSystemFont",
@@ -127,18 +122,6 @@ const config: Config = {
           "70%": { transform: "scale(0.9)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
-        "neon-glow": {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)" },
-          "50%": { boxShadow: "0 0 40px rgba(0, 212, 255, 0.8)" },
-        },
-        "cyber-pulse": {
-          "0%, 100%": {
-            boxShadow: "0 0 20px rgba(0, 212, 255, 0.4), inset 0 0 20px rgba(124, 58, 237, 0.2)",
-          },
-          "50%": {
-            boxShadow: "0 0 40px rgba(0, 212, 255, 0.8), inset 0 0 40px rgba(124, 58, 237, 0.4)",
-          },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -147,20 +130,18 @@ const config: Config = {
         "slide-in-left": "slide-in-left 0.6s ease-out",
         "slide-in-right": "slide-in-right 0.6s ease-out",
         "bounce-in": "bounce-in 0.6s ease-out",
-        "neon-glow": "neon-glow 2s ease-in-out infinite",
-        "cyber-pulse": "cyber-pulse 3s ease-in-out infinite",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        "gradient-cyber": "linear-gradient(135deg, #00d4ff, #7c3aed)",
-        "gradient-dark": "linear-gradient(135deg, #0a0a0f, #1a1a2e)",
       },
       boxShadow: {
-        neon: "0 0 20px rgba(0, 212, 255, 0.4)",
-        "neon-lg": "0 0 40px rgba(0, 212, 255, 0.6)",
-        cyber: "0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 212, 255, 0.2)",
-        dark: "0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2)",
+        sm: "0 1px 2px rgba(0, 0, 0, 0.4)",
+        md: "0 4px 12px rgba(0, 0, 0, 0.5)",
+        lg: "0 8px 24px rgba(0, 0, 0, 0.6)",
+        xl: "0 16px 48px rgba(0, 0, 0, 0.7)",
+        card: "0 4px 12px rgba(0, 0, 0, 0.5)",
+        "card-hover": "0 12px 32px rgba(0, 0, 0, 0.7)",
       },
       backdropBlur: {
         xs: "2px",

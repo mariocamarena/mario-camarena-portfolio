@@ -1,13 +1,14 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useCallback } from "react"
-import { motion, AnimatePresence, useMotionValue } from "framer-motion"
-import { Send, Github, Linkedin, Mail } from "lucide-react"
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { ArrowRight, Github, Linkedin, Mail } from "lucide-react"
+import { Dithering } from "@paper-design/shaders-react"
 import { Spinner } from "@/components/ui/spinner"
 import { theme } from "@/lib/theme"
 
-// Contact form and social links
+// Contact form and social links - Terminal/ASCII aesthetic
 export const ContactSection = () => {
   const [form, setForm] = useState({
     name: "",
@@ -16,11 +17,7 @@ export const ContactSection = () => {
   })
   const [submitting, setSubmitting] = useState(false)
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle")
-
-  // Admin button state
-  const adminButtonRef = useRef<HTMLButtonElement>(null)
-  const adminX = useMotionValue(0)
-  const adminY = useMotionValue(0)
+  const [focusedField, setFocusedField] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,14 +37,14 @@ export const ContactSection = () => {
       if (response.ok) {
         setStatus("success")
         setForm({ name: "", email: "", message: "" })
-        
+
         setTimeout(() => {
           setStatus("idle")
         }, 3000)
       } else {
         setStatus("error")
         console.error('Form submission error:', data.error)
-        
+
         setTimeout(() => {
           setStatus("idle")
         }, 5000)
@@ -55,7 +52,7 @@ export const ContactSection = () => {
     } catch (error) {
       setStatus("error")
       console.error('Network error:', error)
-      
+
       setTimeout(() => {
         setStatus("idle")
       }, 5000)
@@ -71,336 +68,355 @@ export const ContactSection = () => {
     })
   }
 
-  // Magnetic effect handlers
-  const handleAdminMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (!adminButtonRef.current) return
-
-      const rect = adminButtonRef.current.getBoundingClientRect()
-      const centerX = rect.left + rect.width / 2
-      const centerY = rect.top + rect.height / 2
-
-      const distX = e.clientX - centerX
-      const distY = e.clientY - centerY
-
-      const distance = Math.sqrt(distX ** 2 + distY ** 2)
-      const maxDist = 100
-
-      if (distance < maxDist) {
-        const strength = (maxDist - distance) / maxDist
-        adminX.set(distX * strength * 0.3)
-        adminY.set(distY * strength * 0.3)
-      }
-    },
-    [adminX, adminY]
-  )
-
-  const handleAdminLeave = useCallback(() => {
-    adminX.set(0)
-    adminY.set(0)
-  }, [adminX, adminY])
-
   return (
-    <section id="contact" className="py-20" style={{ backgroundColor: theme.surface }}>
-      <div className="container mx-auto px-4">
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, type: "spring" }}
-          viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-bold text-center mb-16"
-          style={{ color: theme.text }}
-        >
-          Let's Connect
-        </motion.h2>
+    <section id="contact" className="min-h-screen py-20 px-6 relative overflow-hidden" style={{ backgroundColor: theme.surface }}>
+      {/* Same dithering background as About section */}
+      <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
+        <Dithering
+          style={{ height: "100%", width: "100%" }}
+          colorBack="#0a0a0a"
+          colorFront="#4a4a4a"
+          shape="simplex"
+          type="4x4"
+          pxSize={3}
+          offsetX={0}
+          offsetY={0}
+          scale={2}
+          rotation={0}
+          speed={0.05}
+        />
+      </div>
 
-        <div className="max-w-2xl mx-auto">
-          <motion.form
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
-            viewport={{ once: true }}
+      <div className="container mx-auto max-w-6xl relative z-10">
+        {/* Title with hero treatment - matching About section */}
+        <motion.div
+          className="text-center mb-10"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <div className="inline-block relative">
+            <div className="flex items-center gap-3 mb-3 justify-center opacity-60">
+              <div className="w-8 h-px bg-white"></div>
+              <span className="text-white text-[10px] font-mono tracking-wider">○</span>
+              <div className="w-8 h-px bg-white"></div>
+            </div>
+            <h2
+              className="text-4xl md:text-5xl lg:text-6xl font-bold font-mono tracking-wider uppercase"
+              style={{ color: theme.text, letterSpacing: '0.05em' }}
+            >
+              CONTACT
+            </h2>
+            <div className="flex items-center gap-3 mt-3 justify-center opacity-60">
+              <div className="flex-1 max-w-[60px] h-px bg-white"></div>
+              <span className="text-white text-[9px] font-mono">MSG.2026</span>
+              <div className="flex-1 max-w-[60px] h-px bg-white"></div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Form Panel - dark surface like terminal card */}
+        <motion.div
+          className="max-w-xl mx-auto relative border overflow-hidden"
+          style={{
+            backgroundColor: '#0a0a0a',
+            borderColor: theme.borderDim,
+            boxShadow: '0 16px 32px rgba(0, 0, 0, 0.4)',
+          }}
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.15, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          {/* Subtle dot grid overlay like terminal */}
+          <div
+            className="absolute inset-0 pointer-events-none z-10"
+            style={{
+              opacity: 0.015,
+              backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)`,
+              backgroundSize: '16px 16px',
+            }}
+          />
+
+          {/* Panel Header */}
+          <div
+            className="px-5 py-2.5 border-b flex items-center justify-between"
+            style={{
+              backgroundColor: theme.bg,
+              borderColor: '#333333',
+            }}
+          >
+            <span
+              className="text-[10px] font-mono tracking-wider"
+              style={{ color: theme.textMuted }}
+            >
+              CONTACT — FORM
+            </span>
+            <div className="flex items-center gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#ff5f56' }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#ffbd2e' }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#27ca40' }} />
+            </div>
+          </div>
+
+          {/* Form Content */}
+          <form
             onSubmit={handleSubmit}
-            className="space-y-6 mb-12"
+            className="p-7 space-y-6 relative"
           >
             {[
-              { name: "name", type: "text", label: "Your Name" },
-              { name: "email", type: "email", label: "Your Email" },
-            ].map((field, index) => (
-              <motion.div
-                key={field.name}
-                className="relative"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + index * 0.1, type: "spring" }}
-                viewport={{ once: true }}
+              { name: "name", type: "text", label: "NAME", placeholder: "John Doe" },
+              { name: "email", type: "email", label: "EMAIL", placeholder: "john@example.com" },
+            ].map((field) => (
+              <div key={field.name}>
+                <label
+                  htmlFor={field.name}
+                  className="block text-[11px] font-mono tracking-[0.15em] uppercase mb-2 transition-colors duration-200"
+                  style={{ color: focusedField === field.name ? theme.text : theme.textSoft }}
+                >
+                  {focusedField === field.name && <span className="text-white/60 mr-1">&gt;</span>}
+                  {field.label}
+                </label>
+                <div className="relative">
+                  <input
+                    type={field.type}
+                    id={field.name}
+                    name={field.name}
+                    value={form[field.name as keyof typeof form]}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField(field.name)}
+                    onBlur={() => setFocusedField(null)}
+                    placeholder={field.placeholder}
+                    className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus:outline-none border-b placeholder:text-white/20"
+                    style={{
+                      backgroundColor: 'transparent',
+                      borderBottomWidth: focusedField === field.name ? '2px' : '1px',
+                      borderBottomStyle: 'solid',
+                      borderBottomColor: focusedField === field.name ? theme.text : '#444444',
+                      color: theme.text,
+                    }}
+                    required
+                  />
+                </div>
+              </div>
+            ))}
+
+            <div>
+              <label
+                htmlFor="message"
+                className="block text-[11px] font-mono tracking-[0.15em] uppercase mb-2 transition-colors duration-200"
+                style={{ color: focusedField === "message" ? theme.text : theme.textSoft }}
               >
-                <motion.input
-                  type={field.type}
-                  name={field.name}
-                  value={form[field.name as keyof typeof form]}
+                {focusedField === "message" && <span className="text-white/60 mr-1">&gt;</span>}
+                MESSAGE
+              </label>
+              <div className="relative">
+                <textarea
+                  id="message"
+                  name="message"
+                  value={form.message}
                   onChange={handleChange}
-                  className="peer w-full bg-transparent border-2 rounded-xl px-4 py-4 pt-6 placeholder-transparent focus:outline-none transition-all duration-300"
+                  onFocus={() => setFocusedField("message")}
+                  onBlur={() => setFocusedField(null)}
+                  placeholder="Your message here..."
+                  className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus:outline-none min-h-[100px] resize-none border-b placeholder:text-white/20"
                   style={{
-                    borderColor: theme.border,
+                    backgroundColor: 'transparent',
+                    borderBottomWidth: focusedField === "message" ? '2px' : '1px',
+                    borderBottomStyle: 'solid',
+                    borderBottomColor: focusedField === "message" ? theme.text : '#444444',
                     color: theme.text,
                   }}
-                  whileFocus={{
-                    borderColor: theme.primary,
-                    boxShadow: `0 0 20px ${theme.primary}20`,
-                  }}
-                  placeholder={field.label}
                   required
                 />
-                <motion.label
-                  className={`absolute left-4 transition-all duration-200 pointer-events-none ${
-                    form[field.name as keyof typeof form]
-                      ? "top-2 text-xs"
-                      : "top-4 text-base peer-focus:top-2 peer-focus:text-xs"
-                  }`}
-                  style={{ color: theme.primary }}
-                  htmlFor={field.name}
-                >
-                  {field.label}
-                </motion.label>
-              </motion.div>
-            ))}
+              </div>
+            </div>
 
-            <motion.div
-              className="relative"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5, type: "spring" }}
-              viewport={{ once: true }}
-            >
-              <motion.textarea
-                name="message"
-                value={form.message}
-                onChange={handleChange}
-                className="peer w-full bg-transparent border-2 rounded-xl px-4 py-4 pt-6 placeholder-transparent focus:outline-none transition-all duration-300 min-h-[120px] resize-none"
-                style={{
-                  borderColor: theme.border,
-                  color: theme.text,
-                }}
-                whileFocus={{
-                  borderColor: theme.primary,
-                  boxShadow: `0 0 20px ${theme.primary}20`,
-                }}
-                placeholder="Your Message"
-                required
-              />
-              <motion.label
-                className={`absolute left-4 transition-all duration-200 pointer-events-none ${
-                  form.message ? "top-2 text-xs" : "top-4 text-base peer-focus:top-2 peer-focus:text-xs"
-                }`}
-                style={{ color: theme.primary }}
-                htmlFor="message"
-              >
-                Your Message
-              </motion.label>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, type: "spring" }}
-              viewport={{ once: true }}
-            >
-              <motion.button
+            {/* Submit button - outlined style matching hero */}
+            <div className="pt-2">
+              <button
                 type="submit"
                 disabled={submitting || status === "success"}
-                className="w-full py-4 rounded-xl font-semibold text-white relative overflow-hidden transition-all duration-200"
+                className="relative w-full py-3 font-mono text-sm tracking-wide uppercase transition-all duration-200 group"
                 style={{
-                  background: `linear-gradient(135deg, ${theme.accent}, ${theme.primary})`,
-                  opacity: submitting || status === "success" ? 0.7 : 1
-                }}
-                whileHover={{ 
-                  scale: submitting || status === "success" ? 1 : 1.02,
-                  boxShadow: `0 20px 40px ${theme.primary}40` 
-                }}
-                whileTap={{ scale: submitting || status === "success" ? 1 : 0.98 }}
-              >
-                <AnimatePresence mode="wait">
-                  {submitting ? (
-                    <motion.div
-                      key="loading"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="flex items-center justify-center"
-                    >
-                      <Spinner />
-                      <span className="ml-2">Sending...</span>
-                    </motion.div>
-                  ) : status === "success" ? (
-                    <motion.div
-                      key="success"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="flex items-center justify-center"
-                    >
-                      <motion.div
-                        className="w-5 h-5 rounded-full mr-2"
-                        style={{ backgroundColor: theme.success }}
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 0.5 }}
-                      />
-                      Message Sent!
-                    </motion.div>
-                  ) : status === "error" ? (
-                    <motion.div
-                      key="error"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="flex items-center justify-center"
-                    >
-                      <motion.div
-                        className="w-5 h-5 rounded-full mr-2"
-                        style={{ backgroundColor: theme.error }}
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 0.5 }}
-                      />
-                      Try Again
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="default"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="flex items-center justify-center"
-                    >
-                      <Send className="w-5 h-5 mr-2" />
-                      Send Message
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-            </motion.div>
-          </motion.form>
-
-          {/* social links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, type: "spring" }}
-            viewport={{ once: true }}
-            className="flex justify-center space-x-6"
-          >
-            {[
-              { icon: Github, href: "https://github.com/mariocamarena", label: "GitHub" },
-              { icon: Linkedin, href: "https://www.linkedin.com/in/marioacamarena/", label: "LinkedIn" },
-              { icon: Mail, href: "mailto:cs.mario.camarena@gmail.com", label: "Email" },
-            ].map(({ icon: Icon, href, label }, index) => (
-              <motion.a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-4 rounded-xl transition-all duration-300 relative overflow-hidden"
-                style={{
-                  backgroundColor: theme.elevated,
-                  border: `2px solid ${theme.border}`,
-                }}
-                whileHover={{
-                  y: -5,
-                  scale: 1.1,
-                  borderColor: theme.primary,
-                  backgroundColor: theme.primary + "20",
-                  boxShadow: `0 10px 30px ${theme.primary}30`,
-                }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + index * 0.1, type: "spring" }}
-              >
-                <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.6 }}>
-                  <Icon className="w-6 h-6" style={{ color: theme.primary }} />
-                </motion.div>
-
-                <motion.div
-                  className="absolute inset-0 rounded-xl"
-                  style={{
-                    background: `radial-gradient(circle, ${theme.primary}20 0%, transparent 70%)`,
-                  }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  whileHover={{ scale: 2, opacity: 1 }}
-                  transition={{ duration: 0.6 }}
-                />
-              </motion.a>
-            ))}
-          </motion.div>
-
-          {/* footer with admin link */}
-          <motion.div
-            className="mt-16 pt-8 text-center"
-            style={{
-              borderTop: `1px solid ${theme.border}`,
-              color: theme.textMuted,
-            }}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <motion.p
-              animate={{
-                opacity: [0.7, 1, 0.7],
-              }}
-              transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
-            >
-              Mario Camarena • AI Researcher & Developer
-            </motion.p>
-            
-            <motion.div 
-              className="mt-4"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <motion.button
-                ref={adminButtonRef}
-                onClick={() => window.location.href = '/admin'}
-                className="text-xs px-3 py-1 rounded-full transition-all duration-300 relative overflow-hidden"
-                style={{ 
-                  color: theme.textMuted,
                   backgroundColor: 'transparent',
-                  border: `1px solid ${theme.border}40`,
-                  x: adminX,
-                  y: adminY,
+                  border: `1px solid ${theme.text}`,
+                  color: theme.text,
+                  opacity: submitting || status === "success" ? 0.6 : 1
                 }}
-                onMouseMove={handleAdminMove}
-                onMouseLeave={handleAdminLeave}
-                whileHover={{ 
-                  color: theme.primary,
-                  borderColor: theme.primary + '60',
-                  backgroundColor: theme.primary + '10',
-                  scale: 1.05,
-                  boxShadow: `0 10px 20px ${theme.primary}30`,
+                onMouseEnter={(e) => {
+                  if (!submitting && status !== "success") {
+                    e.currentTarget.style.backgroundColor = theme.text
+                    e.currentTarget.style.color = theme.bg
+                  }
                 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1, duration: 0.4, type: "spring", stiffness: 400, damping: 30 }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                  e.currentTarget.style.color = theme.text
+                }}
               >
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    background: `radial-gradient(circle, ${theme.primary}40 0%, transparent 70%)`,
+                {/* Corner accents on hover */}
+                <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
+                <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
+
+                <span className="flex items-center justify-center gap-2">
+                  {submitting ? (
+                    <>
+                      <Spinner />
+                      <span>SENDING...</span>
+                    </>
+                  ) : status === "success" ? (
+                    <>
+                      <span
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ backgroundColor: theme.success }}
+                      />
+                      <span>MESSAGE SENT</span>
+                    </>
+                  ) : status === "error" ? (
+                    <>
+                      <span
+                        className="w-1.5 h-1.5 rounded-full"
+                        style={{ backgroundColor: theme.error }}
+                      />
+                      <span>TRY AGAIN</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>SEND MESSAGE</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </>
+                  )}
+                </span>
+              </button>
+
+              {/* Terminal-style status output */}
+              <div className="mt-4 font-mono text-[11px] border-t pt-4" style={{ borderColor: '#333333' }}>
+                <div className="flex items-center gap-2">
+                  <span style={{ color: theme.textMuted }}>$</span>
+                  <span style={{ color: theme.textSoft }}>send_message</span>
+                  {submitting && (
+                    <motion.span
+                      className="text-white/60"
+                      animate={{ opacity: [1, 0.3, 1] }}
+                      transition={{ duration: 0.8, repeat: Infinity }}
+                    >
+                      ...
+                    </motion.span>
+                  )}
+                </div>
+                {status === "success" && (
+                  <motion.div
+                    className="mt-2 flex items-center gap-2"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <span style={{ color: '#27ca40' }}>[ok]</span>
+                    <span style={{ color: theme.textSoft }}>message transmitted successfully</span>
+                  </motion.div>
+                )}
+                {status === "error" && (
+                  <motion.div
+                    className="mt-2 flex items-center gap-2"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <span style={{ color: '#ff5f56' }}>[err]</span>
+                    <span style={{ color: theme.textSoft }}>transmission failed, retry</span>
+                  </motion.div>
+                )}
+                {status === "idle" && !submitting && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <motion.span
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ backgroundColor: theme.textMuted }}
+                      animate={{ opacity: [0.4, 1, 0.4] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    <motion.span
+                      style={{ color: theme.textMuted }}
+                      animate={{ opacity: [0.3, 1, 0.3] }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      awaiting input
+                    </motion.span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </form>
+
+          {/* Social links - integrated into panel footer */}
+          <div
+            className="px-7 py-4 border-t flex items-center justify-between"
+            style={{ borderColor: '#333333' }}
+          >
+            <div className="flex items-center gap-4">
+              {[
+                { icon: Github, href: "https://github.com/mariocamarena", label: "GitHub" },
+                { icon: Linkedin, href: "https://www.linkedin.com/in/marioacamarena/", label: "LinkedIn" },
+                { icon: Mail, href: "mailto:cs.mario.camarena@gmail.com", label: "Email" },
+              ].map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 transition-all duration-200"
+                  style={{ color: theme.textMuted }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = theme.text
                   }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  whileHover={{ scale: 2, opacity: 1 }}
-                  transition={{ duration: 0.6 }}
-                />
-                <span className="relative z-10">Admin Dashboard</span>
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        </div>
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = theme.textMuted
+                  }}
+                  aria-label={label}
+                >
+                  <Icon className="w-4 h-4" />
+                </a>
+              ))}
+            </div>
+            <div className="flex items-center">
+              <span
+                className="text-[9px] font-mono tracking-wider"
+                style={{ color: theme.textMuted }}
+              >
+                mario@portfolio:~$
+              </span>
+              <motion.span
+                className="ml-1 w-1.5 h-3 inline-block"
+                style={{ backgroundColor: theme.text }}
+                animate={{ opacity: [1, 0] }}
+                transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+              />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Footer with admin link */}
+        <motion.div
+          className="mt-8 text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          viewport={{ once: true }}
+        >
+          <button
+            onClick={() => window.location.href = '/admin'}
+            className="text-[10px] font-mono tracking-wider px-3 py-1.5 transition-all duration-200 border hover:border-white/60 hover:text-white"
+            style={{
+              color: theme.textMuted,
+              backgroundColor: 'transparent',
+              borderColor: theme.borderDim,
+            }}
+          >
+            ADMIN DASHBOARD
+          </button>
+        </motion.div>
       </div>
     </section>
   )
-} 
+}

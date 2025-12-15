@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__getDiagnostics",
+      "Bash(du:*)",
+      "Bash(dir /s /b)",
+      "Bash(powershell -Command:*)",
+      "Bash(dir:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)",
+      "Bash(timeout 15 npm run dev:*)",
+      "Bash(timeout 10 npm run dev)",
+      "Bash(Remove-Item -Recurse -Force \"C:\\Users\\Mario\\OneDrive\\Desktop\\portfolio_site\\app\\dev\")"
+    ]
+  }
+}

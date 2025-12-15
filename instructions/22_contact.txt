@@ -1,0 +1,35 @@
+Contact section
+
+Goal: Instead of a generic form, make this feel like the last panel in your “console UI”.
+
+Heading and framing
+
+Style Let’s Connect in the same hero-style heading.
+
+Add a top or side line (like a section frame) so the form feels like a terminal window.
+
+Form fields
+
+Switch labels to monospace all caps: NAME, EMAIL, MESSAGE.
+
+Use outlined fields with the same border weight as hero buttons.
+
+Add very subtle focus states that mimic the hero (slight glow or line accent).
+
+Primary action
+
+Make Send Message match the hero CTAs:
+
+Outlined or filled in the same style as “VIEW PROJECTS” / “DOWNLOAD RESUME”.
+
+Keep the icon, but maybe align it left and make the text all caps.
+
+Social icons + footer
+
+Add a small monospace label above the icons like FIND ME or SOCIAL.
+
+For the footer with your name, echo the hero:
+
+All caps, small tracking.
+
+Maybe a tiny “PORTFOLIO.V2” or year stamp like your hero’s “PORTFOLIO_2025” tag.

@@ -5,18 +5,15 @@ import { motion } from 'framer-motion'
 import { Eye, EyeOff, Mail, Calendar, Globe, User, ArrowLeft } from 'lucide-react'
 
 const theme = {
-  bg: "#0a0a0f",
-  surface: "#1a1a2e",
-  elevated: "#16213e",
-  primary: "#00d4ff",
-  secondary: "#7c3aed",
-  success: "#00ff88",
-  text: "#ffffff",
-  textSoft: "#b4bcd0",
-  textMuted: "#6b7280",
-  border: "#2d3748",
-  accent: "#ff6b35",
-  error: "#ef4444",
+  bg: "#0f0f0f",
+  surface: "#1a1a1a",
+  elevated: "#252525",
+  accent: "#f5f5f5",
+  text: "#f5f5f5",
+  textSoft: "#a0a0a0",
+  textMuted: "#666666",
+  border: "#2a2a2a",
+  error: "#888888",
 }
 
 interface Contact {
@@ -198,7 +195,7 @@ export default function AdminDashboard() {
                   </div>
                   <stat.icon 
                     size={24} 
-                    style={{ color: theme.primary }} 
+                    style={{ color: theme.accent }} 
                   />
                 </div>
               </motion.div>
@@ -237,7 +234,7 @@ export default function AdminDashboard() {
                   >
                     <td className="px-6 py-4" style={{ color: theme.text }}>
                       <div className="flex items-center">
-                        <User size={16} className="mr-2" style={{ color: theme.primary }} />
+                        <User size={16} className="mr-2" style={{ color: theme.accent }} />
                         {contact.name}
                       </div>
                     </td>
@@ -258,8 +255,8 @@ export default function AdminDashboard() {
                         disabled={!isAuthenticated}
                         className="px-3 py-1 rounded text-sm transition-colors"
                         style={{ 
-                          backgroundColor: theme.primary + '20',
-                          color: theme.primary,
+                          backgroundColor: theme.accent + '20',
+                          color: theme.accent,
                           opacity: isAuthenticated ? 1 : 0.5
                         }}
                       >
@@ -307,7 +304,7 @@ export default function AdminDashboard() {
                 className="flex items-center gap-2 text-sm mb-6 transition-colors"
                 style={{ color: theme.textMuted }}
                 whileHover={{ 
-                  color: theme.primary,
+                  color: theme.accent,
                   x: -3
                 }}
                 initial={{ opacity: 0, x: -10 }}
@@ -387,7 +384,7 @@ export default function AdminDashboard() {
                   disabled={loading}
                   className="w-full py-3 rounded-lg font-medium transition-all duration-200 relative overflow-hidden"
                   style={{
-                    backgroundColor: theme.primary,
+                    backgroundColor: theme.accent,
                     color: theme.bg
                   }}
                   whileHover={{ scale: loading ? 1 : 1.02 }}
@@ -494,7 +491,7 @@ export default function AdminDashboard() {
               onClick={() => setSelectedContact(null)}
               className="mt-6 px-4 py-2 rounded transition-colors"
               style={{ 
-                backgroundColor: theme.primary,
+                backgroundColor: theme.accent,
                 color: theme.bg 
               }}
             >

@@ -1,0 +1,28 @@
+{
+  "id": "02",
+  "title": "Remove Floating Shapes Background",
+  "description": "Delete the canvas-based floating geometric shapes - major AI aesthetic indicator",
+  "priority": "high",
+  "status": "completed",
+  "files_to_modify": [
+    "components/sections/floating-shapes.tsx",
+    "components/sections/hero-section.tsx",
+    "app/page.tsx"
+  ],
+  "changes": {
+    "delete_file": "components/sections/floating-shapes.tsx",
+    "remove_imports": [
+      "FloatingShapes component import",
+      "FloatingShapes usage in hero"
+    ]
+  },
+  "replacement": {
+    "option": "subtle grain texture",
+    "implementation": "CSS pseudo-element with noise SVG or grain overlay"
+  },
+  "notes": [
+    "Floating geometric shapes are a dead giveaway for AI-generated sites",
+    "Replace with subtle static texture instead",
+    "Background should feel quiet, not busy"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "id": "07",
+  "title": "Update Button Styling",
+  "description": "Remove magnetic effect and gradient backgrounds, create clean button system",
+  "priority": "medium",
+  "status": "done",
+  "files_to_modify": [
+    "components/ui/button.tsx",
+    "components/ui/magnetic-btn.tsx"
+  ],
+  "current_issues": [
+    "Magnetic cursor-following effect - gimmicky",
+    "Gradient backgrounds (orange to cyan)",
+    "Glow shadows on hover"
+  ],
+  "new_button_styles": {
+    "primary": {
+      "background": "#f5f5f5",
+      "text": "#0f0f0f",
+      "border": "none",
+      "hover": {
+        "background": "#ffffff",
+        "transform": "translateY(-1px)"
+      }
+    },
+    "secondary": {
+      "background": "transparent",
+      "text": "#f5f5f5",
+      "border": "1px solid #3a3a3a",
+      "hover": {
+        "border_color": "#5a5a5a",
+        "background": "#1a1a1a"
+      }
+    },
+    "ghost": {
+      "background": "transparent",
+      "text": "#a0a0a0",
+      "hover": {
+        "text": "#f5f5f5"
+      }
+    }
+  },
+  "files_to_potentially_delete": [
+    "components/ui/magnetic-btn.tsx"
+  ],
+  "notes": [
+    "Buttons should feel solid and clickable",
+    "Primary = white/light (stands out on dark bg)",
+    "Subtle hover states only",
+    "Remove all magnetic/following behavior"
+  ]
+}

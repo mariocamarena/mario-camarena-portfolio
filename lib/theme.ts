@@ -1,19 +1,29 @@
-// Theme configuration
+// Theme configuration - Refined Monochrome
 export const theme = {
-  bg: "#0a0a0f",
-  surface: "#1a1a2e",
-  elevated: "#16213e",
-  primary: "#00d4ff",
-  secondary: "#7c3aed",
-  success: "#00ff88",
-  text: "#ffffff",
-  textSoft: "#b4bcd0",
-  textMuted: "#6b7280",
-  border: "#2d3748",
-  accent: "#ff6b35",
-  warning: "#fbbf24",
+  // Backgrounds
+  bg: "#0f0f0f",
+  surface: "#1a1a1a",
+  elevated: "#252525",
+
+  // Text
+  text: "#f5f5f5",
+  textSoft: "#a0a0a0",
+  textMuted: "#666666",
+
+  // Borders
+  border: "#2a2a2a",
+  borderHover: "#3a3a3a",
+  borderDim: "#222222",
+
+  // Accents (monochrome)
+  accent: "#ffffff",
+  accentDim: "#cccccc",
+
+  // Semantic colors (kept subtle)
+  success: "#4ade80",
+  warning: "#a0a0a0",
   error: "#ef4444",
+
+  // Overlay
   overlay: "#000000",
-  grad1: "#1a1a2e",
-  grad2: "#16213e",
-} 
+}

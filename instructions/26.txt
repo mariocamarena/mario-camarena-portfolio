@@ -1,0 +1,47 @@
+FOR PROJECTS SECTION
+
+3) Normalize the card structure (FT-SAM vs STABLES feel mismatched)
+
+Your two main cards don’t speak the same “layout language”:
+
+FT-SAM card is text-heavy (bullets + paragraphs)
+
+STABLES card is image-heavy with minimal structure
+
+Pick one consistent pattern for all cards:
+
+Top: image/preview (same aspect ratio)
+
+Middle: title + 1–2 line summary
+
+Bottom: tags + 1–2 CTAs
+
+If you want to keep FT-SAM’s “Key Components”, hide it behind:
+
+a “Details” accordion, or
+
+a “Key components” link that expands on hover/click
+
+
+
+5) CTA consistency
+
+Right now buttons vary (“CODE/PAPER” vs “DEMO/CODE”)—good, but tighten rules:
+
+Always show exactly 2 CTAs max
+
+Use a clear primary action:
+
+Research: Paper (primary) + Code (secondary)
+
+Product/App: Demo (primary) + Code (secondary)
+
+Also: add hover/active styles so buttons feel “alive” like the rest of the UI.
+
+6) Alignment + grid polish
+
+Make card heights feel more uniform (even if content differs)
+
+Ensure the tag row always sits in the same place (bottom-aligned)
+
+Keep consistent padding/gutters across all cards (right now the inner content density differs)

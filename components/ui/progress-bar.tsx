@@ -1,12 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion, useSpring, useMotionValue, useTransform } from "framer-motion"
-
-const theme = {
-  primary: "#00d4ff",
-  secondary: "#7c3aed",
-}
+import { motion, useSpring, useTransform } from "framer-motion"
 
 // Scroll progress indicator
 export const ProgressBar = () => {
@@ -28,15 +23,14 @@ export const ProgressBar = () => {
   const width = useTransform(springValue, [0, 1], ["0%", "100%"])
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-1 z-50" style={{ backgroundColor: `${theme.primary}20` }}>
+    <div className="fixed top-0 left-0 right-0 h-[2px] z-50" style={{ backgroundColor: "#1a1a1a" }}>
       <motion.div
         className="h-full"
         style={{
-          background: `linear-gradient(90deg, ${theme.primary}, ${theme.secondary})`,
+          backgroundColor: "#f5f5f5",
           width,
-          boxShadow: `0 0 10px ${theme.primary}80`,
         }}
       />
     </div>
   )
-} 
+}

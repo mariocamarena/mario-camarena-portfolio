@@ -1,0 +1,35 @@
+  ---
+  Design Update Prompt: Subtle Monospace Accents
+
+  Goal: Introduce selective monospace typography throughout the portfolio to create visual continuity with the hero section's technical aesthetic,       
+  while maintaining Satoshi as the primary typeface.
+
+  Where to Apply Monospace (font-mono):
+
+  About Section:
+  - Section title "About Me" → keep Satoshi
+  - Skill category labels ("Languages", "Frameworks & Libraries", "Tools & Platforms") → change to monospace, smaller font size
+  - Keep skill tags and description text in Satoshi
+
+  Projects Section:
+  - Section title "Featured Projects" → keep Satoshi
+  - Project card titles → keep Satoshi
+  - Project tags/technologies (if present) → change to monospace, smaller, lighter opacity
+  - Keep descriptions in Satoshi
+
+  Contact Section:
+  - Section title → keep Satoshi
+  - Any labels or metadata → monospace if applicable
+  - Keep body text in Satoshi
+
+  General Rules:
+  - Use font-mono for: labels, categories, tags, technical metadata, version numbers
+  - Keep font-sans (Satoshi) for: main content, descriptions, body text, navigation
+  - Maintain consistent opacity and sizing — monospace elements should feel like accents, not primary text
+  - Apply text-xs or text-[10px] for monospace to keep it subtle and distinct from body text
+  - Use opacity-60 or opacity-70 for monospace elements to create visual hierarchy
+
+  Visual Effect: The monospace accents should feel like subtle nods to the technical hero aesthetic without disrupting the professional flow of the      
+  portfolio.
+
+  ---

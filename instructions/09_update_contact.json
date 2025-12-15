@@ -1,0 +1,46 @@
+{
+  "id": "09",
+  "title": "Update Contact Section",
+  "description": "Simplify form styling, remove floating labels and icon rotation effects",
+  "priority": "low",
+  "status": "done",
+  "files_to_modify": [
+    "components/sections/contact-section.tsx"
+  ],
+  "current_issues": [
+    "Floating/animated labels",
+    "Cyan focus borders and glow",
+    "Icon 360-degree rotation on hover",
+    "Gradient submit button"
+  ],
+  "new_form_styling": {
+    "inputs": {
+      "background": "#1a1a1a",
+      "border": "1px solid #2a2a2a",
+      "border_focus": "1px solid #5a5a5a",
+      "text": "#f5f5f5",
+      "placeholder": "#666666",
+      "border_radius": "8px"
+    },
+    "labels": {
+      "position": "above input (static)",
+      "color": "#a0a0a0",
+      "font_size": "14px"
+    },
+    "submit": {
+      "style": "primary button (white bg, dark text)",
+      "no_gradient": true
+    }
+  },
+  "social_icons": {
+    "default": "#666666",
+    "hover": "#f5f5f5",
+    "remove": "rotation animation",
+    "transition": "color 0.2s ease"
+  },
+  "notes": [
+    "Form should feel simple and functional",
+    "No animated labels - just clear static labels",
+    "Social icons: simple color change on hover"
+  ]
+}

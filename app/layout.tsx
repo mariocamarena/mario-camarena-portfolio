@@ -1,17 +1,15 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-
-const inter = Inter({ subsets: ["latin"] })
+import './globals.css'
 
 export const metadata: Metadata = {
   title: "Mario Camarena - AI Researcher & Developer",
   description:
     "Mario Camarena's portfolio - Master's student at UTRGV researching computer vision and exploring DevOps",
   icons: {
-    icon: '/icons/scale.png',
-    shortcut: '/icons/scale.png',
-    apple: '/icons/scale.png',
+    icon: '/icons/icon.png',
+    shortcut: '/icons/icon.png',
+    apple: '/icons/icon.png',
   },
 }
 
@@ -22,12 +20,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className} suppressHydrationWarning>
+      <head>
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          rel="preload"
+          href="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.33/dist/unicornStudio.umd.js"
+          as="script"
+        />
+      </head>
+      <body className="font-sans" suppressHydrationWarning>
         {children}
       </body>
     </html>
   )
 }
-
-
-import './globals.css'

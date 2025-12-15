@@ -3,8 +3,8 @@
 import { motion } from "framer-motion"
 
 const theme = {
-  primary: "#00d4ff",
-  secondary: "#7c3aed",
+  accent: "#f5f5f5",
+  border: "#3a3a3a",
 }
 
 // loading spinner
@@ -14,14 +14,14 @@ export const Spinner = () => {
       <motion.div className="relative w-12 h-12">
         <motion.div
           className="absolute inset-0 border-2 rounded-full"
-          style={{ borderColor: `${theme.primary}40` }}
+          style={{ borderColor: theme.border }}
           animate={{ rotate: 360 }}
-          transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
         />
 
         <motion.div
           className="absolute inset-2 rounded-full"
-          style={{ backgroundColor: theme.primary }}
+          style={{ backgroundColor: theme.accent }}
           animate={{
             scale: [1, 0.8, 1.2, 1],
             rotate: [0, 180, 360],
@@ -29,30 +29,11 @@ export const Spinner = () => {
           }}
           transition={{
             duration: 2,
-            repeat: Number.POSITIVE_INFINITY,
+            repeat: Infinity,
             ease: "easeInOut",
           }}
         />
-
-        {[0, 1, 2].map((i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full"
-            style={{ backgroundColor: theme.secondary }}
-            animate={{
-              x: [0, 20, 0, -20, 0],
-              y: [0, -20, 0, 20, 0],
-              opacity: [1, 0.5, 1],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Number.POSITIVE_INFINITY,
-              delay: i * 0.3,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
       </motion.div>
     </div>
   )
-} 
+}

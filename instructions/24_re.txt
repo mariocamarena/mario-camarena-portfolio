@@ -1,0 +1,90 @@
+You are redesigning a Loading Screen for a personal portfolio website with a very specific visual language:
+
+Aesthetic: subtle, engineered, monochrome, ASCII/terminal-inspired, thin rules/lines with small node dots, dark background with a soft grid/dot texture. The landing (hero) UI uses an “open-frame” look (minimal horizontal rules), not heavy boxed panels.
+
+Problem:
+The current loader looks cleaner but still does NOT feel like a real boot sequence. It reads like a static UI checklist. We need it to feel like the system is powering on, without adding clutter or over-engineering.
+
+Goal:
+Make the loader feel like an authentic boot sequence while staying subtle. It should convincingly “handoff” into the landing hero, creating the illusion that the loader fades/expands into the hero frame and text.
+
+Hard constraints:
+- Keep it simple and subtle (visually striking but not overwhelming).
+- Do NOT use a full rectangular outline box.
+- Avoid overuse of lines: only use the same minimal horizontal rules as the hero.
+- Keep 3–5 log lines max.
+- No cringe/app-specific copy (NO “hydrating projects”, NO “loading hero/cards/projects”).
+- Use generic system/boot language only.
+- Progress must be readable/strong but still minimal.
+- Loader timing must be data-driven (no fake 1.8s delay).
+- Respect prefers-reduced-motion.
+
+Design requirements (Boot Sequence v3):
+1) Background / staging:
+   - Use the same site background (dark + subtle dot/grid + soft gradient).
+   - The landing hero should already be rendered behind the loader, dimmed + slightly blurred.
+   - Loader is an overlay positioned in the same region as the hero’s right-side content block so it can “handoff” cleanly.
+
+2) Open-frame loader (match hero language):
+   - Use ONLY two thin horizontal rules: a top rule and a bottom rule.
+   - Optional tiny node dots at rule ends, consistent with hero styling.
+   - Add micro labels on the top rule:
+     - Left: “SYS”
+     - Right: “BOOT” (or “INIT”)
+   - No rectangle borders. No extra rails.
+
+3) Real boot log behavior (this is the key):
+   - Log lines must appear sequentially (one-by-one).
+   - Add timecode prefixes like a real boot log (dmesg-style), e.g.:
+     - “[0000.012] sys: self test ......... [ok]”
+   - Include exactly ONE line that starts “in progress” and then resolves:
+     - show “[..]” first, then flip to “[ok]” shortly after.
+   - Keep the log to 3–5 lines total. Left-aligned. Tight line-height.
+   - Cursor blinks ONLY on the final prompt line or the currently active line.
+
+4) Boot copy (use this tone):
+   - Generic, system-ish, neutral. Examples (choose 3–5 max):
+     - “[0000.012] sys: self test ......... [ok]”
+     - “[0000.084] io: bus scan ........... [ok]”
+     - “[0000.231] gfx: display sync ...... [..]” -> then “[ok]”
+     - “[0000.418] net: link .............. [ok]”
+     - “[0000.602] handoff: ready”
+   - Optional final prompt right before transition:
+     - “mario@portfolio:~$ _” (blinking cursor)
+   - Avoid user-typed “init --ui” as the FIRST line; if used at all, only as the final prompt.
+
+5) Progress indicator (stronger but minimal):
+   - The bottom rule doubles as the progress bar.
+   - Use a thin base line across the width.
+   - Use a fill line that grows left→right with progress.
+   - Add a subtle pulse or tiny scan dot at the leading edge of the fill (optional).
+   - Right-side label should feel system-like:
+     - “BOOT 53%” (preferred) or “INIT 53%”
+   - Do NOT use chunky segmented blocks.
+
+6) Transition / handoff into hero:
+   - On completion:
+     - Log lines fade out top-to-bottom quickly.
+     - The rules either dissolve into the hero framing lines OR linger briefly then fade.
+     - The hero sharpens (blur → 0) and opacity ramps to full.
+   - Must feel like “system online → UI active”, not a hard cut.
+
+Timing / behavior:
+- Minimum loader display: 450–600ms to avoid flashing.
+- Maximum: 1200ms unless real loading requires longer.
+- Tie progress to real readiness.
+- prefers-reduced-motion: show a static minimal overlay (“SYS BOOT” + “status: ONLINE”) then fade quickly.
+
+Deliverables:
+- Implement as a React/Next.js component that overlays the hero section.
+- Use Tailwind/shadcn structure if present.
+- Provide a simple state/progress API (e.g., progress number + ready boolean).
+- Implement animations via Framer Motion or clean CSS transitions (subtle easeOut).
+- Ensure loader never blocks nav/button functionality once it completes.
+
+Acceptance checklist:
+- Feels like a real boot sequence (timestamps + sequential lines + one [..] → [ok]).
+- Minimal open-frame rules only (no rectangle).
+- Progress bar is strong and readable while matching hero styling.
+- Copy is generic system language (no “projects/hero/cards”).
+- Handoff into hero feels seamless (hero behind, blur/opacity transition).

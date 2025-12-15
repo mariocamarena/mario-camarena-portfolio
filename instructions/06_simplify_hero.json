@@ -1,0 +1,40 @@
+{
+  "id": "06",
+  "title": "Simplify Hero Section",
+  "description": "Remove typewriter effect, simplify to elegant fade-in text",
+  "priority": "medium",
+  "status": "completed",
+  "files_to_modify": [
+    "components/sections/hero-section.tsx",
+    "components/ui/typewriter.tsx"
+  ],
+  "current_issues": [
+    "Typewriter effect cycling through phrases - overused pattern",
+    "Multiple animated CTAs",
+    "Floating shapes background (handled in 02)"
+  ],
+  "new_approach": {
+    "headline": {
+      "content": "Static, clear statement",
+      "animation": "Simple fade-in on load, 0.6s ease",
+      "typography": "Large, bold (Satoshi 900)"
+    },
+    "subheadline": {
+      "content": "One clear descriptor",
+      "animation": "Fade-in with slight delay (0.2s)",
+      "typography": "Regular weight, muted color"
+    },
+    "ctas": {
+      "style": "Minimal, not magnetic",
+      "count": "2 max (Projects + Contact or Resume)"
+    }
+  },
+  "files_to_delete": [
+    "components/ui/typewriter.tsx (if no longer needed)"
+  ],
+  "notes": [
+    "Hero should feel confident and still",
+    "Let the typography do the work",
+    "Remove visual noise - no particles, shapes, or cycling text"
+  ]
+}

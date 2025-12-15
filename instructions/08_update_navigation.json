@@ -1,0 +1,33 @@
+{
+  "id": "08",
+  "title": "Update Navigation",
+  "description": "Simplify nav styling, remove excessive blur and glow effects",
+  "priority": "low",
+  "status": "done",
+  "files_to_modify": [
+    "app/page.tsx",
+    "app/globals.css"
+  ],
+  "current_issues": [
+    "Backdrop blur glassmorphism effect",
+    "Animated underline indicator",
+    "Translucent backgrounds"
+  ],
+  "new_styling": {
+    "background": "#0f0f0f or transparent",
+    "blur": "remove or reduce significantly",
+    "border_bottom": "1px solid #1a1a1a (subtle)",
+    "active_indicator": "Simple underline or bold text, no animated layoutId"
+  },
+  "nav_items": {
+    "default": "#a0a0a0",
+    "hover": "#f5f5f5",
+    "active": "#f5f5f5 with underline",
+    "transition": "color 0.2s ease"
+  },
+  "notes": [
+    "Navigation should be invisible until needed",
+    "No flashy effects - just clear wayfinding",
+    "Keep mobile hamburger menu but simplify animation"
+  ]
+}

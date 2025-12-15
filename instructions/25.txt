@@ -1,0 +1,58 @@
+You are improving the ABOUT section of my portfolio site. The concept is good (two-terminal layout), but it needs small consistency + rhythm fixes so it feels like one cohesive “system UI” without adding complexity.
+
+Goal:
+Make the About section more visually consistent, balanced, and polished, while staying subtle and not over-engineered.
+
+Make these changes:
+
+1) Align the two terminals as a pair
+- Snap both terminal panels to the same top baseline (top edges aligned).
+- Use one consistent horizontal gutter between them.
+- Make their sizing feel intentional:
+  - Either same height, OR make one clearly smaller by a deliberate ratio (ex: right panel ~80% of left height).
+- Slightly widen the right terminal (or slightly reduce the left) so they feel balanced, not “main + accessory.”
+
+2) Normalize the terminal “window chrome”
+Ensure BOTH terminals share identical styling for:
+- border thickness + border opacity
+- corner radius
+- titlebar height + padding
+- title text styling (size, tracking, opacity)
+- window-dot size/spacing/position (and if dots are kept, keep them consistent; no random color emphasis)
+
+3) Clean up heading hierarchy inside the left terminal
+- Reduce the “too many labels” feeling.
+- Keep BACKGROUND / RESEARCH / PRODUCTS as-is.
+- Combine LANGUAGES + FRAMEWORKS + TOOLS into one compact SKILLS section:
+  - SKILLS heading
+  - 2–3 rows of chips underneath (same chip style as Projects tags)
+
+4) Make chips consistent with the rest of the site
+- Reuse the exact same chip/tag component styling used in the Projects section:
+  - same border weight/opacity
+  - same radius
+  - same padding
+  - same font size/letter spacing
+  - same subtle hover behavior
+
+5) Improve the right terminal’s “system output” alignment
+- Format fields like real terminal/system output:
+  - keys aligned (e.g., “role:”, “location:”, “focus:”, “status:” all start at same column)
+  - values start at the same x-position
+- Keep the green status dot as the ONLY strong accent color (besides optional window dots).
+
+6) Animation consistency (subtle, matches hero)
+- Use the same easing/duration as the hero section.
+- Simple sequence:
+  1) ABOUT title + thin rules fade/slide in
+  2) both terminals fade/slide in together (left from left ~12–16px, right from right ~12–16px)
+- No typewriter animation.
+- Only allow one subtle loop: a single blinking cursor in ONE place (pick one panel).
+
+Constraints:
+- Do NOT add new decorative lines or extra UI ornaments.
+- Keep the layout clean and readable.
+- The section must feel visually interesting through composition + consistency, not extra effects.
+
+Deliverable:
+Return updated React/Next.js component code (Tailwind/shadcn if used), with the above fixes applied.

@@ -1,0 +1,82 @@
+{
+  "task_title": "Transform About profile card into subtle terminal-style window",
+  "context": {
+    "section": "About",
+    "element": "right-side profile card with photo, name, role, focus, status",
+    "goal": "Visually resemble a simple terminal window while staying fully consistent with the site’s existing dark, minimal, technical aesthetic."
+  },
+  "design_principles": [
+    "MUST stay aligned with the rest of the site’s visual language (colors, fonts, spacing, general feel).",
+    "NO over-engineering: this is a light visual treatment, not a complex component.",
+    "Prefer small, clear changes over flashy effects.",
+    "Maintain current layout proportions as much as possible so the About section composition is preserved."
+  ],
+  "constraints": [
+    "Do NOT introduce new colors that clash with the existing palette. Reuse existing neutrals and the existing accent color(s).",
+    "Do NOT add heavy animations; any animation, if present, must be extremely subtle.",
+    "Do NOT significantly change the card’s size or its approximate position relative to the left text column.",
+    "Do NOT change text content or routing/behavior, only visual styling and layout.",
+    "The card must remain fully readable and responsive on all breakpoints."
+  ],
+  "visual_changes": {
+    "frame_and_background": {
+      "description": "Adjust card container to read more like a terminal window rather than a generic panel.",
+      "requirements": [
+        "Use a slightly darker background inside the card compared to the main page background, but keep it in the same tonal family.",
+        "Apply a thin (1–2px) border that is slightly brighter than the card background, similar in weight to existing hero/project card outlines.",
+        "Keep corners either square or only very slightly rounded, consistent with other cards on the site.",
+        "Optionally add a very subtle noise or texture already used elsewhere on the site (if present), not a new visible pattern."
+      ]
+    },
+    "header_bar": {
+      "description": "Add a simple window-style header bar at the top of the card.",
+      "requirements": [
+        "Create a slim horizontal bar at the top of the card with a slightly different shade than the card body (a small contrast, not a strong color block).",
+        "On the left side of this bar, add three small window-control indicators (dots or tiny circles/squares) using existing neutral/soft accent colors.",
+        "Include a short window title in the header bar using the existing monospace/hero font, such as a terminal-like string (e.g., \"mario@portfolio: ~\" or similar), styled to match the site’s existing heading/subheading treatments in size and weight.",
+        "Overall header bar must feel minimal and flat, consistent with the site’s aesthetic; avoid gradients or skeuomorphic effects."
+      ]
+    },
+    "internal_layout": {
+      "description": "Reformat the content inside the card to look like terminal output while preserving all existing information.",
+      "requirements": [
+        "Left-align the text content inside the card instead of centering it, so it reads like lines of terminal output.",
+        "Keep the photo, but reduce its visual dominance: place it in a small rectangular or square area (e.g., top-right or top-left) with a thin border, optionally labeled as a file-like element (e.g., \"profile.png\") using existing text styles.",
+        "Display name, role, location, focus, and status as simple key–value lines, e.g., a short label followed by the value on the same line, without complex layout logic.",
+        "Maintain comfortable spacing between lines so that the card remains easy to scan and doesn’t feel crowded."
+      ]
+    },
+    "typography_and_colors": {
+      "description": "Use existing fonts and palette to achieve a terminal vibe without introducing a new style system.",
+      "requirements": [
+        "Inside the card, switch labels and values to the existing monospace/hero font to echo a CLI feel.",
+        "Use a dimmer gray for labels and a brighter neutral for values, both drawn from existing site colors.",
+        "Keep font sizes consistent with the current card (or very close) to maintain readability and hierarchy with the rest of the About section.",
+        "Use the existing accent color sparingly for items like focus tags or status text (e.g., \"Open to opportunities\"), not for entire blocks of text."
+      ]
+    },
+    "footer_prompt_line": {
+      "description": "Add a simple terminal prompt at the bottom as a visual flourish.",
+      "requirements": [
+        "Add a thin separator line above the bottom-most area of the card, matching other dividers used on the site.",
+        "Below this line, add a single terminal-style prompt string (e.g., \"mario@portfolio:~$\"), using the existing monospace font and a small size.",
+        "If a cursor indicator is included (e.g., \"_\" or a block), it should be static or have at most a very subtle blink that does not distract from reading the rest of the page.",
+        "Ensure this footer area does not significantly increase the card height; it should be a small, tasteful detail."
+      ]
+    }
+  },
+  "responsiveness": {
+    "requirements": [
+      "On smaller screens, keep the card’s width and general proportions similar to the current implementation so it still pairs well with the text column or stacks cleanly when layout changes.",
+      "Ensure that when the layout stacks vertically on mobile, the terminal-style card remains legible, with sufficient padding and line spacing.",
+      "Avoid adding any layout that depends on very precise pixel-perfect alignment; keep the structure simple so it degrades gracefully at all breakpoints."
+    ]
+  },
+  "acceptance_criteria": [
+    "The About profile card clearly reads as a minimal terminal/CLI-like window while matching the site’s existing dark, technical aesthetic.",
+    "No new visual element feels out of place compared to the hero and projects sections (same general palette, fonts, and border styles).",
+    "The card is not noticeably taller or wider than before, and the overall About section composition remains balanced.",
+    "All existing information (photo, name, role, location, focus, status) is still present, easy to read, and clearly structured as terminal-style output.",
+    "The implementation is visually simple and does not rely on complex behaviors or heavy animations."
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "05",
+  "title": "Update Card Styling",
+  "description": "Replace 3D flip cards with elegant hover-lift effect, remove glow borders",
+  "priority": "medium",
+  "status": "completed",
+  "files_to_modify": [
+    "components/ui/project-card.tsx",
+    "components/ui/card.tsx"
+  ],
+  "current_issues": [
+    "3D rotateY flip animation - flashy, overused",
+    "Neon glow borders on hover",
+    "Cyan colored shadows"
+  ],
+  "new_styling": {
+    "default": {
+      "background": "#1a1a1a",
+      "border": "1px solid #2a2a2a",
+      "border_radius": "12px",
+      "shadow": "0 4px 12px rgba(0,0,0,0.5)"
+    },
+    "hover": {
+      "transform": "translateY(-4px)",
+      "border_color": "#3a3a3a",
+      "shadow": "0 12px 32px rgba(0,0,0,0.7)",
+      "transition": "all 0.3s ease"
+    }
+  },
+  "interaction_change": {
+    "remove": "3D flip to reveal back",
+    "replace_with": "Expand or modal on click, or show content on single face"
+  },
+  "notes": [
+    "Cards should feel solid and grounded",
+    "Hover lifts card slightly with deeper shadow",
+    "No color changes on hover - just elevation",
+    "Consider showing all content without flip"
+  ]
+}

@@ -1,0 +1,68 @@
+2. Visual language – borrow more from hero/projects
+
+You’ve already moved toward the hero style, but About still feels flatter.
+
+Changes
+
+Add a subtle connecting motif
+
+Draw a faint horizontal rule from the center “ABOUT” lines out toward the terminal card, or
+
+Add a tiny label above the terminal that matches your PROJECT 01 / RESEARCH BLOG style, e.g. PROFILE — TERMINAL.
+
+Make the chips feel like the project tags
+
+Use the exact same pill style (border weight, font, tracking) for LANGUAGES / FRAMEWORKS / TOOLS tags as the tech stack chips in your project cards.
+
+This immediately visually links “skills” ↔ “projects”.
+
+Reuse the dot/grid or noise
+
+Add a very low-contrast dot/noise overlay inside the terminal or behind the skill chips, similar to the hero background but toned down, so this section clearly lives in the same universe.
+
+3. Motion – less “static,” but not louder than the hero
+
+You already have:
+
+Heading spring
+
+Text slide-in
+
+Staggered tags
+
+Terminal slide-in
+
+Status pulse
+
+Cursor blink
+
+That’s a lot on paper, but it may feel static because nothing reacts to the user after first load.
+
+Subtle improvements
+
+Add one tiny reactive moment
+
+When the section scrolls into view the first time, have the terminal “type” a single short command + result:
+
+mario@portfolio:~$ whoami
+Mario Camarena — Graduate Research Assistant
+
+Keep it super quick (under 1s) and only once per page load; no looping.
+
+Tone down overlapping entrance motions
+
+Reduce the distance of the text slide-in and the springiness of the heading so they feel more like the Projects section’s entrance and less “floaty.”
+
+Make sure the timing ladder is:
+
+Heading appears → text + terminal slide in → chips fade up.
+
+Hover micro-interactions
+
+On desktop, when you hover the terminal card:
+
+Slight lift + border brighten (same as project cards).
+
+Maybe the cursor switches from solid to a gentle blink, or the status dot brightens slightly.
+
+This gives the section a bit of life after the initial scroll without adding new big animations.

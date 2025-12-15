@@ -6,7 +6,6 @@ export async function POST(request: NextRequest) {
   try {
     const { name, email, message } = await request.json()
 
-    
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: 'All fields are required' },
@@ -31,8 +30,8 @@ export async function POST(request: NextRequest) {
 
     // Database insertion
     const result = await pool.query(
-      `INSERT INTO contacts (name, email, message, user_agent, ip_address) 
-       VALUES ($1, $2, $3, $4, $5) 
+      `INSERT INTO contacts (name, email, message, user_agent, ip_address)
+       VALUES ($1, $2, $3, $4, $5)
        RETURNING id, created_at`,
       [name, email, message, userAgent, ipAddress]
     )

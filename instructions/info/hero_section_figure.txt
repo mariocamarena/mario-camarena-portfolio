@@ -1,0 +1,32 @@
+Hero section figure info: 
+
+
+● The figure in the hero section is an interactive animation powered by UnicornStudio, a web animation platform. Here's how it works technically:        
+
+  What it is:
+  - A third-party animation/visualization service that renders interactive, animated backgrounds
+  - The specific animation is referenced by ID: OMzqyUv6M3kSnv0JeAtC
+  - It displays on desktop (desktop has the full animation, mobile shows a starfield instead)
+
+  Technical Implementation:
+
+  1. Dynamic Script Loading
+    - The component creates a <script> element dynamically and injects it into the DOM
+    - Loads the UnicornStudio library from a CDN: https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.33/dist/unicornStudio.umd.js
+    - The library initializes and renders the animation in the div with data-us-project="OMzqyUv6M3kSnv0JeAtC"
+  2. Aggressive Branding Removal (the bulk of the code)
+    - UnicornStudio adds watermarks/branding (like "Made with UnicornStudio")
+    - The code aggressively hides these by:
+        - Adding CSS rules to hide branded elements
+      - Running a function every 50ms that searches for and hides any elements containing "unicorn" or "made with" text
+      - Running additional checks at 500ms, 1s, 2s, 5s, and 10s to catch async-loaded branding
+      - Using clip-path: inset(0 0 10% 0) to crop the bottom 10% of the canvas where branding typically appears
+  3. Cleanup
+    - When the component unmounts, it removes the injected script and styles from the DOM
+
+  Why this approach:
+  - UnicornStudio is a no-code/low-code animation tool that generates beautiful animated backgrounds
+  - It's easier than building custom WebGL animations from scratch
+  - The branding removal is necessary because the free tier includes watermarks
+
+  Would you like to customize the animation or switch to a different background approach?
