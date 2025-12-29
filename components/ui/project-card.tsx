@@ -113,6 +113,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
       document.body.classList.add('modal-open')
     } else {
       document.body.classList.remove('modal-open')
+      setIsHovered(false) // reset hover when modal closes
     }
     return () => {
       document.body.classList.remove('modal-open')
