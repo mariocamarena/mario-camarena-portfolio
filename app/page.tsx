@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
 
@@ -17,11 +17,26 @@ import { ContactSection } from "@/components/sections/contact-section"
 import { theme } from "@/lib/theme"
 import { navigation } from "@/lib/constants"
 
+// throttle helper
+function throttle<T extends (...args: unknown[]) => void>(func: T, limit: number): T {
+  let inThrottle = false
+  return ((...args: unknown[]) => {
+    if (!inThrottle) {
+      func(...args)
+      inThrottle = true
+      setTimeout(() => (inThrottle = false), limit)
+    }
+  }) as T
+}
+
 export default function Portfolio() {
   const [isLoading, setIsLoading] = useState(true)
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
+
+  // cached section positions
+  const sectionCacheRef = useRef<{ id: string; top: number; bottom: number }[]>([])
 
   // Loading timer - matches boot sequence duration
   useEffect(() => {
@@ -31,28 +46,34 @@ export default function Portfolio() {
     return () => clearTimeout(timer)
   }, [])
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
+  const updateSectionCache = useCallback(() => {
+    sectionCacheRef.current = navigation.map((item) => {
+      const element = document.getElementById(item.id)
+      if (element) {
+        return {
+          id: item.id,
+          top: element.offsetTop,
+          bottom: element.offsetTop + element.offsetHeight,
+        }
+      }
+      return { id: item.id, top: 0, bottom: 0 }
+    })
   }, [])
 
+  // scroll handler
   useEffect(() => {
-    const handleScroll = () => {
-      const sections = navigation.map((item) => ({
-        id: item.id,
-        element: document.getElementById(item.id),
-      }))
+    updateSectionCache()
 
-      const scrollPos = window.scrollY + 100
+    const handleResize = throttle(updateSectionCache, 250)
+    window.addEventListener("resize", handleResize)
+
+    const handleScroll = throttle(() => {
+      const scrollY = window.scrollY
+      setScrolled(scrollY > 50)
+
+      const scrollPos = scrollY + 100
       const windowHeight = window.innerHeight
       const docHeight = document.documentElement.scrollHeight
-
       const nearBottom = scrollPos + windowHeight >= docHeight - 100
 
       if (nearBottom) {
@@ -60,26 +81,24 @@ export default function Portfolio() {
         return
       }
 
+      const sections = sectionCacheRef.current
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = sections[i]
-        if (section.element) {
-          const sectionTop = section.element.offsetTop
-          const sectionHeight = section.element.offsetHeight
-          const sectionBottom = sectionTop + sectionHeight
-
-          if (scrollPos >= sectionTop - 200 && scrollPos < sectionBottom) {
-            setActiveSection(section.id)
-            break
-          }
+        if (section.top > 0 && scrollPos >= section.top - 200 && scrollPos < section.bottom) {
+          setActiveSection(section.id)
+          break
         }
       }
-    }
+    }, 100)
 
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true })
     handleScroll()
 
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [isLoading])
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [isLoading, updateSectionCache])
 
   const scrollTo = (id: string) => {
     const element = document.getElementById(id)

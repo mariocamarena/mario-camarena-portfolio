@@ -1,24 +1,32 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion, useSpring, useTransform } from "framer-motion"
+import { useEffect } from "react"
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 
-// Scroll progress indicator
+// scroll progress indicator
 export const ProgressBar = () => {
-  const [progress, setProgress] = useState(0)
+  const progress = useMotionValue(0)
   const springValue = useSpring(progress, { stiffness: 400, damping: 40 })
 
   useEffect(() => {
+    let ticking = false
+
     const updateProgress = () => {
-      const scrolled = document.documentElement.scrollTop
-      const maxScroll = document.documentElement.scrollHeight - document.documentElement.clientHeight
-      const scrollPercent = scrolled / maxScroll
-      setProgress(scrollPercent)
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrolled = document.documentElement.scrollTop
+          const maxScroll = document.documentElement.scrollHeight - document.documentElement.clientHeight
+          const scrollPercent = maxScroll > 0 ? scrolled / maxScroll : 0
+          progress.set(scrollPercent)
+          ticking = false
+        })
+        ticking = true
+      }
     }
 
-    window.addEventListener("scroll", updateProgress)
+    window.addEventListener("scroll", updateProgress, { passive: true })
     return () => window.removeEventListener("scroll", updateProgress)
-  }, [])
+  }, [progress])
 
   const width = useTransform(springValue, [0, 1], ["0%", "100%"])
 

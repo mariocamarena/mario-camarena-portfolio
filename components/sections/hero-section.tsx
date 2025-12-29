@@ -36,7 +36,7 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
           if (typingInterval) clearInterval(typingInterval)
           setIsTypingComplete(true)
         }
-      }, 10) // typing speed
+      }, 35)
     }, 700)
 
     return () => {

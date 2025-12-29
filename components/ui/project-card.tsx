@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, memo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Github, ExternalLink, FileText, X } from "lucide-react"
 import Image from "next/image"
@@ -69,8 +69,8 @@ const PixelArrow = ({ direction, onClick }: { direction: "left" | "right"; onCli
   </button>
 )
 
-// Project showcase cards with terminal control panel aesthetic
-export const ProjectCard: React.FC<ProjectProps> = ({ project, index }) => {
+// project card component
+export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [loading, setLoading] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
@@ -107,15 +107,15 @@ export const ProjectCard: React.FC<ProjectProps> = ({ project, index }) => {
     return () => clearInterval(interval)
   }, [images.length, isExpanded])
 
-  // Lock body scroll when modal is open
+  // lock scroll when modal open
   useEffect(() => {
     if (isExpanded) {
-      document.body.style.overflow = 'hidden'
+      document.body.classList.add('modal-open')
     } else {
-      document.body.style.overflow = ''
+      document.body.classList.remove('modal-open')
     }
     return () => {
-      document.body.style.overflow = ''
+      document.body.classList.remove('modal-open')
     }
   }, [isExpanded])
 
@@ -567,4 +567,6 @@ export const ProjectCard: React.FC<ProjectProps> = ({ project, index }) => {
       </AnimatePresence>
     </motion.div>
   )
-}
+})
+
+ProjectCard.displayName = 'ProjectCard'

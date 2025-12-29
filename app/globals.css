@@ -13,6 +13,11 @@ body {
   color: #f5f5f5;
 }
 
+/* modal open state */
+body.modal-open {
+  overflow: hidden;
+}
+
 /* Subtle grain texture overlay */
 body::before {
   content: "";
@@ -45,8 +50,13 @@ body::before {
   background: #4a4a4a;
 }
 
-/* smooth transitions for everything */
-* {
+/* transitions for interactive elements */
+button,
+a,
+input,
+textarea,
+nav,
+[role="button"] {
   transition-property: transform, opacity, background-color, border-color, color, box-shadow;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 0.15s;
@@ -61,9 +71,11 @@ button:focus {
 }
 
 /* hover effects */
-button:hover,
-a:hover {
-  transform: translateY(-1px);
+@media (hover: hover) {
+  button:hover,
+  a:hover {
+    transform: translateY(-1px);
+  }
 }
 
 /* typography */
