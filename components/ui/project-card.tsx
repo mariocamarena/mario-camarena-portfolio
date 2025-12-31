@@ -293,17 +293,33 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
             {project.title}
           </h3>
 
-          {/* Description - fixed 2 lines */}
-          <p
-            className="text-xs mb-3 line-clamp-2 leading-relaxed"
-            style={{ color: theme.textSoft }}
+          {/* desc - expands on hover */}
+          <motion.div
+            className="overflow-hidden"
+            initial={false}
+            animate={{
+              height: isHovered ? "auto" : "2.5rem",
+            }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
           >
-            {project.description.replace("**You're viewing this site right now!**", "").trim()}
-          </p>
+            <p
+              className="text-xs leading-relaxed"
+              style={{ color: theme.textSoft }}
+            >
+              {project.description.replace("**You're viewing this site right now!**", "").trim()}
+            </p>
+          </motion.div>
 
-          {/* Tech Stack - limited tags */}
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {visibleTags.map((tech: string) => (
+          {/* tags - shows all on hover */}
+          <motion.div
+            className="flex flex-wrap gap-1.5 mt-3 mb-3 overflow-hidden"
+            initial={false}
+            animate={{
+              height: isHovered ? "auto" : "1.5rem",
+            }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            {(isHovered ? project.stack : visibleTags).map((tech: string) => (
               <span
                 key={tech}
                 className="px-2 py-0.5 text-[10px] font-mono tracking-wide uppercase"
@@ -316,7 +332,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                 {tech}
               </span>
             ))}
-            {hasMoreTags && (
+            {!isHovered && hasMoreTags && (
               <span
                 className="px-2 py-0.5 text-[10px] font-mono tracking-wide"
                 style={{ color: theme.textMuted }}
@@ -324,7 +340,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                 +{project.stack.length - 4}
               </span>
             )}
-          </div>
+          </motion.div>
 
           {/* Action Buttons - Max 2 CTAs with primary/secondary styling */}
           <div className="flex gap-2 min-h-[32px]">
