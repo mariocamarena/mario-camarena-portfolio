@@ -12,7 +12,8 @@
       "Bash(npx tsc:*)",
       "Bash(timeout 15 npm run dev:*)",
       "Bash(timeout 10 npm run dev)",
-      "Bash(Remove-Item -Recurse -Force \"C:\\Users\\Mario\\OneDrive\\Desktop\\portfolio_site\\app\\dev\")"
+      "Bash(Remove-Item -Recurse -Force \"C:\\Users\\Mario\\OneDrive\\Desktop\\portfolio_site\\app\\dev\")",
+      "Bash(git checkout:*)"
     ]
   }
 }
