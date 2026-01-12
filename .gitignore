@@ -161,6 +161,11 @@ $RECYCLE.BIN/
 # Testing
 /coverage
 
+
+
+.claude/
+
+
 # PWA files
 **/public/sw.js
 **/public/workbox-*.js
