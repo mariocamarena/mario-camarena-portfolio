@@ -1,11 +1,12 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ArrowLeft, Database, Cpu, GitBranch, FlaskConical, ChevronDown, BookOpen, FileText } from "lucide-react"
+import { Database, Cpu, GitBranch, FlaskConical, ChevronDown, BookOpen, FileText } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
 import { CitationsSection } from "@/components/thesis"
+import DelicateAsciiDots from "@/components/ui/delicate-ascii-dots"
 
 interface SectionProps {
   title: string
@@ -18,10 +19,10 @@ function CollapsibleSection({ title, icon, children, defaultOpen = false }: Sect
   const [isOpen, setIsOpen] = useState(defaultOpen)
 
   return (
-    <div className="border border-white/10 rounded-lg overflow-hidden">
+    <div className="border border-white/10 rounded-lg overflow-hidden bg-[#0a0a0a]">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 md:p-6 bg-white/5 hover:bg-white/10 transition-colors"
+        className="w-full flex items-center justify-between p-4 md:p-6 bg-[#111111] hover:bg-[#1a1a1a] transition-colors"
       >
         <div className="flex items-center gap-3">
           <span className="text-white/60">{icon}</span>
@@ -36,7 +37,7 @@ function CollapsibleSection({ title, icon, children, defaultOpen = false }: Sect
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="p-4 md:p-6 border-t border-white/10"
+          className="p-4 md:p-6 border-t border-white/10 bg-[#0a0a0a]"
         >
           {children}
         </motion.div>
@@ -48,6 +49,16 @@ function CollapsibleSection({ title, icon, children, defaultOpen = false }: Sect
 export default function ThesisPage() {
   return (
     <div className="min-h-screen bg-black relative">
+      {/* Fixed animated ASCII background */}
+      <div className="fixed inset-0 z-0">
+        <DelicateAsciiDots
+          backgroundColor="#000000"
+          textColor="255, 255, 255"
+          gridSize={45}
+          animationSpeed={0.3}
+        />
+      </div>
+
       {/* Corner Frame Accents - medium on dark bg */}
       <div className="fixed top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 border-white/25 z-20"></div>
       <div className="fixed top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 border-white/25 z-20"></div>
@@ -55,18 +66,18 @@ export default function ThesisPage() {
       <div className="fixed bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 border-white/25 z-20"></div>
 
       {/* Back Link */}
-      <div className="fixed top-6 left-6 z-10">
+      <div className="fixed top-6 left-6 z-30">
         <Link
           href="/#projects"
-          className="inline-flex items-center gap-2 text-white/40 hover:text-white font-mono text-sm transition-colors"
+          className="group inline-flex items-center gap-3 px-4 py-2 border border-white/20 hover:border-white/40 bg-black/80 backdrop-blur-sm rounded font-mono text-xs tracking-wider transition-all duration-200"
         >
-          <ArrowLeft className="w-4 h-4" />
-          Back
+          <span className="text-white/40 group-hover:text-white transition-colors">←</span>
+          <span className="text-white/60 group-hover:text-white transition-colors uppercase">Back</span>
         </Link>
       </div>
 
       {/* Header */}
-      <header className="pt-24 pb-12 px-6 border-b border-white/10">
+      <header className="pt-8 pb-12 px-6 border-b border-white/10 relative z-10">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -92,7 +103,7 @@ export default function ThesisPage() {
       </header>
 
       {/* Content */}
-      <main className="px-6 py-12">
+      <main className="px-6 py-12 relative z-10">
         <div className="max-w-4xl mx-auto space-y-6">
 
           {/* Model Overview Section */}
@@ -731,7 +742,7 @@ export default function ThesisPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 py-8 px-6">
+      <footer className="border-t border-white/10 py-8 px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-white/30 font-mono text-xs">
             Dynamic Heterogeneous Flight Graphs for AAM Security

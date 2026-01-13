@@ -108,12 +108,11 @@ export const ContactSection = () => {
               <span className="text-white text-[10px] font-mono tracking-wider">○</span>
               <div className="w-8 h-px bg-white"></div>
             </div>
-            <h2
-              className="text-4xl md:text-5xl lg:text-6xl font-bold font-mono tracking-wider uppercase"
-              style={{ color: theme.text, letterSpacing: '0.05em' }}
-            >
-              CONTACT
-            </h2>
+            <pre
+              className="font-mono text-[14px] sm:text-[18px] md:text-[22px] lg:text-[26px] leading-[1.1] tracking-tight"
+              style={{ color: theme.text }}
+            >{`█▀▀ █▀█ █▄░█ ▀█▀ ▄▀█ █▀▀ ▀█▀
+█▄▄ █▄█ █░▀█ ░█░ █▀█ █▄▄ ░█░`}</pre>
             <div className="flex items-center gap-3 mt-3 justify-center opacity-60">
               <div className="flex-1 max-w-[60px] h-px bg-white"></div>
               <span className="text-white text-[9px] font-mono">MSG.2026</span>

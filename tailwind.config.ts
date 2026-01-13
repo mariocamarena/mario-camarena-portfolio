@@ -80,7 +80,7 @@ const config: Config = {
           "monospace",
         ],
         sans: [
-          "Satoshi",
+          "Outfit",
           "system-ui",
           "-apple-system",
           "BlinkMacSystemFont",

@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
 
 // Component imports
-import { ProgressBar } from "@/components/ui/progress-bar"
 import { LoadingScreen } from "@/components/ui/loading-screen"
 import { HeroSection } from "@/components/sections/hero-section"
 import { AboutSection } from "@/components/sections/about-section"
@@ -123,8 +122,6 @@ export default function Portfolio() {
         {isLoading && <LoadingScreen />}
       </AnimatePresence>
 
-      <ProgressBar />
-
       {/* Navigation */}
       <nav
         className="fixed top-0 left-0 right-0 z-40 transition-all duration-200"
@@ -140,7 +137,7 @@ export default function Portfolio() {
                 <button
                   key={item.id}
                   onClick={() => scrollTo(item.id)}
-                  className="relative px-4 py-2 font-medium transition-colors duration-200 focus:outline-none"
+                  className="relative px-4 py-2 font-medium uppercase tracking-wider text-sm transition-colors duration-200 focus:outline-none"
                   style={{
                     color: activeSection === item.id ? theme.text : theme.textSoft,
                   }}
@@ -212,7 +209,7 @@ export default function Portfolio() {
                 <button
                   key={item.id}
                   onClick={() => scrollTo(item.id)}
-                  className="text-xl font-medium px-6 py-3 transition-colors duration-200 focus:outline-none"
+                  className="text-xl font-medium uppercase tracking-wider px-6 py-3 transition-colors duration-200 focus:outline-none"
                   style={{
                     color: activeSection === item.id ? theme.text : theme.textSoft,
                   }}
