@@ -70,6 +70,12 @@ export const ContactSection = () => {
 
   return (
     <section id="contact" className="min-h-screen py-20 px-6 relative overflow-hidden" style={{ backgroundColor: theme.surface }}>
+      {/* Corner Frame Accents - softer on surface bg */}
+      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 border-white/20 z-20"></div>
+      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 border-white/20 z-20"></div>
+      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 border-white/20 z-20"></div>
+      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 border-white/20 z-20"></div>
+
       {/* Same dithering background as About section */}
       <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
         <Dithering

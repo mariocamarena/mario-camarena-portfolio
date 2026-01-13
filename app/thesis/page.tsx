@@ -1,10 +1,11 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { ArrowLeft, Database, Cpu, GitBranch, FlaskConical, ChevronDown, BookOpen } from "lucide-react"
+import { ArrowLeft, Database, Cpu, GitBranch, FlaskConical, ChevronDown, BookOpen, FileText } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
+import { CitationsSection } from "@/components/thesis"
 
 interface SectionProps {
   title: string
@@ -46,7 +47,13 @@ function CollapsibleSection({ title, icon, children, defaultOpen = false }: Sect
 
 export default function ThesisPage() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black relative">
+      {/* Corner Frame Accents - medium on dark bg */}
+      <div className="fixed top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 border-white/25 z-20"></div>
+      <div className="fixed top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 border-white/25 z-20"></div>
+      <div className="fixed bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 border-white/25 z-20"></div>
+      <div className="fixed bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 border-white/25 z-20"></div>
+
       {/* Back Link */}
       <div className="fixed top-6 left-6 z-10">
         <Link
@@ -92,7 +99,6 @@ export default function ThesisPage() {
           <CollapsibleSection
             title="Model Architecture"
             icon={<Cpu className="w-5 h-5" />}
-            defaultOpen={true}
           >
             <div className="space-y-6">
               <p className="text-white/70 font-mono text-sm leading-relaxed">
@@ -713,6 +719,14 @@ export default function ThesisPage() {
             </div>
           </CollapsibleSection>
 
+          {/* Citations Section */}
+          <CollapsibleSection
+            title="Related Work & Citations"
+            icon={<FileText className="w-5 h-5" />}
+          >
+            <CitationsSection />
+          </CollapsibleSection>
+
         </div>
       </main>
 
@@ -720,7 +734,7 @@ export default function ThesisPage() {
       <footer className="border-t border-white/10 py-8 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-white/30 font-mono text-xs">
-            Research supported by NASA | Dynamic Heterogeneous Flight Graphs for AAM Security
+            Dynamic Heterogeneous Flight Graphs for AAM Security
           </p>
         </div>
       </footer>

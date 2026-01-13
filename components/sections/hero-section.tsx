@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { ArrowDown } from "lucide-react"
+import Link from "next/link"
 import HeroAsciiBackground from "@/components/ui/hero-ascii-one"
 import { TextScramble } from "@/components/ui/text-scramble"
 
@@ -57,10 +58,10 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
       <div className="absolute inset-0 backdrop-blur-[2px] bg-black/20 z-[5] lg:hidden" />
 
       {/* Corner Frame Accents */}
-      <div className="absolute top-0 left-0 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 border-white/30 z-20"></div>
-      <div className="absolute top-0 right-0 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 border-white/30 z-20"></div>
-      <div className="absolute bottom-0 left-0 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 border-white/30 z-20"></div>
-      <div className="absolute bottom-0 right-0 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 border-white/30 z-20"></div>
+      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 border-white/30 z-20"></div>
+      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 border-white/30 z-20"></div>
+      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 border-white/30 z-20"></div>
+      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 border-white/30 z-20"></div>
 
       {/* Main Content */}
       <div className="relative z-10 flex min-h-screen items-center justify-center lg:justify-end pt-16 lg:pt-0">
@@ -128,14 +129,14 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
 
             {/* CTA Buttons with technical accents */}
             <motion.div
-              className="flex flex-col lg:flex-row gap-4 lg:gap-5 justify-center lg:justify-start"
+              className="flex flex-col lg:flex-row gap-3 lg:gap-4 justify-center lg:justify-start"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
             >
               <button
                 onClick={onScrollToProjects}
-                className="relative px-6 lg:px-8 py-2.5 lg:py-3 bg-transparent text-white font-mono text-sm lg:text-base border border-white hover:bg-white hover:text-black transition-all duration-200 group"
+                className="relative px-5 lg:px-6 py-2.5 lg:py-3 bg-transparent text-white font-mono text-sm border border-white hover:bg-white hover:text-black transition-all duration-200 group"
               >
                 <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
                 <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
@@ -146,12 +147,21 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
                 href="/CS_Mario_Camarena_Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative px-6 lg:px-8 py-2.5 lg:py-3 bg-white border border-white text-black font-mono text-sm lg:text-base hover:bg-transparent hover:text-white transition-all duration-200 text-center group"
+                className="relative px-5 lg:px-6 py-2.5 lg:py-3 bg-white border border-white text-black font-mono text-sm hover:bg-transparent hover:text-white transition-all duration-200 text-center group"
               >
                 <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
                 <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                DOWNLOAD RESUME
+                GET RESUME
               </a>
+
+              <Link
+                href="/thesis"
+                className="relative px-4 lg:px-5 py-2 lg:py-2.5 bg-transparent text-white font-mono text-sm border border-white hover:bg-white hover:text-black transition-all duration-200 text-center group"
+              >
+                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                THESIS
+              </Link>
             </motion.div>
 
             {/* Bottom technical notation - desktop only */}

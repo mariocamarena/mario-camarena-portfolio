@@ -28,6 +28,12 @@ const skills = [
 export function AboutSection() {
   return (
     <section id="about" className="min-h-screen py-20 px-6 relative overflow-hidden" style={{ backgroundColor: theme.surface }}>
+      {/* Corner Frame Accents - softer on surface bg */}
+      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 border-white/20 z-20"></div>
+      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 border-white/20 z-20"></div>
+      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 border-white/20 z-20"></div>
+      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 border-white/20 z-20"></div>
+
       {/* Subtle dithering background effect */}
       <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
         <Dithering
@@ -246,7 +252,7 @@ export function AboutSection() {
               {/* Terminal Content */}
               <div className="p-6 space-y-5 relative">
                 {/* Photo with file label */}
-                <div className="flex items-start gap-4">
+                <div className="flex items-center gap-4">
                   <div>
                     <span className="text-[9px] font-mono opacity-40 block mb-1" style={{ color: theme.text }}>
                       profile.png
@@ -264,13 +270,15 @@ export function AboutSection() {
                       />
                     </div>
                   </div>
-                  <div className="flex-1 pt-5">
-                    <h3
-                      className="font-mono text-lg font-bold tracking-wider uppercase"
+                  <div className="flex-1">
+                    <pre
+                      className="font-mono text-[8px] sm:text-[9px] leading-[1.15] tracking-tight"
                       style={{ color: theme.text }}
-                    >
-                      MARIO CAMARENA
-                    </h3>
+                    >{`█▀▄▀█ ▄▀█ █▀█ █ █▀█
+█░▀░█ █▀█ █▀▄ █ █▄█
+
+█▀▀ ▄▀█ █▀▄▀█ ▄▀█ █▀█ █▀▀ █▄░█ ▄▀█
+█▄▄ █▀█ █░▀░█ █▀█ █▀▄ ██▄ █░▀█ █▀█`}</pre>
                   </div>
                 </div>
 

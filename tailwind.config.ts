@@ -69,6 +69,7 @@ const config: Config = {
       },
       fontFamily: {
         mono: [
+          "JetBrains Mono",
           "ui-monospace",
           "SFMono-Regular",
           "Menlo",

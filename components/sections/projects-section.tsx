@@ -13,6 +13,12 @@ export function ProjectsSection() {
       className="py-20 relative overflow-hidden"
       style={{ backgroundColor: theme.bg }}
     >
+      {/* Corner Frame Accents - medium on dark bg */}
+      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 border-white/25 z-20"></div>
+      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 border-white/25 z-20"></div>
+      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 border-white/25 z-20"></div>
+      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 border-white/25 z-20"></div>
+
       {/* Subtle dot grid overlay */}
       <div
         className="absolute inset-0 pointer-events-none"

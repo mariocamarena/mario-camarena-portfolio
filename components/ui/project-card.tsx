@@ -195,6 +195,19 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
           }}
         />
 
+        {/* Grid Overlay on Hover - matches Thesis Banner */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none transition-opacity duration-300"
+          style={{
+            opacity: isHovered ? 0.03 : 0,
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
+            `,
+            backgroundSize: "20px 20px",
+          }}
+        />
+
         {/* Corner Accents */}
         <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/30 z-20"></div>
         <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/30 z-20"></div>
