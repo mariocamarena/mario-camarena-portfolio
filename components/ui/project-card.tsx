@@ -235,14 +235,14 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
 
         {/* Top Label Bar */}
         <div
-          className="px-4 py-2 border-b flex items-center justify-between"
+          className="px-3 py-2 border-b flex items-center justify-between"
           style={{
             backgroundColor: theme.bg,
             borderColor: theme.borderDim,
           }}
         >
           <span
-            className="text-[10px] font-mono tracking-wider"
+            className="text-[10px] font-mono tracking-wider truncate"
             style={{ color: theme.textMuted }}
           >
             PROJECT {projectNumber} — {projectLabel}

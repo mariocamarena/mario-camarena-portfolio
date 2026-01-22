@@ -83,7 +83,7 @@ export default function Portfolio() {
       const sections = sectionCacheRef.current
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = sections[i]
-        if (section.top > 0 && scrollPos >= section.top - 200 && scrollPos < section.bottom) {
+        if (section.top >= 0 && scrollPos >= section.top - 200 && scrollPos < section.bottom) {
           setActiveSection(section.id)
           break
         }

@@ -165,6 +165,8 @@ $RECYCLE.BIN/
 
 .claude/
 
+# Instructions folder (private)
+/instructions/
 
 # PWA files
 **/public/sw.js

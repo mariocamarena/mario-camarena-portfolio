@@ -7,6 +7,7 @@ interface DelicateAsciiDotsProps {
   textColor?: string;
   gridSize?: number;
   animationSpeed?: number;
+  targetCellSize?: number; // Target cell size in pixels for consistent sizing across devices
 }
 
 interface Wave {
@@ -28,6 +29,7 @@ const DelicateAsciiDots = ({
   textColor = '255, 255, 255',
   gridSize = 60,
   animationSpeed = 0.5,
+  targetCellSize,
 }: DelicateAsciiDotsProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -35,6 +37,7 @@ const DelicateAsciiDots = ({
   const timeRef = useRef<number>(0);
   const animationFrameId = useRef<number | null>(null);
   const dimensionsRef = useRef({ width: 0, height: 0 });
+  const effectiveGridSizeRef = useRef({ cols: gridSize, rows: gridSize });
 
   const CHARS =
     '⣧⣩⣪⣫⣬⣭⣮⣯⣱⣲⣳⣴⣵⣶⣷⣹⣺⣻⣼⣽⣾⣿⣧⣩⣪⣫⣬⣭⣮⣯⣱⣲⣳⣴⣵⣶⣷⣹⣺⣻⣼⣽⣾⣿⣧⣩⣪⣫⣬⣭⣮⣯⣱⣲⣳⣴⣵⣶⣷⣹⣺⣻⣼⣽⣾⣿⣧⣩⣪⣫⣬⣭⣮⣯⣱⣲⣳⣴⣵⣶⣷⣹⣺⣻⣼⣽⣾⣿⣧⣩⣪⣫⣬⣭⣮⣯⣱⣲⣳⣴⣵⣶⣷⣹⣺⣻⣼⣽⣾⣿⣧⣩⣪⣫⣬⣭⣮⣯⣱⣲⣳⣴⣵⣶⣷⣹⣺⣻⣼⣽⣾⣿⠁⠂⠄⠈⠐⠠⡀⢀⠃⠅⠘⠨⠊⠋⠌⠍⠎⠏⠑⠒⠓⠔⠕⠖⠗⠙⠚⠛⠜⠝⠞⠟⠡⠢⠣⠤⠥⠦⠧⠩⠪⠫⠬⠭⠮⠯⠱⠲⠳⠴⠵⠶⠷⠹⠺⠻⠼⠽⠾⠿⡁⡂⡃⡄⡅⡆⡇⡉⡊⡋⡌⡍⡎⡏⡑⡒⡓⡔⡕⡖⡗⡙⡚⡛⡜⡝⡞⡟⡡⡢⡣⡤⡥⡦⡧⡩⡪⡫⡬⡭⡮⡯⡱⡲⡳⡴⡵⡶⡷⡹⡺⡻⡼⡽⡾⡿⢁⢂⢃⢄⢅⢆⢇⢉⢊⢋⢌⢍⢎⢏⢑⢒⢓⢔⢕⢖⢗⢙⢚⢛⢜⢝⢞⢟⢡⢢⢣⢤⢥⢦⢧⢩⢪⢫⢬⢭⢮⢯⢱⢲⢳⢴⢵⢶⢷⢹⢺⢻⢼⢽⢾⢿⣀⣁⣂⣃⣄⣅⣆⣇⣉⣊⣋⣌⣍⣎⣏⣑⣒⣓⣔⣕⣖⣗⣙⣚⣛⣜⣝⣞⣟⣡⣢⣣⣤⣥⣦⣧⣩⣪⣫⣬⣭⣮⣯⣱⣲⣳⣴⣵⣶⣷⣹⣺⣻⣼⣽⣾⣿';
@@ -50,6 +53,15 @@ const DelicateAsciiDots = ({
 
     dimensionsRef.current = { width, height };
 
+    // Calculate effective grid size based on targetCellSize for consistent dot sizing
+    if (targetCellSize) {
+      const cols = Math.max(5, Math.floor(width / targetCellSize));
+      const rows = Math.max(5, Math.floor(height / targetCellSize));
+      effectiveGridSizeRef.current = { cols, rows };
+    } else {
+      effectiveGridSizeRef.current = { cols: gridSize, rows: gridSize };
+    }
+
     const dpr = window.devicePixelRatio || 1;
 
     canvas.width = width * dpr;
@@ -62,7 +74,7 @@ const DelicateAsciiDots = ({
     if (ctx) {
       ctx.scale(dpr, dpr);
     }
-  }, []);
+  }, [targetCellSize, gridSize]);
 
   const animate = useCallback(() => {
     const canvas = canvasRef.current;
@@ -76,23 +88,32 @@ const DelicateAsciiDots = ({
     const { width, height } = dimensionsRef.current;
     if (width === 0 || height === 0) return;
 
+    const { cols, rows } = effectiveGridSizeRef.current;
+
     ctx.fillStyle = backgroundColor;
     ctx.fillRect(0, 0, width, height);
 
-    const newGrid: (GridCell | null)[][] = Array(gridSize)
+    const newGrid: (GridCell | null)[][] = Array(rows)
       .fill(0)
-      .map(() => Array(gridSize).fill(null));
+      .map(() => Array(cols).fill(null));
 
-    const cellWidth = width / gridSize;
-    const cellHeight = height / gridSize;
+    const cellWidth = width / cols;
+    const cellHeight = height / rows;
 
-    for (let y = 0; y < gridSize; y++) {
-      for (let x = 0; x < gridSize; x++) {
+    // Scale factor to adjust wave positions to current grid size
+    const scaleX = cols / gridSize;
+    const scaleY = rows / gridSize;
+
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
         let totalWave = 0;
 
         wavesRef.current.forEach((wave) => {
-          const dx = x - wave.x;
-          const dy = y - wave.y;
+          // Scale wave position to match current grid size
+          const scaledWaveX = wave.x * scaleX;
+          const scaledWaveY = wave.y * scaleY;
+          const dx = x - scaledWaveX;
+          const dy = y - scaledWaveY;
           const dist = Math.sqrt(dx * dx + dy * dy);
           const falloff = 1 / (1 + dist * 0.1);
           const value =
@@ -129,8 +150,8 @@ const DelicateAsciiDots = ({
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    for (let y = 0; y < gridSize; y++) {
-      for (let x = 0; x < gridSize; x++) {
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
         const cell = newGrid[y][x];
         if (cell && cell.char && CHARS.includes(cell.char)) {
           ctx.fillStyle = `rgba(${textColor}, ${cell.opacity})`;
@@ -144,7 +165,7 @@ const DelicateAsciiDots = ({
     }
 
     animationFrameId.current = requestAnimationFrame(animate);
-  }, [backgroundColor, textColor, gridSize, animationSpeed]);
+  }, [backgroundColor, textColor, animationSpeed, gridSize]);
 
   useEffect(() => {
     const waves: Wave[] = [];

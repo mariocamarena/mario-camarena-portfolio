@@ -37,7 +37,7 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
           if (typingInterval) clearInterval(typingInterval)
           setIsTypingComplete(true)
         }
-      }, 35)
+      }, 25)
     }, 700)
 
     return () => {
@@ -89,8 +89,8 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                duration={1.5}
-                speed={0.05}
+                duration={3.5}
+                speed={0.03}
                 characterSet="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 trigger={isVisible}
               >

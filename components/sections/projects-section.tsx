@@ -20,6 +20,7 @@ export function ProjectsSection() {
         textColor="255, 255, 255"
         gridSize={45}
         animationSpeed={0.3}
+        targetCellSize={42}
       />
 
       {/* Corner Frame Accents - medium on dark bg */}
@@ -56,7 +57,7 @@ export function ProjectsSection() {
         </motion.div>
 
         <div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto px-2"
         >
           <ThesisBanner />
           {portfolio.map((project, index) => (

@@ -56,6 +56,7 @@ export default function ThesisPage() {
           textColor="255, 255, 255"
           gridSize={45}
           animationSpeed={0.3}
+          targetCellSize={42}
         />
       </div>
 
@@ -77,7 +78,7 @@ export default function ThesisPage() {
       </div>
 
       {/* Header */}
-      <header className="pt-8 pb-12 px-6 border-b border-white/10 relative z-10">
+      <header className="pt-20 md:pt-8 pb-12 px-6 border-b border-white/10 relative z-10">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
