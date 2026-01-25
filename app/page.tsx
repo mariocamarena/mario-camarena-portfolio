@@ -28,8 +28,13 @@ function throttle<T extends (...args: unknown[]) => void>(func: T, limit: number
   }) as T
 }
 
+// Module-level flag to track if boot animation has played
+// This persists across client-side navigation but resets on hard refresh
+let hasPlayedBootAnimation = false
+
 export default function Portfolio() {
-  const [isLoading, setIsLoading] = useState(true)
+  // Only show loading if animation hasn't played yet in this JS context
+  const [isLoading, setIsLoading] = useState(!hasPlayedBootAnimation)
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
@@ -37,10 +42,17 @@ export default function Portfolio() {
   // cached section positions
   const sectionCacheRef = useRef<{ id: string; top: number; bottom: number }[]>([])
 
-  // Loading timer - matches boot sequence duration
+  // Loading animation - only show on initial site load, not on client-side navigation
   useEffect(() => {
+    if (hasPlayedBootAnimation) {
+      // Skip animation on back navigation (JS context preserved)
+      return
+    }
+
+    // Show animation and mark as played
     const timer = setTimeout(() => {
       setIsLoading(false)
+      hasPlayedBootAnimation = true
     }, 1600)
     return () => clearTimeout(timer)
   }, [])
