@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { pool } from '@/lib/db'
+import { pool, isDatabaseConfigured, saveContactToFile } from '@/lib/db'
 
 // Contact form submission handler
 export async function POST(request: NextRequest) {
@@ -28,20 +28,35 @@ export async function POST(request: NextRequest) {
     const realIp = request.headers.get('x-real-ip')
     const ipAddress = forwarded?.split(',')[0] || realIp || 'Unknown'
 
-    // Database insertion
-    const result = await pool.query(
-      `INSERT INTO contacts (name, email, message, user_agent, ip_address)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, created_at`,
-      [name, email, message, userAgent, ipAddress]
-    )
+    let contactId: number
 
-    console.log(`New contact submission from ${name} (${email}) - ID: ${result.rows[0].id}`)
+    if (isDatabaseConfigured && pool) {
+      // Database insertion
+      const result = await pool.query(
+        `INSERT INTO contacts (name, email, message, user_agent, ip_address)
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING id, created_at`,
+        [name, email, message, userAgent, ipAddress]
+      )
+      contactId = result.rows[0].id
+    } else {
+      // File-based fallback
+      const newContact = saveContactToFile({
+        name,
+        email,
+        message,
+        user_agent: userAgent,
+        ip_address: ipAddress,
+      })
+      contactId = newContact.id
+    }
+
+    console.log(`New contact submission from ${name} (${email}) - ID: ${contactId}`)
 
     return NextResponse.json({
       success: true,
       message: 'Thanks for reaching out! I\'ll get back to you soon.',
-      id: result.rows[0].id
+      id: contactId
     })
 
   } catch (error) {

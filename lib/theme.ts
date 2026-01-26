@@ -1,14 +1,14 @@
 // Theme configuration - Refined Monochrome
 export const theme = {
   // Backgrounds
-  bg: "#0f0f0f",
+  bg: "#0a0a0a",
   surface: "#1a1a1a",
   elevated: "#252525",
 
   // Text
   text: "#f5f5f5",
   textSoft: "#a0a0a0",
-  textMuted: "#666666",
+  textMuted: "#808080",
 
   // Borders
   border: "#2a2a2a",
@@ -26,4 +26,11 @@ export const theme = {
 
   // Overlay
   overlay: "#000000",
+
+  // Terminal dots (macOS style)
+  terminalDots: {
+    red: "#ff5f56",
+    yellow: "#ffbd2e",
+    green: "#27ca40",
+  },
 }

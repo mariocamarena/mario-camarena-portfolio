@@ -6,6 +6,7 @@ import { ArrowDown } from "lucide-react"
 import Link from "next/link"
 import HeroAsciiBackground from "@/components/ui/hero-ascii-one"
 import { TextScramble } from "@/components/ui/text-scramble"
+import { theme } from "@/lib/theme"
 
 interface HeroSectionProps {
   onScrollToProjects: () => void
@@ -49,7 +50,8 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
   return (
     <section
       id="home"
-      className="relative min-h-screen overflow-hidden bg-black"
+      className="relative min-h-screen overflow-hidden"
+      style={{ backgroundColor: '#000000' }}
     >
       {/* ASCII Background Animation */}
       <HeroAsciiBackground />

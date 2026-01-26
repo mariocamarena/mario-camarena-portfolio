@@ -38,7 +38,7 @@ export function AboutSection() {
       <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
         <Dithering
           style={{ height: "100%", width: "100%" }}
-          colorBack="#0a0a0a"
+          colorBack={theme.bg}
           colorFront="#4a4a4a"
           shape="simplex"
           type="4x4"
@@ -90,7 +90,7 @@ export function AboutSection() {
             <div
               className="relative overflow-hidden"
               style={{
-                backgroundColor: '#0a0a0a',
+                backgroundColor: theme.bg,
                 border: terminalChrome.border,
                 boxShadow: '0 16px 32px rgba(0, 0, 0, 0.4)',
               }}
@@ -212,7 +212,7 @@ export function AboutSection() {
             <div
               className="relative overflow-hidden"
               style={{
-                backgroundColor: '#0a0a0a',
+                backgroundColor: theme.bg,
                 border: terminalChrome.border,
                 boxShadow: '0 16px 32px rgba(0, 0, 0, 0.4)',
               }}

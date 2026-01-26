@@ -5,18 +5,7 @@ import { useState, useEffect, memo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Github, ExternalLink, FileText, X } from "lucide-react"
 import Image from "next/image"
-
-const theme = {
-  bg: "#0a0a0a",
-  surface: "#0f0f0f",
-  elevated: "#1a1a1a",
-  border: "#ffffff",
-  borderDim: "#333333",
-  text: "#f5f5f5",
-  textSoft: "#a0a0a0",
-  textMuted: "#666666",
-  accent: "#ffffff",
-}
+import { theme } from "@/lib/theme"
 
 interface ProjectProps {
   project: {
@@ -238,7 +227,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
           className="px-3 py-2 border-b flex items-center justify-between"
           style={{
             backgroundColor: theme.bg,
-            borderColor: theme.borderDim,
+            borderColor: '#333333',
           }}
         >
           <span
@@ -247,38 +236,55 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
           >
             PROJECT {projectNumber} — {projectLabel}
           </span>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: theme.terminalDots.red }} />
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: theme.terminalDots.yellow }} />
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: theme.terminalDots.green }} />
+          </div>
         </div>
 
-        {/* Image Section */}
-        <div className="relative h-32 overflow-hidden">
+        {/* Image Section - Expands on hover */}
+        <motion.div
+          className="relative overflow-hidden"
+          initial={false}
+          animate={{
+            height: isHovered ? 220 : 128,
+          }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        >
           <Image
             src={images[currentImageIndex]}
             alt={`${project.title}`}
             fill
-            className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
+            className={`object-cover transition-transform duration-500 ${
               images[currentImageIndex].includes("stables3") ? "object-[50%_25%]" : "object-center"
             }`}
           />
 
-          {/* Subtle overlay */}
-          <div
+          {/* Subtle overlay - fades on hover for better image visibility */}
+          <motion.div
             className="absolute inset-0"
+            initial={false}
+            animate={{
+              opacity: isHovered ? 0.3 : 1,
+            }}
+            transition={{ duration: 0.3 }}
             style={{
               background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)",
             }}
           />
 
-          {/* Pixel Art Navigation Arrows */}
-          <div className="absolute left-2 top-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          {/* Pixel Art Navigation Arrows - Always visible */}
+          <div className="absolute left-2 top-1/2 -translate-y-1/2 z-20 opacity-70 group-hover:opacity-100 transition-opacity duration-200">
             <PixelArrow direction="left" onClick={prevImage} />
           </div>
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 z-20 opacity-70 group-hover:opacity-100 transition-opacity duration-200">
             <PixelArrow direction="right" onClick={nextImage} />
           </div>
 
-          {/* Image dots indicator */}
+          {/* Image dots indicator - Enlarged for accessibility */}
           {images.length > 1 && (
-            <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5 z-20">
+            <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
               {images.map((_, idx) => (
                 <button
                   key={idx}
@@ -286,7 +292,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                     e.stopPropagation()
                     setCurrentImageIndex(idx)
                   }}
-                  className="w-1.5 h-1.5 transition-all duration-200"
+                  className="w-3 h-3 transition-all duration-200"
                   style={{
                     backgroundColor: idx === currentImageIndex ? theme.accent : "rgba(255,255,255,0.4)",
                   }}
@@ -294,7 +300,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
 
         {/* Content Section */}
         <div className="p-3">

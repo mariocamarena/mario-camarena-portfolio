@@ -7,6 +7,7 @@ import Image from "next/image"
 import { useState } from "react"
 import { CitationsSection } from "@/components/thesis"
 import DelicateAsciiDots from "@/components/ui/delicate-ascii-dots"
+import { theme } from "@/lib/theme"
 
 interface SectionProps {
   title: string
@@ -19,10 +20,11 @@ function CollapsibleSection({ title, icon, children, defaultOpen = false }: Sect
   const [isOpen, setIsOpen] = useState(defaultOpen)
 
   return (
-    <div className="border border-white/10 rounded-lg overflow-hidden bg-[#0a0a0a]">
+    <div className="border border-white/10 rounded-lg overflow-hidden" style={{ backgroundColor: theme.bg }}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 md:p-6 bg-[#111111] hover:bg-[#1a1a1a] transition-colors"
+        className="w-full flex items-center justify-between p-4 md:p-6 hover:bg-[#1a1a1a] transition-colors"
+        style={{ backgroundColor: '#111111' }}
       >
         <div className="flex items-center gap-3">
           <span className="text-white/60">{icon}</span>
@@ -37,7 +39,8 @@ function CollapsibleSection({ title, icon, children, defaultOpen = false }: Sect
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="p-4 md:p-6 border-t border-white/10 bg-[#0a0a0a]"
+          className="p-4 md:p-6 border-t border-white/10"
+          style={{ backgroundColor: theme.bg }}
         >
           {children}
         </motion.div>
@@ -48,11 +51,11 @@ function CollapsibleSection({ title, icon, children, defaultOpen = false }: Sect
 
 export default function ThesisPage() {
   return (
-    <div className="min-h-screen bg-black relative">
+    <div className="min-h-screen relative" style={{ backgroundColor: theme.bg }}>
       {/* Fixed animated ASCII background */}
       <div className="fixed inset-0 z-0">
         <DelicateAsciiDots
-          backgroundColor="#000000"
+          backgroundColor={theme.bg}
           textColor="255, 255, 255"
           gridSize={45}
           animationSpeed={0.3}

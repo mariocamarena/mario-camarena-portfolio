@@ -80,7 +80,7 @@ export const ContactSection = () => {
       <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
         <Dithering
           style={{ height: "100%", width: "100%" }}
-          colorBack="#0a0a0a"
+          colorBack={theme.bg}
           colorFront="#4a4a4a"
           shape="simplex"
           type="4x4"
@@ -125,7 +125,7 @@ export const ContactSection = () => {
         <motion.div
           className="max-w-xl mx-auto relative border overflow-hidden"
           style={{
-            backgroundColor: '#0a0a0a',
+            backgroundColor: theme.bg,
             borderColor: theme.borderDim,
             boxShadow: '0 16px 32px rgba(0, 0, 0, 0.4)',
           }}
@@ -370,7 +370,7 @@ export const ContactSection = () => {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-1.5 transition-all duration-200"
+                  className="p-2 transition-all duration-200"
                   style={{ color: theme.textMuted }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.color = theme.text
@@ -380,7 +380,7 @@ export const ContactSection = () => {
                   }}
                   aria-label={label}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-5 h-5" />
                 </a>
               ))}
             </div>

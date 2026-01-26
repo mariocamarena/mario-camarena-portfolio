@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import './globals.css'
+import { AnalyticsTracker } from '@/components/analytics-tracker'
 
 export const metadata: Metadata = {
   title: "Mario Camarena - AI Researcher & Developer",
@@ -38,6 +39,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans" suppressHydrationWarning>
+        <AnalyticsTracker />
         {children}
       </body>
     </html>

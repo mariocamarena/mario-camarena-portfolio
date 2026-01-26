@@ -157,6 +157,9 @@ $RECYCLE.BIN/
 *.sqlite
 *.sqlite3
 
+# Contact form submissions (file-based storage fallback)
+/data/
+
 
 # Testing
 /coverage
