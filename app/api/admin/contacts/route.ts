@@ -2,11 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 import { pool, isDatabaseConfigured, getContactsFromFile, getFileStats } from '@/lib/db'
 
 // Admin endpoint for contact submissions
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
-    // Simple password verification
+    // Simple password verification (runtime only)
     const authHeader = request.headers.get('authorization')
-    const password = process.env.ADMIN_PASSWORD || 'admin123'
+    const password = process.env.ADMIN_PASSWORD
+
+    if (!password) {
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+    }
 
     if (!authHeader || authHeader !== `Bearer ${password}`) {
       return NextResponse.json(

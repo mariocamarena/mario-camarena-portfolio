@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { pool, isDatabaseConfigured } from '@/lib/db'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
-  // Auth check
+  // Auth check (runtime only)
   const authHeader = request.headers.get('authorization')
-  const password = process.env.ADMIN_PASSWORD || 'admin123'
+  const password = process.env.ADMIN_PASSWORD
+
+  if (!password) {
+    return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+  }
 
   if (!authHeader || authHeader !== `Bearer ${password}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
