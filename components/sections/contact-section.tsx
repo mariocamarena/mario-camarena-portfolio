@@ -6,10 +6,11 @@ import { motion } from "framer-motion"
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react"
 import { Dithering } from "@paper-design/shaders-react"
 import { Spinner } from "@/components/ui/spinner"
-import { theme } from "@/lib/theme"
+import { useTheme } from "@/lib/useTheme"
 
 // Contact form and social links - Terminal/ASCII aesthetic
 export const ContactSection = () => {
+  const { theme, isDark } = useTheme()
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -71,17 +72,17 @@ export const ContactSection = () => {
   return (
     <section id="contact" className="min-h-screen py-20 px-6 relative overflow-hidden" style={{ backgroundColor: theme.surface }}>
       {/* Corner Frame Accents - softer on surface bg */}
-      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 border-white/20 z-20"></div>
-      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 border-white/20 z-20"></div>
-      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 border-white/20 z-20"></div>
-      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 border-white/20 z-20"></div>
+      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
 
       {/* Same dithering background as About section */}
-      <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.15 }}>
         <Dithering
           style={{ height: "100%", width: "100%" }}
           colorBack={theme.bg}
-          colorFront="#4a4a4a"
+          colorFront={isDark ? "#4a4a4a" : "#c0c0c0"}
           shape="simplex"
           type="4x4"
           pxSize={3}
@@ -104,9 +105,9 @@ export const ContactSection = () => {
         >
           <div className="inline-block relative">
             <div className="flex items-center gap-3 mb-3 justify-center opacity-60">
-              <div className="w-8 h-px bg-white"></div>
-              <span className="text-white text-[10px] font-mono tracking-wider">○</span>
-              <div className="w-8 h-px bg-white"></div>
+              <div className="w-8 h-px" style={{ backgroundColor: theme.text }}></div>
+              <span className="text-[10px] font-mono tracking-wider" style={{ color: theme.text }}>○</span>
+              <div className="w-8 h-px" style={{ backgroundColor: theme.text }}></div>
             </div>
             <pre
               className="font-mono text-[14px] sm:text-[18px] md:text-[22px] lg:text-[26px] leading-[1.1] tracking-tight"
@@ -114,9 +115,9 @@ export const ContactSection = () => {
             >{`█▀▀ █▀█ █▄░█ ▀█▀ ▄▀█ █▀▀ ▀█▀
 █▄▄ █▄█ █░▀█ ░█░ █▀█ █▄▄ ░█░`}</pre>
             <div className="flex items-center gap-3 mt-3 justify-center opacity-60">
-              <div className="flex-1 max-w-[60px] h-px bg-white"></div>
-              <span className="text-white text-[9px] font-mono">MSG.2026</span>
-              <div className="flex-1 max-w-[60px] h-px bg-white"></div>
+              <div className="flex-1 max-w-[60px] h-px" style={{ backgroundColor: theme.text }}></div>
+              <span className="text-[9px] font-mono" style={{ color: theme.text }}>MSG.2026</span>
+              <div className="flex-1 max-w-[60px] h-px" style={{ backgroundColor: theme.text }}></div>
             </div>
           </div>
         </motion.div>
@@ -138,8 +139,8 @@ export const ContactSection = () => {
           <div
             className="absolute inset-0 pointer-events-none z-10"
             style={{
-              opacity: 0.015,
-              backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)`,
+              opacity: isDark ? 0.015 : 0.03,
+              backgroundImage: `radial-gradient(circle, ${theme.text}cc 1px, transparent 1px)`,
               backgroundSize: '16px 16px',
             }}
           />
@@ -149,7 +150,7 @@ export const ContactSection = () => {
             className="px-5 py-2.5 border-b flex items-center justify-between"
             style={{
               backgroundColor: theme.bg,
-              borderColor: '#333333',
+              borderColor: theme.border,
             }}
           >
             <span
@@ -180,7 +181,7 @@ export const ContactSection = () => {
                   className="block text-[11px] font-mono tracking-[0.15em] uppercase mb-2 transition-colors duration-200"
                   style={{ color: focusedField === field.name ? theme.text : theme.textSoft }}
                 >
-                  {focusedField === field.name && <span className="text-white/60 mr-1">&gt;</span>}
+                  {focusedField === field.name && <span className="opacity-60 mr-1">&gt;</span>}
                   {field.label}
                 </label>
                 <div className="relative">
@@ -193,12 +194,12 @@ export const ContactSection = () => {
                     onFocus={() => setFocusedField(field.name)}
                     onBlur={() => setFocusedField(null)}
                     placeholder={field.placeholder}
-                    className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus:outline-none border-b placeholder:text-white/20"
+                    className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus:outline-none border-b placeholder:opacity-30"
                     style={{
                       backgroundColor: 'transparent',
                       borderBottomWidth: focusedField === field.name ? '2px' : '1px',
                       borderBottomStyle: 'solid',
-                      borderBottomColor: focusedField === field.name ? theme.text : '#444444',
+                      borderBottomColor: focusedField === field.name ? theme.text : theme.borderHover,
                       color: theme.text,
                     }}
                     required
@@ -213,7 +214,7 @@ export const ContactSection = () => {
                 className="block text-[11px] font-mono tracking-[0.15em] uppercase mb-2 transition-colors duration-200"
                 style={{ color: focusedField === "message" ? theme.text : theme.textSoft }}
               >
-                {focusedField === "message" && <span className="text-white/60 mr-1">&gt;</span>}
+                {focusedField === "message" && <span className="opacity-60 mr-1">&gt;</span>}
                 MESSAGE
               </label>
               <div className="relative">
@@ -225,12 +226,12 @@ export const ContactSection = () => {
                   onFocus={() => setFocusedField("message")}
                   onBlur={() => setFocusedField(null)}
                   placeholder="Your message here..."
-                  className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus:outline-none min-h-[100px] resize-none border-b placeholder:text-white/20"
+                  className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus:outline-none min-h-[100px] resize-none border-b placeholder:opacity-30"
                   style={{
                     backgroundColor: 'transparent',
                     borderBottomWidth: focusedField === "message" ? '2px' : '1px',
                     borderBottomStyle: 'solid',
-                    borderBottomColor: focusedField === "message" ? theme.text : '#444444',
+                    borderBottomColor: focusedField === "message" ? theme.text : theme.borderHover,
                     color: theme.text,
                   }}
                   required
@@ -297,13 +298,13 @@ export const ContactSection = () => {
               </button>
 
               {/* Terminal-style status output */}
-              <div className="mt-4 font-mono text-[11px] border-t pt-4" style={{ borderColor: '#333333' }}>
+              <div className="mt-4 font-mono text-[11px] border-t pt-4" style={{ borderColor: theme.border }}>
                 <div className="flex items-center gap-2">
                   <span style={{ color: theme.textMuted }}>$</span>
                   <span style={{ color: theme.textSoft }}>send_message</span>
                   {submitting && (
                     <motion.span
-                      className="text-white/60"
+                      className="opacity-60"
                       animate={{ opacity: [1, 0.3, 1] }}
                       transition={{ duration: 0.8, repeat: Infinity }}
                     >
@@ -357,7 +358,7 @@ export const ContactSection = () => {
           {/* Social links - integrated into panel footer */}
           <div
             className="px-7 py-4 border-t flex items-center justify-between"
-            style={{ borderColor: '#333333' }}
+            style={{ borderColor: theme.border }}
           >
             <div className="flex items-center gap-4">
               {[
@@ -411,7 +412,15 @@ export const ContactSection = () => {
         >
           <button
             onClick={() => window.location.href = '/admin'}
-            className="text-[10px] font-mono tracking-wider px-3 py-1.5 transition-all duration-200 border hover:border-white/60 hover:text-white"
+            className="text-[10px] font-mono tracking-wider px-3 py-1.5 transition-all duration-200 border"
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = theme.text
+              e.currentTarget.style.color = theme.text
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = theme.borderDim
+              e.currentTarget.style.color = theme.textMuted
+            }}
             style={{
               color: theme.textMuted,
               backgroundColor: 'transparent',

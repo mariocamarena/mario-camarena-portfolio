@@ -11,9 +11,10 @@ import { HeroSection } from "@/components/sections/hero-section"
 import { AboutSection } from "@/components/sections/about-section"
 import { ProjectsSection } from "@/components/sections/projects-section"
 import { ContactSection } from "@/components/sections/contact-section"
+import { AnimatedThemeToggleButton } from "@/components/ui/animated-theme-toggle-button"
 
 // Configuration imports
-import { theme } from "@/lib/theme"
+import { useTheme } from "@/lib/useTheme"
 import { navigation } from "@/lib/constants"
 
 // throttle helper
@@ -33,6 +34,9 @@ function throttle<T extends (...args: unknown[]) => void>(func: T, limit: number
 let hasPlayedBootAnimation = false
 
 export default function Portfolio() {
+  // Theme hook for reactive color updates
+  const { theme } = useTheme()
+
   // Only show loading if animation hasn't played yet in this JS context
   const [isLoading, setIsLoading] = useState(!hasPlayedBootAnimation)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -144,7 +148,8 @@ export default function Portfolio() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="hidden md:flex space-x-8 mx-auto">
+            {/* Desktop navigation */}
+            <div className="hidden md:flex items-center space-x-8 flex-1 justify-center">
               {navigation.map((item) => (
                 <button
                   key={item.id}
@@ -175,13 +180,22 @@ export default function Portfolio() {
               ))}
             </div>
 
-            <button
-              className="md:hidden p-2 rounded-lg transition-colors duration-200 ml-auto focus:outline-none"
-              style={{ color: theme.textSoft }}
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              {menuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {/* Desktop theme toggle */}
+            <div className="hidden md:block absolute right-4 lg:right-8">
+              <AnimatedThemeToggleButton type="horizontal" />
+            </div>
+
+            {/* Mobile menu button and theme toggle */}
+            <div className="md:hidden flex items-center ml-auto gap-2">
+              <AnimatedThemeToggleButton type="horizontal" />
+              <button
+                className="p-2 rounded-lg transition-colors duration-200 focus:outline-none"
+                style={{ color: theme.textSoft }}
+                onClick={() => setMenuOpen(!menuOpen)}
+              >
+                {menuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -202,7 +216,7 @@ export default function Portfolio() {
               className="absolute inset-0 pointer-events-none"
               style={{
                 opacity: 0.04,
-                backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)`,
+                backgroundImage: `radial-gradient(circle, ${theme.text}cc 1px, transparent 1px)`,
                 backgroundSize: '24px 24px',
               }}
             />

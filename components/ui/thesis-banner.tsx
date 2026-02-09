@@ -4,9 +4,10 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
-import { theme } from "@/lib/theme"
+import { useTheme } from "@/lib/useTheme"
 
 export const ThesisBanner = () => {
+  const { theme, isDark } = useTheme()
   const [isHovered, setIsHovered] = useState(false)
 
   // Only show hover effects on actual hover (not stuck on mobile)
@@ -25,19 +26,19 @@ export const ThesisBanner = () => {
           className="group relative overflow-hidden cursor-pointer"
           style={{
             backgroundColor: theme.bg,
-            border: `1px solid #333333`,
+            border: `1px solid ${theme.border}`,
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           animate={showHoverState ? {
             y: -6,
             scale: 1.015,
-            borderColor: '#ffffff',
-            boxShadow: "0 12px 32px rgba(0, 0, 0, 0.8)",
+            borderColor: theme.text,
+            boxShadow: isDark ? "0 12px 32px rgba(0, 0, 0, 0.8)" : "0 12px 32px rgba(0, 0, 0, 0.2)",
           } : {
             y: 0,
             scale: 1,
-            borderColor: '#333333',
+            borderColor: theme.border,
             boxShadow: "none",
           }}
           transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
@@ -47,7 +48,7 @@ export const ThesisBanner = () => {
             className="px-4 py-2 border-b flex items-center justify-between"
             style={{
               backgroundColor: theme.bg,
-              borderColor: '#333333',
+              borderColor: theme.border,
             }}
           >
             <span
@@ -64,22 +65,24 @@ export const ThesisBanner = () => {
           </div>
 
           {/* Corner Accents */}
-          <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/30 z-10" />
-          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/30 z-10" />
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/30 z-10" />
-          <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/30 z-10" />
+          <div className="absolute top-0 left-0 w-3 h-3 border-t border-l z-10" style={{ borderColor: `${theme.text}4d` }} />
+          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r z-10" style={{ borderColor: `${theme.text}4d` }} />
+          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l z-10" style={{ borderColor: `${theme.text}4d` }} />
+          <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r z-10" style={{ borderColor: `${theme.text}4d` }} />
 
           {/* Scan Double Effect */}
           {showHoverState && (
             <>
               <motion.div
-                className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent z-20 pointer-events-none"
+                className="absolute left-0 right-0 h-[1px] z-20 pointer-events-none"
+                style={{ background: `linear-gradient(to right, transparent, ${theme.text}66, transparent)` }}
                 initial={{ top: 0 }}
                 animate={{ top: "100%" }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
               />
               <motion.div
-                className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent z-20 pointer-events-none"
+                className="absolute left-0 right-0 h-[1px] z-20 pointer-events-none"
+                style={{ background: `linear-gradient(to right, transparent, ${theme.text}66, transparent)` }}
                 initial={{ top: "100%" }}
                 animate={{ top: 0 }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
@@ -93,8 +96,8 @@ export const ThesisBanner = () => {
             style={{
               opacity: showHoverState ? 0.03 : 0,
               backgroundImage: `
-                linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
+                linear-gradient(${theme.text}80 1px, transparent 1px),
+                linear-gradient(90deg, ${theme.text}80 1px, transparent 1px)
               `,
               backgroundSize: "20px 20px",
             }}
@@ -113,8 +116,8 @@ export const ThesisBanner = () => {
             {/* Left Side - Title & Description */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
-                <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-white/40" />
-                <span className="text-[9px] md:text-[10px] font-mono tracking-wider text-white/40 uppercase">
+                <div className="w-1.5 h-1.5 md:w-2 md:h-2" style={{ backgroundColor: `${theme.text}66` }} />
+                <span className="text-[9px] md:text-[10px] font-mono tracking-wider uppercase" style={{ color: `${theme.text}66` }}>
                   Research Blog
                 </span>
               </div>
@@ -166,18 +169,25 @@ export const ThesisBanner = () => {
 
             {/* Right Side - CTA */}
             <div className="flex items-center gap-2 md:gap-3 shrink-0">
-              <span className="text-xs font-mono tracking-wider text-white/60 uppercase hidden md:block">
+              <span className="text-xs font-mono tracking-wider uppercase hidden md:block" style={{ color: `${theme.text}99` }}>
                 Read More
               </span>
               <motion.div
-                className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 border border-white/30 group-hover:border-white group-hover:bg-white transition-all duration-200"
+                className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 border transition-all duration-200"
+                style={{
+                  borderColor: showHoverState ? theme.text : `${theme.text}4d`,
+                  backgroundColor: showHoverState ? theme.text : 'transparent',
+                }}
                 animate={{
                   x: showHoverState ? 4 : 0,
                   scale: showHoverState ? 1.1 : 1,
                 }}
                 transition={{ duration: 0.15 }}
               >
-                <ArrowRight className="w-3 h-3 md:w-4 md:h-4 transition-colors text-white group-hover:text-black" />
+                <ArrowRight
+                  className="w-3 h-3 md:w-4 md:h-4 transition-colors"
+                  style={{ color: showHoverState ? theme.bg : theme.text }}
+                />
               </motion.div>
             </div>
           </motion.div>
@@ -185,14 +195,14 @@ export const ThesisBanner = () => {
           {/* Bottom decorative dots */}
           <div className="absolute bottom-2 right-4 flex gap-1 opacity-30">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="w-0.5 h-0.5 bg-white rounded-full" />
+              <div key={i} className="w-0.5 h-0.5 rounded-full" style={{ backgroundColor: theme.text }} />
             ))}
           </div>
 
           {/* Left decorative element */}
           <div className="absolute left-4 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-1 opacity-20">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="w-0.5 h-0.5 bg-white rounded-full" />
+              <div key={i} className="w-0.5 h-0.5 rounded-full" style={{ backgroundColor: theme.text }} />
             ))}
           </div>
         </motion.div>

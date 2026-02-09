@@ -3,19 +3,7 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { Dithering } from "@paper-design/shaders-react"
-import { theme } from "@/lib/theme"
-
-// Shared terminal chrome styling
-const terminalChrome = {
-  border: "1px solid #333333",
-  borderRadius: "0px",
-  headerPadding: "px-4 py-2",
-  headerBg: theme.bg,
-  headerBorder: "#333333",
-  titleStyle: "text-[10px] font-mono tracking-wider",
-  dotSize: "w-2.5 h-2.5",
-  dotGap: "gap-1.5",
-}
+import { useTheme } from "@/lib/useTheme"
 
 // Skills data - combined from languages, frameworks, tools
 const skills = [
@@ -26,20 +14,34 @@ const skills = [
 ]
 
 export function AboutSection() {
+  const { theme, isDark } = useTheme()
+
+  // Terminal chrome styling - reacts to theme
+  const terminalChrome = {
+    border: `1px solid ${theme.border}`,
+    borderRadius: "0px",
+    headerPadding: "px-4 py-2",
+    headerBg: theme.bg,
+    headerBorder: theme.border,
+    titleStyle: "text-[10px] font-mono tracking-wider",
+    dotSize: "w-2.5 h-2.5",
+    dotGap: "gap-1.5",
+  }
+
   return (
     <section id="about" className="min-h-screen py-20 px-6 relative overflow-hidden" style={{ backgroundColor: theme.surface }}>
       {/* Corner Frame Accents - softer on surface bg */}
-      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 border-white/20 z-20"></div>
-      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 border-white/20 z-20"></div>
-      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 border-white/20 z-20"></div>
-      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 border-white/20 z-20"></div>
+      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
 
       {/* Subtle dithering background effect */}
-      <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.15 }}>
         <Dithering
           style={{ height: "100%", width: "100%" }}
           colorBack={theme.bg}
-          colorFront="#4a4a4a"
+          colorFront={isDark ? "#4a4a4a" : "#c0c0c0"}
           shape="simplex"
           type="4x4"
           pxSize={3}
@@ -61,9 +63,9 @@ export function AboutSection() {
         >
           <div className="inline-block relative">
             <div className="flex items-center gap-3 mb-3 justify-center opacity-60">
-              <div className="w-8 h-px bg-white"></div>
-              <span className="text-white text-[10px] font-mono tracking-wider">○</span>
-              <div className="w-8 h-px bg-white"></div>
+              <div className="w-8 h-px" style={{ backgroundColor: theme.text }}></div>
+              <span className="text-[10px] font-mono tracking-wider" style={{ color: theme.text }}>○</span>
+              <div className="w-8 h-px" style={{ backgroundColor: theme.text }}></div>
             </div>
             <pre
               className="font-mono text-[18px] sm:text-[20px] md:text-[24px] lg:text-[28px] leading-[1.1] tracking-tight"
@@ -71,9 +73,9 @@ export function AboutSection() {
             >{`▄▀█ █▄▄ █▀█ █ █ ▀█▀
 █▀█ █▄█ █▄█ █▄█ ░█░`}</pre>
             <div className="flex items-center gap-3 mt-3 justify-center opacity-60">
-              <div className="flex-1 max-w-[60px] h-px bg-white"></div>
-              <span className="text-white text-[9px] font-mono">BIO.2026</span>
-              <div className="flex-1 max-w-[60px] h-px bg-white"></div>
+              <div className="flex-1 max-w-[60px] h-px" style={{ backgroundColor: theme.text }}></div>
+              <span className="text-[9px] font-mono" style={{ color: theme.text }}>BIO.2026</span>
+              <div className="flex-1 max-w-[60px] h-px" style={{ backgroundColor: theme.text }}></div>
             </div>
           </div>
         </motion.div>
@@ -99,8 +101,8 @@ export function AboutSection() {
               <div
                 className="absolute inset-0 pointer-events-none z-10"
                 style={{
-                  opacity: 0.015,
-                  backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)`,
+                  opacity: isDark ? 0.015 : 0.03,
+                  backgroundImage: `radial-gradient(circle, ${theme.text}cc 1px, transparent 1px)`,
                   backgroundSize: '16px 16px',
                 }}
               />
@@ -187,7 +189,7 @@ export function AboutSection() {
                 </div>
 
                 {/* Footer prompt with blinking cursor */}
-                <div className="pt-3 border-t" style={{ borderColor: '#333333' }}>
+                <div className="pt-3 border-t" style={{ borderColor: theme.border }}>
                   <div className="flex items-center font-mono text-[11px]">
                     <span style={{ color: theme.textMuted }}>cat ~/README.md</span>
                     <motion.span
@@ -221,8 +223,8 @@ export function AboutSection() {
               <div
                 className="absolute inset-0 pointer-events-none z-10"
                 style={{
-                  opacity: 0.015,
-                  backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)`,
+                  opacity: isDark ? 0.015 : 0.03,
+                  backgroundImage: `radial-gradient(circle, ${theme.text}cc 1px, transparent 1px)`,
                   backgroundSize: '16px 16px',
                 }}
               />
@@ -258,7 +260,7 @@ export function AboutSection() {
                     </span>
                     <div
                       className="w-24 h-24 overflow-hidden border"
-                      style={{ borderColor: '#333333' }}
+                      style={{ borderColor: theme.border }}
                     >
                       <Image
                         src="/mc.png"
@@ -310,7 +312,7 @@ export function AboutSection() {
                 </div>
 
                 {/* Footer prompt with single blinking cursor */}
-                <div className="pt-3 border-t" style={{ borderColor: '#333333' }}>
+                <div className="pt-3 border-t" style={{ borderColor: theme.border }}>
                   <div className="flex items-center font-mono text-[11px]">
                     <span style={{ color: theme.textMuted }}>mario@portfolio:~$</span>
                     <motion.span

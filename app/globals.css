@@ -2,15 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* View Transitions API support */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 html {
   scroll-behavior: smooth;
+}
+
+/* Dark mode (default) */
+html.dark body {
+  background-color: #0a0a0a;
+  color: #f5f5f5;
+}
+
+/* Light mode */
+html:not(.dark) body {
+  background-color: #f8f8f8;
+  color: #1a1a1a;
 }
 
 body {
   overflow-x: hidden;
   font-family: "Outfit", system-ui, -apple-system, sans-serif;
-  background-color: #0a0a0a;
-  color: #f5f5f5;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* modal open state */
@@ -18,8 +36,8 @@ body.modal-open {
   overflow: hidden;
 }
 
-/* Subtle grain texture overlay */
-body::before {
+/* Subtle grain texture overlay - dark mode */
+html.dark body::before {
   content: "";
   position: fixed;
   top: 0;
@@ -32,22 +50,54 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
-/* custom scrollbar styling */
-::-webkit-scrollbar {
+/* Subtle grain texture overlay - light mode */
+html:not(.dark) body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* custom scrollbar styling - dark mode */
+html.dark ::-webkit-scrollbar {
   width: 8px;
 }
 
-::-webkit-scrollbar-track {
+html.dark ::-webkit-scrollbar-track {
   background: #1a1a1a;
 }
 
-::-webkit-scrollbar-thumb {
+html.dark ::-webkit-scrollbar-thumb {
   background: #3a3a3a;
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+html.dark ::-webkit-scrollbar-thumb:hover {
   background: #4a4a4a;
+}
+
+/* custom scrollbar styling - light mode */
+html:not(.dark) ::-webkit-scrollbar {
+  width: 8px;
+}
+
+html:not(.dark) ::-webkit-scrollbar-track {
+  background: #eeeeee;
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  border-radius: 4px;
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: #aaaaaa;
 }
 
 /* transitions for interactive elements */
@@ -62,11 +112,19 @@ nav,
   transition-duration: 0.15s;
 }
 
-/* focus states */
-input:focus,
-textarea:focus,
-button:focus {
+/* focus states - dark mode */
+html.dark input:focus,
+html.dark textarea:focus,
+html.dark button:focus {
   outline: 2px solid #f5f5f5;
+  outline-offset: 2px;
+}
+
+/* focus states - light mode */
+html:not(.dark) input:focus,
+html:not(.dark) textarea:focus,
+html:not(.dark) button:focus {
+  outline: 2px solid #1a1a1a;
   outline-offset: 2px;
 }
 
@@ -78,27 +136,50 @@ button:focus {
   }
 }
 
-/* typography */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* typography - dark mode */
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6 {
   font-weight: 700;
   line-height: 1.2;
   color: #f5f5f5;
 }
 
-p {
+html.dark p {
   line-height: 1.6;
   color: #a0a0a0;
 }
 
-/* text selection styling */
-::selection {
+/* typography - light mode */
+html:not(.dark) h1,
+html:not(.dark) h2,
+html:not(.dark) h3,
+html:not(.dark) h4,
+html:not(.dark) h5,
+html:not(.dark) h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1a1a1a;
+}
+
+html:not(.dark) p {
+  line-height: 1.6;
+  color: #555555;
+}
+
+/* text selection styling - dark mode */
+html.dark ::selection {
   background-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
+}
+
+/* text selection styling - light mode */
+html:not(.dark) ::selection {
+  background-color: rgba(0, 0, 0, 0.15);
+  color: #000000;
 }
 
 /* reduce motion for accessibility */
@@ -121,10 +202,18 @@ p {
   }
 }
 
-/* Hero section styles - dither pattern */
-.dither-pattern {
+/* Hero section styles - dither pattern - dark mode */
+html.dark .dither-pattern {
   background-image:
     repeating-linear-gradient(0deg, transparent 0px, transparent 1px, white 1px, white 2px),
     repeating-linear-gradient(90deg, transparent 0px, transparent 1px, white 1px, white 2px);
+  background-size: 3px 3px;
+}
+
+/* Hero section styles - dither pattern - light mode */
+html:not(.dark) .dither-pattern {
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0px, transparent 1px, #1a1a1a 1px, #1a1a1a 2px),
+    repeating-linear-gradient(90deg, transparent 0px, transparent 1px, #1a1a1a 1px, #1a1a1a 2px);
   background-size: 3px 3px;
 }

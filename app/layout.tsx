@@ -19,9 +19,24 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // Script to set theme before page renders to prevent flash
+  const themeScript = `
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const shouldBeDark = savedTheme ? savedTheme === 'dark' : prefersDark;
+      if (shouldBeDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  `
+
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
         <link

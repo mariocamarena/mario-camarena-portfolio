@@ -5,7 +5,7 @@ import { useState, useEffect, memo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Github, ExternalLink, FileText, X } from "lucide-react"
 import Image from "next/image"
-import { theme } from "@/lib/theme"
+import { useTheme } from "@/lib/useTheme"
 
 interface ProjectProps {
   project: {
@@ -60,6 +60,7 @@ const PixelArrow = ({ direction, onClick }: { direction: "left" | "right"; onCli
 
 // project card component
 export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => {
+  const { theme, isDark } = useTheme()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [loading, setLoading] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
@@ -156,21 +157,21 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
       <motion.div
         className="relative overflow-hidden cursor-pointer"
         style={{
-          backgroundColor: '#0a0a0a',
-          border: '1px solid #333333',
-          boxShadow: '0 16px 32px rgba(0, 0, 0, 0.4)',
+          backgroundColor: theme.bg,
+          border: `1px solid ${theme.border}`,
+          boxShadow: isDark ? '0 16px 32px rgba(0, 0, 0, 0.4)' : '0 16px 32px rgba(0, 0, 0, 0.15)',
         }}
         onClick={() => setIsExpanded(true)}
         animate={isHovered ? {
           y: -6,
           scale: 1.025,
-          borderColor: theme.border,
-          boxShadow: "0 20px 40px rgba(0, 0, 0, 0.6)",
+          borderColor: theme.borderHover,
+          boxShadow: isDark ? "0 20px 40px rgba(0, 0, 0, 0.6)" : "0 20px 40px rgba(0, 0, 0, 0.2)",
         } : {
           y: 0,
           scale: 1,
-          borderColor: '#333333',
-          boxShadow: "0 16px 32px rgba(0, 0, 0, 0.4)",
+          borderColor: theme.border,
+          boxShadow: isDark ? "0 16px 32px rgba(0, 0, 0, 0.4)" : "0 16px 32px rgba(0, 0, 0, 0.15)",
         }}
         transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
       >
@@ -178,8 +179,8 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
         <div
           className="absolute inset-0 pointer-events-none z-10"
           style={{
-            opacity: 0.015,
-            backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)`,
+            opacity: isDark ? 0.015 : 0.03,
+            backgroundImage: `radial-gradient(circle, ${theme.text}cc 1px, transparent 1px)`,
             backgroundSize: '16px 16px',
           }}
         />
@@ -190,30 +191,32 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
           style={{
             opacity: isHovered ? 0.03 : 0,
             backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)
+              linear-gradient(${theme.text}80 1px, transparent 1px),
+              linear-gradient(90deg, ${theme.text}80 1px, transparent 1px)
             `,
             backgroundSize: "20px 20px",
           }}
         />
 
         {/* Corner Accents */}
-        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/30 z-20"></div>
-        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/30 z-20"></div>
-        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/30 z-20"></div>
-        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/30 z-20"></div>
+        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l z-20" style={{ borderColor: `${theme.text}4d` }}></div>
+        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r z-20" style={{ borderColor: `${theme.text}4d` }}></div>
+        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l z-20" style={{ borderColor: `${theme.text}4d` }}></div>
+        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r z-20" style={{ borderColor: `${theme.text}4d` }}></div>
 
         {/* Scan Double Effect */}
         {isHovered && (
           <>
             <motion.div
-              className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent z-20 pointer-events-none"
+              className="absolute left-0 right-0 h-[1px] z-20 pointer-events-none"
+              style={{ background: `linear-gradient(to right, transparent, ${theme.text}66, transparent)` }}
               initial={{ top: 0 }}
               animate={{ top: "100%" }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             />
             <motion.div
-              className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent z-20 pointer-events-none"
+              className="absolute left-0 right-0 h-[1px] z-20 pointer-events-none"
+              style={{ background: `linear-gradient(to right, transparent, ${theme.text}66, transparent)` }}
               initial={{ top: "100%" }}
               animate={{ top: 0 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
@@ -227,7 +230,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
           className="px-3 py-2 border-b flex items-center justify-between"
           style={{
             backgroundColor: theme.bg,
-            borderColor: '#333333',
+            borderColor: theme.border,
           }}
         >
           <span
@@ -420,7 +423,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
         {/* Bottom decorative dots */}
         <div className="absolute bottom-2 right-4 flex gap-1 opacity-30">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="w-0.5 h-0.5 bg-white rounded-full"></div>
+            <div key={i} className="w-0.5 h-0.5 rounded-full" style={{ backgroundColor: theme.text }}></div>
           ))}
         </div>
 
@@ -438,7 +441,8 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
           >
             {/* Backdrop */}
             <motion.div
-              className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+              className="absolute inset-0 backdrop-blur-sm"
+              style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.9)' : 'rgba(0,0,0,0.7)' }}
               onClick={() => setIsExpanded(false)}
             />
 
