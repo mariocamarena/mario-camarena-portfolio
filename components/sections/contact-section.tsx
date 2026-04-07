@@ -78,11 +78,11 @@ export const ContactSection = () => {
       <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
 
       {/* Same dithering background as About section */}
-      <div className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.15 }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.3 }}>
         <Dithering
           style={{ height: "100%", width: "100%" }}
           colorBack={theme.bg}
-          colorFront={isDark ? "#4a4a4a" : "#c0c0c0"}
+          colorFront={isDark ? "#4a4a4a" : "#8a8a8a"}
           shape="simplex"
           type="4x4"
           pxSize={3}

@@ -53,8 +53,8 @@ export default function RootLayout({
           as="script"
         />
       </head>
-      <body className="font-sans" suppressHydrationWarning>
-        <AnalyticsTracker />
+      <body className="font-mono" suppressHydrationWarning>
+        {/* <AnalyticsTracker /> — disabled until analytics backend is fixed */}
         {children}
       </body>
     </html>

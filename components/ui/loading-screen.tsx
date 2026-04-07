@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
+import { useTheme } from "@/lib/useTheme"
 
 // Initial command that triggers boot
 const INIT_COMMAND = "init --boot"
@@ -24,6 +25,7 @@ const LINE_DELAY = 120 // ms between boot lines appearing
 const PENDING_RESOLVE_DELAY = 150 // ms before [..] becomes [ok]
 
 export const LoadingScreen = () => {
+  const { theme, isDark, mode } = useTheme()
   const [typedCommand, setTypedCommand] = useState("")
   const [commandComplete, setCommandComplete] = useState(false)
   const [visibleLines, setVisibleLines] = useState(0)
@@ -140,7 +142,8 @@ export const LoadingScreen = () => {
     >
       {/* Backdrop - dims the hero behind */}
       <motion.div
-        className="absolute inset-0 bg-black"
+        className="absolute inset-0"
+        style={{ backgroundColor: isDark ? '#000000' : theme.bg }}
         initial={{ opacity: 0.94 }}
         animate={{ opacity: isExiting ? 0 : 0.94 }}
         transition={{ duration: 0.3 }}
@@ -156,25 +159,26 @@ export const LoadingScreen = () => {
         >
           {/* TOP RULE with labels */}
           <div className="flex items-center gap-2 mb-6 opacity-50">
-            <div className="w-1 h-1 bg-white rounded-full" />
-            <div className="w-4 h-px bg-white" />
-            <span className="text-white text-[9px] font-mono tracking-widest">SYS</span>
-            <div className="flex-1 h-px bg-white" />
-            <span className="text-white text-[9px] font-mono tracking-widest">BOOT</span>
-            <div className="w-4 h-px bg-white" />
-            <div className="w-1 h-1 bg-white rounded-full" />
+            <div className="w-1 h-1 rounded-full" style={{ backgroundColor: theme.text }} />
+            <div className="w-4 h-px" style={{ backgroundColor: theme.text }} />
+            <span className="text-[9px] font-mono tracking-widest" style={{ color: theme.text }}>SYS</span>
+            <div className="flex-1 h-px" style={{ backgroundColor: theme.text }} />
+            <span className="text-[9px] font-mono tracking-widest" style={{ color: theme.text }}>BOOT</span>
+            <div className="w-4 h-px" style={{ backgroundColor: theme.text }} />
+            <div className="w-1 h-1 rounded-full" style={{ backgroundColor: theme.text }} />
           </div>
 
           {/* BOOT LOG - tight, left-aligned, monospace */}
           <div className="font-mono text-[13px] leading-tight min-h-[160px] text-left space-y-0.5">
             {/* Command prompt with typing animation */}
             <div className="h-6 flex items-center mb-2">
-              <span className="text-white">{PROMPT}</span>
-              <span className="text-white">{typedCommand}</span>
+              <span style={{ color: theme.text }}>{PROMPT}</span>
+              <span style={{ color: theme.text }}>{typedCommand}</span>
               {/* Blinking cursor while typing command */}
               {!commandComplete && (
                 <motion.span
-                  className="inline-block w-[2px] h-[14px] bg-white ml-0.5"
+                  className="inline-block w-[2px] h-[14px] ml-0.5"
+                  style={{ backgroundColor: theme.text }}
                   animate={{ opacity: [1, 0] }}
                   transition={{ duration: 0.4, repeat: Infinity, repeatType: "reverse" }}
                 />
@@ -192,11 +196,7 @@ export const LoadingScreen = () => {
                 }}
                 transition={{ duration: 0.1 }}
               >
-                <span className={
-                  line.status === "none"
-                    ? "text-white"
-                    : "text-gray-500"
-                }>
+                <span style={{ color: line.status === "none" ? theme.text : theme.textMuted }}>
                   {visibleLines > index && formatLine(line, index)}
                 </span>
               </motion.div>
@@ -206,22 +206,23 @@ export const LoadingScreen = () => {
           {/* BOTTOM RULE as PROGRESS BAR */}
           <div className="mt-6">
             <div className="flex items-center gap-2 opacity-60">
-              <div className="w-1 h-1 bg-white rounded-full" />
+              <div className="w-1 h-1 rounded-full" style={{ backgroundColor: theme.text }} />
 
               {/* Progress line container */}
               <div className="flex-1 relative h-px">
                 {/* Base line */}
-                <div className="absolute inset-0 bg-white/20" />
+                <div className="absolute inset-0" style={{ backgroundColor: `${theme.text}33` }} />
                 {/* Fill line */}
                 <motion.div
-                  className="absolute left-0 top-0 h-full bg-white"
-                  style={{ width: `${Math.min(progress, 100)}%` }}
+                  className="absolute left-0 top-0 h-full"
+                  style={{ width: `${Math.min(progress, 100)}%`, backgroundColor: theme.text }}
                 />
                 {/* Scan dot at leading edge */}
                 {progress < 100 && (
                   <motion.div
-                    className="absolute top-1/2 w-1 h-1 bg-white rounded-full"
+                    className="absolute top-1/2 w-1 h-1 rounded-full"
                     style={{
+                      backgroundColor: theme.text,
                       left: `${Math.min(progress, 100)}%`,
                       transform: 'translate(-50%, -50%)'
                     }}
@@ -232,11 +233,11 @@ export const LoadingScreen = () => {
               </div>
 
               {/* Progress label - BOOT XX% */}
-              <span className="text-white text-[9px] font-mono tracking-widest min-w-[52px] text-right">
+              <span className="text-[9px] font-mono tracking-widest min-w-[52px] text-right" style={{ color: theme.text }}>
                 BOOT {Math.floor(Math.min(progress, 100))}%
               </span>
 
-              <div className="w-1 h-1 bg-white rounded-full" />
+              <div className="w-1 h-1 rounded-full" style={{ backgroundColor: theme.text }} />
             </div>
           </div>
         </motion.div>

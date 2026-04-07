@@ -6,7 +6,7 @@ import { ArrowDown } from "lucide-react"
 import Link from "next/link"
 import HeroAsciiBackground from "@/components/ui/hero-ascii-one"
 import { TextScramble } from "@/components/ui/text-scramble"
-import { theme } from "@/lib/theme"
+import { useTheme } from "@/lib/useTheme"
 
 interface HeroSectionProps {
   onScrollToProjects: () => void
@@ -18,6 +18,7 @@ const taglineText = "CS Master's student working on NASA-funded AAM flight-graph
 
 // Hero landing section - merging technical ASCII aesthetic with existing functionality
 export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = true }: HeroSectionProps) => {
+  const { theme, isDark } = useTheme()
   const [displayedText, setDisplayedText] = useState("")
   const [isTypingComplete, setIsTypingComplete] = useState(false)
 
@@ -51,19 +52,27 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
     <section
       id="home"
       className="relative min-h-screen overflow-hidden"
-      style={{ backgroundColor: '#000000' }}
+      style={{ backgroundColor: isDark ? '#000000' : theme.bg }}
     >
-      {/* ASCII Background Animation */}
-      <HeroAsciiBackground />
+      {/* ASCII Background Animation — invert in light mode */}
+      <div style={
+        isDark ? undefined :
+        { filter: 'invert(1)', opacity: 0.5 }
+      }>
+        <HeroAsciiBackground />
+      </div>
 
       {/* Mobile blur overlay */}
-      <div className="absolute inset-0 backdrop-blur-[2px] bg-black/20 z-[5] lg:hidden" />
+      <div
+        className="absolute inset-0 backdrop-blur-[2px] z-[5] lg:hidden"
+        style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(232,232,232,0.4)' }}
+      />
 
       {/* Corner Frame Accents */}
-      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 border-white/30 z-20"></div>
-      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 border-white/30 z-20"></div>
-      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 border-white/30 z-20"></div>
-      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 border-white/30 z-20"></div>
+      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
+      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
+      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
+      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
 
       {/* Main Content */}
       <div className="relative z-10 flex min-h-screen items-center justify-center lg:justify-end pt-16 lg:pt-0">
@@ -76,9 +85,9 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
               animate={{ opacity: 0.6, x: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <div className="w-8 h-px bg-white"></div>
-              <span className="text-white text-[10px] font-mono tracking-wider">∞</span>
-              <div className="flex-1 h-px bg-white"></div>
+              <div className="w-8 h-px" style={{ backgroundColor: theme.text }} />
+              <span className="text-[10px] font-mono tracking-wider" style={{ color: theme.text }}>∞</span>
+              <div className="flex-1 h-px" style={{ backgroundColor: theme.text }} />
             </motion.div>
 
             {/* Title with dithered accent */}
@@ -86,8 +95,8 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
               <div className="hidden lg:block absolute -right-3 top-0 bottom-0 w-1 dither-pattern opacity-40"></div>
               <TextScramble
                 as="h1"
-                className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-4 lg:mb-6 leading-tight font-mono tracking-wider"
-                style={{ letterSpacing: '0.05em' }}
+                className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-4 lg:mb-6 leading-tight font-mono tracking-wider"
+                style={{ letterSpacing: '0.05em', color: theme.text }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
@@ -108,24 +117,25 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
               transition={{ duration: 0.6, delay: 0.1 }}
             >
               {Array.from({ length: 30 }).map((_, i) => (
-                <div key={i} className="w-0.5 h-0.5 bg-white rounded-full"></div>
+                <div key={i} className="w-0.5 h-0.5 rounded-full" style={{ backgroundColor: theme.text }} />
               ))}
             </motion.div>
 
             {/* Description with typing animation */}
             <div className="relative">
-              <div className="text-base lg:text-lg text-gray-300 mb-6 lg:mb-8 leading-relaxed font-mono min-h-[3.5rem] lg:min-h-[4rem]">
-                <span className="opacity-80">{displayedText}</span>
+              <div className="text-base lg:text-lg mb-6 lg:mb-8 leading-relaxed font-mono min-h-[3.5rem] lg:min-h-[4rem]">
+                <span className="opacity-80" style={{ color: theme.textSoft }}>{displayedText}</span>
                 <motion.span
-                  className="inline-block w-[2px] h-[1.1em] bg-white ml-0.5 align-middle"
+                  className="inline-block w-[2px] h-[1.1em] ml-0.5 align-middle"
+                  style={{ backgroundColor: theme.text }}
                   animate={{ opacity: isTypingComplete ? [1, 0] : 1 }}
                   transition={isTypingComplete ? { duration: 0.8, repeat: Infinity, repeatType: "reverse" } : {}}
                 />
               </div>
 
               {/* Technical corner accent - desktop only */}
-              <div className="hidden lg:block absolute -left-4 top-1/2 w-3 h-3 border border-white opacity-30" style={{ transform: 'translateY(-50%)' }}>
-                <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-white" style={{ transform: 'translate(-50%, -50%)' }}></div>
+              <div className="hidden lg:block absolute -left-4 top-1/2 w-3 h-3 opacity-30" style={{ transform: 'translateY(-50%)', border: `1px solid ${theme.text}` }}>
+                <div className="absolute top-1/2 left-1/2 w-1 h-1" style={{ transform: 'translate(-50%, -50%)', backgroundColor: theme.text }}></div>
               </div>
             </div>
 
@@ -138,10 +148,13 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
             >
               <button
                 onClick={onScrollToProjects}
-                className="relative px-5 lg:px-6 py-2.5 lg:py-3 bg-transparent text-white font-mono text-sm border border-white hover:bg-white hover:text-black transition-all duration-200 group"
+                className="relative px-5 lg:px-6 py-2.5 lg:py-3 bg-transparent font-mono text-sm transition-all duration-200 group"
+                style={{ border: `1px solid ${theme.text}`, color: theme.text }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
               >
-                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
+                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
                 VIEW PROJECTS
               </button>
 
@@ -149,19 +162,25 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
                 href="/CS_Mario_Camarena_Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative px-5 lg:px-6 py-2.5 lg:py-3 bg-white border border-white text-black font-mono text-sm hover:bg-transparent hover:text-white transition-all duration-200 text-center group"
+                className="relative px-5 lg:px-6 py-2.5 lg:py-3 font-mono text-sm transition-all duration-200 text-center group"
+                style={{ backgroundColor: theme.text, border: `1px solid ${theme.text}`, color: theme.bg }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
               >
-                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
+                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
                 GET RESUME
               </a>
 
               <Link
                 href="/thesis"
-                className="relative px-4 lg:px-5 py-2 lg:py-2.5 bg-transparent text-white font-mono text-sm border border-white hover:bg-white hover:text-black transition-all duration-200 text-center group"
+                className="relative px-4 lg:px-5 py-2 lg:py-2.5 bg-transparent font-mono text-sm transition-all duration-200 text-center group"
+                style={{ border: `1px solid ${theme.text}`, color: theme.text }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
               >
-                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
+                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
                 THESIS
               </Link>
             </motion.div>
@@ -173,9 +192,9 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
               animate={{ opacity: 0.4 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <span className="text-white text-[9px] font-mono">∞</span>
-              <div className="flex-1 h-px bg-white"></div>
-              <span className="text-white text-[9px] font-mono">PORTFOLIO.2026</span>
+              <span className="text-[9px] font-mono" style={{ color: theme.text }}>∞</span>
+              <div className="flex-1 h-px" style={{ backgroundColor: theme.text }} />
+              <span className="text-[9px] font-mono" style={{ color: theme.text }}>PORTFOLIO.2026</span>
             </motion.div>
           </div>
         </div>
@@ -190,7 +209,8 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
       >
         <motion.button
           onClick={onScrollToAbout}
-          className="p-2 rounded-full text-white/50 hover:text-white transition-colors"
+          className="p-2 rounded-full transition-colors"
+          style={{ color: `${theme.text}80` }}
           animate={{ y: [0, 6, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           aria-label="Scroll to about"

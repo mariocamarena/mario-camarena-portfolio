@@ -37,32 +37,32 @@ export const darkTheme = {
 }
 
 export const lightTheme = {
-  // Backgrounds
-  bg: "#f8f8f8",
-  surface: "#ffffff",
-  elevated: "#eeeeee",
+  // Backgrounds — cold CRT gray, like terminal phosphor
+  bg: "#e8e8e8",
+  surface: "#dcdcdc",
+  elevated: "#d0d0d0",
 
-  // Text
-  text: "#1a1a1a",
-  textSoft: "#555555",
-  textMuted: "#777777",
+  // Text — softened for comfort on gray
+  text: "#2e2e2e",
+  textSoft: "#4a4a4a",
+  textMuted: "#666666",
 
-  // Borders
-  border: "#d5d5d5",
-  borderHover: "#b5b5b5",
-  borderDim: "#e5e5e5",
+  // Borders — neutral gray
+  border: "#c4c4c4",
+  borderHover: "#a8a8a8",
+  borderDim: "#cfcfcf",
 
   // Accents (monochrome)
-  accent: "#1a1a1a",
-  accentDim: "#444444",
+  accent: "#2e2e2e",
+  accentDim: "#4a4a4a",
 
   // Semantic colors
-  success: "#22c55e",
+  success: "#2e7d32",
   warning: "#666666",
-  error: "#dc2626",
+  error: "#c62828",
 
   // Overlay
-  overlay: "#ffffff",
+  overlay: "#e8e8e8",
 
   // Terminal dots (macOS style - keep consistent)
   terminalDots: {
@@ -71,6 +71,8 @@ export const lightTheme = {
     green: "#27ca40",
   },
 }
+
+export type ThemeMode = "dark" | "light"
 
 // Default export for backward compatibility - this will be the "current" theme
 // Components should use useTheme() hook instead for reactive updates

@@ -19,7 +19,7 @@ export function ProjectsSection() {
       {/* Animated ASCII dots background */}
       <DelicateAsciiDots
         backgroundColor={theme.bg}
-        textColor={isDark ? "255, 255, 255" : "26, 26, 26"}
+        textColor={isDark ? "255, 255, 255" : "80, 80, 80"}
         gridSize={45}
         animationSpeed={0.3}
         targetCellSize={42}

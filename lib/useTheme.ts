@@ -2,26 +2,38 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { darkTheme, lightTheme } from "./theme"
+import type { ThemeMode } from "./theme"
 
 export type Theme = typeof darkTheme
 
+const themeMap: Record<ThemeMode, Theme> = {
+  dark: darkTheme,
+  light: lightTheme,
+}
+
+const cycle: ThemeMode[] = ["dark", "light"]
+
+function applyModeClasses(mode: ThemeMode) {
+  const cl = document.documentElement.classList
+  cl.remove("dark")
+  if (mode === "dark") cl.add("dark")
+}
+
 export function useTheme() {
-  const [isDark, setIsDark] = useState(true)
+  const [mode, setMode] = useState<ThemeMode>("dark")
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
-    // Check initial theme from localStorage or system preference
-    const savedTheme = localStorage.getItem("theme")
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+    // Read stored mode or default to dark
+    const stored = localStorage.getItem("theme") as ThemeMode | null
+    const initial = stored && cycle.includes(stored) ? stored : "dark"
+    setMode(initial)
+    applyModeClasses(initial)
 
-    const shouldBeDark = savedTheme ? savedTheme === "dark" : prefersDark
-    setIsDark(shouldBeDark)
-    document.documentElement.classList.toggle("dark", shouldBeDark)
-
-    // Listen for theme changes from the toggle button
-    const handleThemeChange = (e: CustomEvent<{ darkMode: boolean }>) => {
-      setIsDark(e.detail.darkMode)
+    // Listen for theme changes from other components
+    const handleThemeChange = (e: CustomEvent<{ mode: ThemeMode }>) => {
+      setMode(e.detail.mode)
     }
 
     window.addEventListener("themeChange", handleThemeChange as EventListener)
@@ -31,19 +43,21 @@ export function useTheme() {
   }, [])
 
   const toggleTheme = useCallback(() => {
-    const newIsDark = !isDark
-    setIsDark(newIsDark)
-    document.documentElement.classList.toggle("dark", newIsDark)
-    localStorage.setItem("theme", newIsDark ? "dark" : "light")
-    window.dispatchEvent(new CustomEvent('themeChange', { detail: { darkMode: newIsDark } }))
-  }, [isDark])
+    const idx = cycle.indexOf(mode)
+    const next = cycle[(idx + 1) % cycle.length]
+    setMode(next)
+    applyModeClasses(next)
+    localStorage.setItem("theme", next)
+    window.dispatchEvent(new CustomEvent("themeChange", { detail: { mode: next } }))
+  }, [mode])
 
-  // Return the appropriate theme object based on current mode
-  const theme: Theme = isDark ? darkTheme : lightTheme
+  const theme: Theme = themeMap[mode]
+  const isDark = mode === "dark"
 
   return {
     theme,
     isDark,
+    mode,
     mounted,
     toggleTheme,
   }

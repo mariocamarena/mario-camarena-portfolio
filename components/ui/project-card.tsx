@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect, memo } from "react"
+import { createPortal } from "react-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { Github, ExternalLink, FileText, X } from "lucide-react"
 import Image from "next/image"
@@ -373,10 +374,13 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                   e.stopPropagation()
                   window.open(project.paper, "_blank")
                 }}
-                className="relative flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-wider bg-white text-black hover:bg-white/90 transition-all duration-200 group/btn"
+                className="relative flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-wider transition-all duration-200 group/btn"
+                style={{ backgroundColor: theme.text, color: theme.bg }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
               >
-                <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
-                <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
+                <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
+                <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
                 <FileText className="w-3 h-3" />
                 PAPER
               </button>
@@ -387,10 +391,13 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                   handleDemo()
                 }}
                 disabled={loading}
-                className="relative flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-wider bg-white text-black hover:bg-white/90 transition-all duration-200 group/btn"
+                className="relative flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-wider transition-all duration-200 group/btn"
+                style={{ backgroundColor: theme.text, color: theme.bg }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
               >
-                <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
-                <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
+                <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
+                <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
                 {loading ? (
                   <span className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />
                 ) : (
@@ -409,10 +416,13 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                   e.stopPropagation()
                   window.open(project.github, "_blank")
                 }}
-                className="relative flex items-center gap-1.5 px-3 py-1.5 bg-transparent font-mono text-[10px] tracking-wider border border-white/60 text-white hover:border-white hover:bg-white hover:text-black transition-all duration-200 group/btn"
+                className="relative flex items-center gap-1.5 px-3 py-1.5 bg-transparent font-mono text-[10px] tracking-wider transition-all duration-200 group/btn"
+                style={{ border: `1px solid ${theme.text}80`, color: theme.text }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg; e.currentTarget.style.borderColor = theme.text }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text; e.currentTarget.style.borderColor = `${theme.text}80` }}
               >
-                <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
-                <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
+                <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
+                <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
                 <Github className="w-3 h-3" />
                 CODE
               </button>
@@ -429,182 +439,194 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
 
       </motion.div>
 
-      {/* Expanded Modal */}
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 pt-24 md:p-8 md:pt-24"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {/* Backdrop */}
+      {/* Expanded Modal — portaled to body to escape transform stacking context */}
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {isExpanded && (
             <motion.div
-              className="absolute inset-0 backdrop-blur-sm"
-              style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.9)' : 'rgba(0,0,0,0.7)' }}
-              onClick={() => setIsExpanded(false)}
-            />
-
-            {/* Modal Content */}
-            <motion.div
-              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto"
-              style={{
-                backgroundColor: theme.surface,
-                border: `1px solid ${theme.borderDim}`,
-              }}
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+              className="fixed inset-0 z-[100] flex items-center justify-center p-4 pt-24 md:p-8 md:pt-24"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              {/* Modal Header */}
-              <div
-                className="sticky top-0 z-10 px-4 py-3 border-b flex items-center justify-between"
+              {/* Backdrop */}
+              <motion.div
+                className="absolute inset-0 backdrop-blur-sm"
+                style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.9)' : 'rgba(0,0,0,0.7)' }}
+                onClick={() => setIsExpanded(false)}
+              />
+
+              {/* Modal Content */}
+              <motion.div
+                className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto"
                 style={{
-                  backgroundColor: theme.bg,
-                  borderColor: theme.borderDim,
+                  backgroundColor: theme.surface,
+                  border: `1px solid ${theme.borderDim}`,
                 }}
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                transition={{ duration: 0.2 }}
               >
-                <span
-                  className="text-[10px] font-mono tracking-wider"
-                  style={{ color: theme.textMuted }}
+                {/* Modal Header */}
+                <div
+                  className="sticky top-0 z-10 px-4 py-3 border-b flex items-center justify-between"
+                  style={{
+                    backgroundColor: theme.bg,
+                    borderColor: theme.borderDim,
+                  }}
                 >
-                  PROJECT {projectNumber} — {projectLabel}
-                </span>
-                <button
-                  onClick={() => setIsExpanded(false)}
-                  className="p-1 hover:bg-white/10 transition-colors"
-                >
-                  <X className="w-4 h-4" style={{ color: theme.textSoft }} />
-                </button>
-              </div>
-
-              {/* Full-size Image Section */}
-              <div className="relative aspect-video bg-black">
-                <Image
-                  src={images[currentImageIndex]}
-                  alt={`${project.title}`}
-                  fill
-                  className="object-contain"
-                />
-
-                {/* Navigation Arrows - Always visible in modal */}
-                {images.length > 1 && (
-                  <>
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 z-20">
-                      <PixelArrow direction="left" onClick={prevImage} />
-                    </div>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
-                      <PixelArrow direction="right" onClick={nextImage} />
-                    </div>
-                  </>
-                )}
-
-                {/* Image counter */}
-                {images.length > 1 && (
-                  <div
-                    className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 font-mono text-[10px]"
-                    style={{ backgroundColor: 'rgba(0,0,0,0.7)', color: theme.textSoft }}
-                  >
-                    {currentImageIndex + 1} / {images.length}
-                  </div>
-                )}
-              </div>
-
-              {/* Full Content */}
-              <div className="p-6">
-                <h3
-                  className="text-xl font-bold mb-4 font-mono tracking-wide uppercase"
-                  style={{ color: theme.text }}
-                >
-                  {project.title}
-                </h3>
-
-                <p
-                  className="text-sm mb-6 leading-relaxed"
-                  style={{ color: theme.textSoft }}
-                >
-                  {project.description.replace("**You're viewing this site right now!**", "").trim()}
-                </p>
-
-                {/* Tech Stack */}
-                <div className="mb-6">
                   <span
-                    className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-3 block"
-                    style={{ color: theme.text }}
+                    className="text-[10px] font-mono tracking-wider"
+                    style={{ color: theme.textMuted }}
                   >
-                    TECH STACK
+                    PROJECT {projectNumber} — {projectLabel}
                   </span>
-                  <div className="flex flex-wrap gap-2">
-                    {project.stack.map((tech: string) => (
-                      <span
-                        key={tech}
-                        className="px-3 py-1 text-[11px] font-mono tracking-wide uppercase"
-                        style={{
-                          backgroundColor: "transparent",
-                          color: theme.textMuted,
-                          border: `1px solid ${theme.borderDim}`,
-                        }}
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                  <button
+                    onClick={() => setIsExpanded(false)}
+                    className="p-1 hover:bg-white/10 transition-colors"
+                  >
+                    <X className="w-4 h-4" style={{ color: theme.textSoft }} />
+                  </button>
                 </div>
 
-                {/* Action Buttons - Max 2 with primary/secondary */}
-                <div className="flex gap-3 pt-4 border-t" style={{ borderColor: theme.borderDim }}>
-                  {/* Primary CTA */}
-                  {isResearch ? (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        window.open(project.paper, "_blank")
-                      }}
-                      className="relative flex items-center gap-2 px-4 py-2 font-mono text-[11px] tracking-wider bg-white text-black hover:bg-white/90 transition-all duration-200 group/btn"
-                    >
-                      <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
-                      <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
-                      <FileText className="w-4 h-4" />
-                      VIEW PAPER
-                    </button>
-                  ) : isProduct ? (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        window.open(project.demo, "_blank")
-                      }}
-                      className="relative flex items-center gap-2 px-4 py-2 font-mono text-[11px] tracking-wider bg-white text-black hover:bg-white/90 transition-all duration-200 group/btn"
-                    >
-                      <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
-                      <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
-                      <ExternalLink className="w-4 h-4" />
-                      VIEW DEMO
-                    </button>
-                  ) : null}
+                {/* Full-size Image Section */}
+                <div className="relative aspect-video bg-black">
+                  <Image
+                    src={images[currentImageIndex]}
+                    alt={`${project.title}`}
+                    fill
+                    className="object-contain"
+                  />
 
-                  {/* Secondary CTA - Code */}
-                  {project.github && !isPCBuilds && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        window.open(project.github, "_blank")
-                      }}
-                      className="relative flex items-center gap-2 px-4 py-2 bg-transparent font-mono text-[11px] tracking-wider border border-white/60 text-white hover:border-white hover:bg-white hover:text-black transition-all duration-200 group/btn"
+                  {/* Navigation Arrows - Always visible in modal */}
+                  {images.length > 1 && (
+                    <>
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 z-20">
+                        <PixelArrow direction="left" onClick={prevImage} />
+                      </div>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
+                        <PixelArrow direction="right" onClick={nextImage} />
+                      </div>
+                    </>
+                  )}
+
+                  {/* Image counter */}
+                  {images.length > 1 && (
+                    <div
+                      className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 font-mono text-[10px]"
+                      style={{ backgroundColor: 'rgba(0,0,0,0.7)', color: theme.textSoft }}
                     >
-                      <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
-                      <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-white opacity-0 group-hover/btn:opacity-100 transition-opacity"></span>
-                      <Github className="w-4 h-4" />
-                      VIEW CODE
-                    </button>
+                      {currentImageIndex + 1} / {images.length}
+                    </div>
                   )}
                 </div>
-              </div>
+
+                {/* Full Content */}
+                <div className="p-6">
+                  <h3
+                    className="text-xl font-bold mb-4 font-mono tracking-wide uppercase"
+                    style={{ color: theme.text }}
+                  >
+                    {project.title}
+                  </h3>
+
+                  <p
+                    className="text-sm mb-6 leading-relaxed"
+                    style={{ color: theme.textSoft }}
+                  >
+                    {project.description.replace("**You're viewing this site right now!**", "").trim()}
+                  </p>
+
+                  {/* Tech Stack */}
+                  <div className="mb-6">
+                    <span
+                      className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-3 block"
+                      style={{ color: theme.text }}
+                    >
+                      TECH STACK
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {project.stack.map((tech: string) => (
+                        <span
+                          key={tech}
+                          className="px-3 py-1 text-[11px] font-mono tracking-wide uppercase"
+                          style={{
+                            backgroundColor: "transparent",
+                            color: theme.textMuted,
+                            border: `1px solid ${theme.borderDim}`,
+                          }}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons - Max 2 with primary/secondary */}
+                  <div className="flex gap-3 pt-4 border-t" style={{ borderColor: theme.borderDim }}>
+                    {/* Primary CTA */}
+                    {isResearch ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          window.open(project.paper, "_blank")
+                        }}
+                        className="relative flex items-center gap-2 px-4 py-2 font-mono text-[11px] tracking-wider transition-all duration-200 group/btn"
+                        style={{ backgroundColor: theme.text, color: theme.bg }}
+                        onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
+                      >
+                        <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
+                        <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
+                        <FileText className="w-4 h-4" />
+                        VIEW PAPER
+                      </button>
+                    ) : isProduct ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          window.open(project.demo, "_blank")
+                        }}
+                        className="relative flex items-center gap-2 px-4 py-2 font-mono text-[11px] tracking-wider transition-all duration-200 group/btn"
+                        style={{ backgroundColor: theme.text, color: theme.bg }}
+                        onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
+                      >
+                        <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
+                        <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
+                        <ExternalLink className="w-4 h-4" />
+                        VIEW DEMO
+                      </button>
+                    ) : null}
+
+                    {/* Secondary CTA - Code */}
+                    {project.github && !isPCBuilds && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          window.open(project.github, "_blank")
+                        }}
+                        className="relative flex items-center gap-2 px-4 py-2 bg-transparent font-mono text-[11px] tracking-wider transition-all duration-200 group/btn"
+                        style={{ border: `1px solid ${theme.text}80`, color: theme.text }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg; e.currentTarget.style.borderColor = theme.text }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text; e.currentTarget.style.borderColor = `${theme.text}80` }}
+                      >
+                        <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
+                        <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
+                        <Github className="w-4 h-4" />
+                        VIEW CODE
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </motion.div>
   )
 })

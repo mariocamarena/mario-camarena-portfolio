@@ -11,7 +11,7 @@ import { HeroSection } from "@/components/sections/hero-section"
 import { AboutSection } from "@/components/sections/about-section"
 import { ProjectsSection } from "@/components/sections/projects-section"
 import { ContactSection } from "@/components/sections/contact-section"
-import { AnimatedThemeToggleButton } from "@/components/ui/animated-theme-toggle-button"
+import { AsciiThemeToggle } from "@/components/ui/ascii-theme-toggle"
 
 // Configuration imports
 import { useTheme } from "@/lib/useTheme"
@@ -48,6 +48,9 @@ export default function Portfolio() {
 
   // Loading animation - only show on initial site load, not on client-side navigation
   useEffect(() => {
+    // Mark that the landing page has been visited this session
+    try { sessionStorage.setItem('visited-home', '1') } catch {}
+
     if (hasPlayedBootAnimation) {
       // Skip animation on back navigation (JS context preserved)
       return
@@ -180,14 +183,8 @@ export default function Portfolio() {
               ))}
             </div>
 
-            {/* Desktop theme toggle */}
-            <div className="hidden md:block absolute right-4 lg:right-8">
-              <AnimatedThemeToggleButton type="horizontal" />
-            </div>
-
-            {/* Mobile menu button and theme toggle */}
+            {/* Mobile menu button */}
             <div className="md:hidden flex items-center ml-auto gap-2">
-              <AnimatedThemeToggleButton type="horizontal" />
               <button
                 className="p-2 rounded-lg transition-colors duration-200 focus:outline-none"
                 style={{ color: theme.textSoft }}
@@ -274,6 +271,9 @@ export default function Portfolio() {
 
       {/* Contact Section */}
       <ContactSection />
+
+      {/* Theme toggle */}
+      <AsciiThemeToggle />
     </div>
   )
 }
