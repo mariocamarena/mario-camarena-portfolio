@@ -1,5 +1,5 @@
 'use client';
-import { type JSX, useEffect, useState } from 'react';
+import { type JSX, useEffect, useRef, useState } from 'react';
 import { motion, MotionProps } from 'framer-motion';
 
 type TextScrambleProps = {
@@ -31,12 +31,22 @@ export function TextScramble({
     Component as keyof JSX.IntrinsicElements
   );
   const [displayText, setDisplayText] = useState(children);
-  const [isAnimating, setIsAnimating] = useState(false);
   const text = children;
+  const onCompleteRef = useRef(onScrambleComplete);
+  onCompleteRef.current = onScrambleComplete;
 
-  const scramble = async () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
+  useEffect(() => {
+    if (!trigger) return;
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      setDisplayText(text);
+      onCompleteRef.current?.();
+      return;
+    }
 
     const steps = duration / speed;
     let step = 0;
@@ -65,31 +75,21 @@ export function TextScramble({
       if (step > steps) {
         clearInterval(interval);
         setDisplayText(text);
-        setIsAnimating(false);
-        onScrambleComplete?.();
+        onCompleteRef.current?.();
       }
     }, speed * 1000);
-  };
 
-  useEffect(() => {
-    if (!trigger) return;
-
-    const prefersReducedMotion =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (prefersReducedMotion) {
-      setDisplayText(text);
-      onScrambleComplete?.();
-      return;
-    }
-
-    scramble();
-  }, [trigger]);
+    return () => clearInterval(interval);
+  }, [trigger, text, duration, speed, characterSet]);
 
   return (
-    <MotionComponent className={className} {...props}>
-      {displayText}
+    <MotionComponent
+      aria-label={text}
+      aria-live="off"
+      className={className}
+      {...props}
+    >
+      <span aria-hidden="true">{displayText}</span>
     </MotionComponent>
   );
 }

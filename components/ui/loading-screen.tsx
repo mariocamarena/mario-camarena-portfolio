@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { useTheme } from "@/lib/useTheme"
 
 // Initial command that triggers boot
@@ -26,6 +26,7 @@ const PENDING_RESOLVE_DELAY = 150 // ms before [..] becomes [ok]
 
 export const LoadingScreen = () => {
   const { theme, isDark, mode } = useTheme()
+  const shouldReduceMotion = useReducedMotion()
   const [typedCommand, setTypedCommand] = useState("")
   const [commandComplete, setCommandComplete] = useState(false)
   const [visibleLines, setVisibleLines] = useState(0)
@@ -134,6 +135,10 @@ export const LoadingScreen = () => {
 
   return (
     <motion.div
+      role="status"
+      aria-busy="true"
+      aria-live="polite"
+      aria-label="Loading portfolio"
       className="fixed inset-0 z-50 flex items-center justify-center lg:justify-end pointer-events-none"
       initial={{ opacity: 1 }}
       animate={{ opacity: isExiting ? 0 : 1 }}
@@ -218,8 +223,9 @@ export const LoadingScreen = () => {
                   style={{ width: `${Math.min(progress, 100)}%`, backgroundColor: theme.text }}
                 />
                 {/* Scan dot at leading edge */}
-                {progress < 100 && (
+                {progress < 100 && !shouldReduceMotion && (
                   <motion.div
+                    aria-hidden="true"
                     className="absolute top-1/2 w-1 h-1 rounded-full"
                     style={{
                       backgroundColor: theme.text,

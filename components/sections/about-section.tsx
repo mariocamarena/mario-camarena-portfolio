@@ -30,7 +30,7 @@ export function AboutSection() {
   }
 
   return (
-    <section id="about" className="min-h-screen py-20 px-6 relative overflow-hidden" style={{ backgroundColor: theme.surface }}>
+    <section id="about" aria-labelledby="about-heading" className="min-h-screen py-20 px-6 relative overflow-hidden" style={{ backgroundColor: theme.surface }}>
       {/* Corner Frame Accents - softer on surface bg */}
       <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
       <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
@@ -50,7 +50,7 @@ export function AboutSection() {
           offsetY={0}
           scale={2}
           rotation={0}
-          speed={0.05}
+          speed={shouldReduceMotion ? 0 : 0.05}
         />
       </div>
       <div className="container mx-auto max-w-6xl relative z-10">
@@ -68,7 +68,7 @@ export function AboutSection() {
               <span className="text-[10px] font-mono tracking-wider" style={{ color: theme.text }}>○</span>
               <div className="w-8 h-px" style={{ backgroundColor: theme.text }}></div>
             </div>
-            <h2 className="sr-only">About</h2>
+            <h2 id="about-heading" className="sr-only">About</h2>
             <pre
               aria-hidden="true"
               className="font-mono text-[18px] sm:text-[20px] md:text-[24px] lg:text-[28px] leading-[1.1] tracking-tight"
@@ -142,7 +142,7 @@ export function AboutSection() {
                     M.S. Computer Science @ UTRGV, expected May 2027. I started building systems through custom PCs, hardware repair, and small software projects. Over time, that turned into full-stack development, applied AI, and research work.
                   </p>
                   <p className="text-sm leading-relaxed mt-2" style={{ color: theme.textSoft }}>
-                    This summer, I'll be joining Textron Systems in Slidell, Louisiana as an IT Analyst Intern. The role sits at the intersection of software development, cybersecurity, infrastructure IT, and front-facing business support, which fits well with the way I've been building across both research and applied systems.
+                    This summer, I’ll be joining Textron Systems in Slidell, Louisiana as an IT Analyst Intern. The role sits at the intersection of software development, cybersecurity, infrastructure IT, and front-facing business support, which fits well with the way I’ve been building across both research and applied systems.
                   </p>
                 </div>
 
@@ -152,7 +152,7 @@ export function AboutSection() {
                     RESEARCH
                   </span>
                   <p className="text-sm leading-relaxed" style={{ color: theme.textSoft }}>
-                    I'm an AI Research Assistant at UTRGV MECIS (NSF CREST), where I work on computer vision, transportation AI, and graph-based risk modeling.
+                    I’m an AI Research Assistant at UTRGV MECIS (NSF CREST), where I work on computer vision, transportation AI, and graph-based risk modeling.
                   </p>
                   <p className="text-sm leading-relaxed mt-2" style={{ color: theme.textSoft }}>
                     I lead AD-SAM, a dual-encoder urban-scene segmentation model for autonomous-driving environments. The work focuses on improving segmentation with deformable decoding, hybrid losses, and stronger class-level performance across urban scenes.
@@ -180,9 +180,9 @@ export function AboutSection() {
                   <span className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-3 block" style={{ color: theme.text }}>
                     SKILLS
                   </span>
-                  <div className="flex flex-wrap gap-1.5">
+                  <ul className="flex flex-wrap gap-1.5 list-none p-0 m-0">
                     {skills.map((tech) => (
-                      <span
+                      <li
                         key={tech}
                         className="px-2 py-0.5 text-[10px] font-mono tracking-wide uppercase transition-colors duration-150"
                         style={{
@@ -192,9 +192,9 @@ export function AboutSection() {
                         }}
                       >
                         {tech}
-                      </span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
 
                 {/* Footer prompt with blinking cursor */}

@@ -54,7 +54,10 @@ export function ThesisSidebar({ phases }: ThesisSidebarProps) {
   const scrollTo = useCallback((id: string) => {
     const el = document.getElementById(id)
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      const prefersReduced =
+        typeof window !== "undefined" &&
+        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+      el.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' })
       setMobileOpen(false)
     }
   }, [])
@@ -133,6 +136,7 @@ export function ThesisSidebar({ phases }: ThesisSidebarProps) {
                       <button
                         key={entry.id}
                         onClick={() => scrollTo(`entry-${entry.id}`)}
+                        aria-current={activeEntry === entry.id ? "location" : undefined}
                         className="block text-left w-full font-mono text-xs py-1.5 px-2 transition-colors"
                         style={{
                           color: activeEntry === entry.id ? 'var(--th-text)' : 'var(--th-text-dim)',
@@ -184,6 +188,7 @@ export function ThesisSidebar({ phases }: ThesisSidebarProps) {
                   <button
                     key={entry.id}
                     onClick={() => scrollTo(`entry-${entry.id}`)}
+                    aria-current={activeEntry === entry.id ? "location" : undefined}
                     className="block text-left w-full font-mono text-[11px] py-1 pl-3 transition-colors border-l-2 -ml-px"
                     style={{
                       color: activeEntry === entry.id ? 'var(--th-text)' : 'var(--th-text-faint)',

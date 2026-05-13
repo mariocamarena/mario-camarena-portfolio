@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 
 interface ThesisHeaderProps {
@@ -9,6 +10,15 @@ interface ThesisHeaderProps {
 }
 
 export function ThesisHeader({ title, subtitle, lastUpdated }: ThesisHeaderProps) {
+  // Format date client-side using the user's locale; render a stable
+  // ISO date during SSR to avoid hydration mismatches across timezones/locales.
+  const [formattedDate, setFormattedDate] = useState(lastUpdated)
+
+  useEffect(() => {
+    const d = new Date(lastUpdated + 'T00:00:00')
+    setFormattedDate(d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }))
+  }, [lastUpdated])
+
   return (
     <header className="pb-12 mb-12" style={{ borderBottom: '1px solid var(--th-border)' }}>
       <motion.div
@@ -24,7 +34,7 @@ export function ThesisHeader({ title, subtitle, lastUpdated }: ThesisHeaderProps
             In Progress
           </span>
           <span className="text-[10px] font-mono" style={{ color: 'var(--th-text-dim)' }}>
-            Updated {new Date(lastUpdated + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            Updated <time dateTime={lastUpdated}>{formattedDate}</time>
           </span>
         </div>
         <h1 className="text-3xl md:text-5xl font-mono font-bold mb-4" style={{ color: 'var(--th-text)' }}>

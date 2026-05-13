@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import {
   Eye, EyeOff, Mail, Calendar, Globe, User, ArrowLeft,
   BarChart3, Users, Monitor, Smartphone, Tablet, MapPin,
@@ -77,6 +77,7 @@ interface Analytics {
 }
 
 export default function AdminDashboard() {
+  const shouldReduceMotion = useReducedMotion()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -197,18 +198,28 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: theme.bg }}>
       {/* Main Content */}
-      <main id="main-content" className={`max-w-7xl mx-auto px-4 py-8 transition-all duration-500 ${
-        !isAuthenticated ? 'filter blur-sm opacity-50 pointer-events-none select-none' : ''
-      }`}>
+      <main
+        id="main-content"
+        aria-hidden={!isAuthenticated || undefined}
+        inert={!isAuthenticated || undefined}
+        className={`max-w-7xl mx-auto px-4 py-8 transition-all duration-500 ${
+          !isAuthenticated ? 'filter blur-sm opacity-50 pointer-events-none select-none' : ''
+        }`}
+      >
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <header className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
             <h1 className="text-2xl font-bold font-mono" style={{ color: theme.text }}>
               Admin Dashboard
             </h1>
             {/* Tab Switcher */}
-            <div className="flex gap-2 ml-4">
+            <div role="tablist" aria-label="Dashboard sections" className="flex gap-2 ml-4">
               <button
+                role="tab"
+                id="tab-analytics"
+                aria-selected={activeTab === 'analytics'}
+                aria-controls="panel-analytics"
+                tabIndex={activeTab === 'analytics' ? 0 : -1}
                 onClick={() => setActiveTab('analytics')}
                 className={`px-4 py-2 font-mono text-sm transition-all ${
                   activeTab === 'analytics' ? 'bg-white text-black' : 'border border-white/30 text-white/60 hover:text-white'
@@ -218,6 +229,11 @@ export default function AdminDashboard() {
                 Analytics
               </button>
               <button
+                role="tab"
+                id="tab-contacts"
+                aria-selected={activeTab === 'contacts'}
+                aria-controls="panel-contacts"
+                tabIndex={activeTab === 'contacts' ? 0 : -1}
                 onClick={() => setActiveTab('contacts')}
                 className={`px-4 py-2 font-mono text-sm transition-all ${
                   activeTab === 'contacts' ? 'bg-white text-black' : 'border border-white/30 text-white/60 hover:text-white'
@@ -235,11 +251,11 @@ export default function AdminDashboard() {
           >
             Logout
           </button>
-        </div>
+        </header>
 
         {/* Analytics Tab */}
         {activeTab === 'analytics' && analytics && (
-          <div className="space-y-6">
+          <div id="panel-analytics" role="tabpanel" aria-labelledby="tab-analytics" className="space-y-6">
             {/* Overview Stats */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               {[
@@ -253,7 +269,7 @@ export default function AdminDashboard() {
                   key={stat.label}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
+                  transition={{ delay: shouldReduceMotion ? 0 : index * 0.05 }}
                   className="p-4 border"
                   style={{ backgroundColor: theme.surface, borderColor: theme.border }}
                 >
@@ -273,16 +289,18 @@ export default function AdminDashboard() {
                 <h3 className="text-sm font-mono mb-4 flex items-center gap-2" style={{ color: theme.text }}>
                   <TrendingUp className="w-4 h-4" /> Last 7 Days
                 </h3>
-                <div className="flex items-end gap-1 h-24">
+                <div role="img" aria-label="Page views over the last 7 days" className="flex items-end gap-1 h-24">
                   {analytics.viewsOverTime.map((day, i) => {
                     const maxViews = Math.max(...analytics.viewsOverTime.map(d => parseInt(d.views) || 1))
                     const height = (parseInt(day.views) / maxViews) * 100
                     return (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                        <div
-                          className="w-full bg-white/80 transition-all hover:bg-white"
-                          style={{ height: `${Math.max(height, 5)}%` }}
+                        <button
+                          type="button"
+                          aria-label={`${formatShortDate(day.date)}: ${day.views} views`}
                           title={`${day.views} views`}
+                          className="w-full bg-white/80 transition-all hover:bg-white cursor-default"
+                          style={{ height: `${Math.max(height, 5)}%` }}
                         />
                         <span className="text-[9px]" style={{ color: theme.textMuted }}>
                           {formatShortDate(day.date)}
@@ -429,7 +447,7 @@ export default function AdminDashboard() {
 
         {/* Contacts Tab */}
         {activeTab === 'contacts' && (
-          <div className="space-y-6">
+          <div id="panel-contacts" role="tabpanel" aria-labelledby="tab-contacts" className="space-y-6">
             {/* Contact Stats */}
             {(isAuthenticated ? stats : mockStats) && (
               <div className="grid md:grid-cols-3 gap-4">
@@ -442,7 +460,7 @@ export default function AdminDashboard() {
                     key={stat.label}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    transition={{ delay: shouldReduceMotion ? 0 : index * 0.1 }}
                     className="p-6 border"
                     style={{ backgroundColor: theme.surface, borderColor: theme.border }}
                   >
@@ -464,11 +482,11 @@ export default function AdminDashboard() {
                 <table className="w-full">
                   <thead>
                     <tr style={{ backgroundColor: theme.elevated }}>
-                      <th className="px-6 py-4 text-left" style={{ color: theme.text }}>Name</th>
-                      <th className="px-6 py-4 text-left" style={{ color: theme.text }}>Email</th>
-                      <th className="px-6 py-4 text-left" style={{ color: theme.text }}>Date</th>
-                      <th className="px-6 py-4 text-left" style={{ color: theme.text }}>Message</th>
-                      <th className="px-6 py-4 text-left" style={{ color: theme.text }}>Actions</th>
+                      <th scope="col" className="px-6 py-4 text-left" style={{ color: theme.text }}>Name</th>
+                      <th scope="col" className="px-6 py-4 text-left" style={{ color: theme.text }}>Email</th>
+                      <th scope="col" className="px-6 py-4 text-left" style={{ color: theme.text }}>Date</th>
+                      <th scope="col" className="px-6 py-4 text-left" style={{ color: theme.text }}>Message</th>
+                      <th scope="col" className="px-6 py-4 text-left" style={{ color: theme.text }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -477,7 +495,7 @@ export default function AdminDashboard() {
                         key={contact.id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: index * 0.05 }}
+                        transition={{ delay: shouldReduceMotion ? 0 : index * 0.05 }}
                         className="border-t"
                         style={{ borderColor: theme.border }}
                       >
@@ -496,6 +514,7 @@ export default function AdminDashboard() {
                           <button
                             onClick={() => isAuthenticated && setSelectedContact(contact)}
                             disabled={!isAuthenticated}
+                            aria-label={isAuthenticated ? `View message from ${contact.name}` : "View (locked)"}
                             className="px-3 py-1 text-sm transition-colors"
                             style={{ backgroundColor: theme.accent + '20', color: theme.accent, opacity: isAuthenticated ? 1 : 0.5 }}
                           >

@@ -11,10 +11,15 @@ function findEntryTitle(id: string): string {
   return id
 }
 
-function scrollToEntry(id: string) {
+function handleClick(e: React.MouseEvent<HTMLAnchorElement>, id: string) {
+  if (e.metaKey || e.ctrlKey || e.shiftKey) return
+  e.preventDefault()
   const el = document.getElementById(`entry-${id}`)
   if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+    el.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' })
   }
 }
 
@@ -24,9 +29,10 @@ export function CrossLinks({ ledTo, motivatedBy }: { ledTo?: string[]; motivated
   return (
     <div className="flex flex-wrap gap-2 mt-1">
       {motivatedBy?.map((id) => (
-        <button
+        <a
           key={`from-${id}`}
-          onClick={() => scrollToEntry(id)}
+          href={`#entry-${id}`}
+          onClick={(e) => handleClick(e, id)}
           className="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-mono rounded transition-colors"
           style={{
             backgroundColor: 'var(--th-bg-subtle)',
@@ -36,12 +42,13 @@ export function CrossLinks({ ledTo, motivatedBy }: { ledTo?: string[]; motivated
         >
           <ArrowLeft className="w-3 h-3" />
           {findEntryTitle(id)}
-        </button>
+        </a>
       ))}
       {ledTo?.map((id) => (
-        <button
+        <a
           key={`to-${id}`}
-          onClick={() => scrollToEntry(id)}
+          href={`#entry-${id}`}
+          onClick={(e) => handleClick(e, id)}
           className="inline-flex items-center gap-1 px-2 py-1 text-[10px] font-mono rounded transition-colors"
           style={{
             backgroundColor: 'var(--th-bg-subtle)',
@@ -51,7 +58,7 @@ export function CrossLinks({ ledTo, motivatedBy }: { ledTo?: string[]; motivated
         >
           {findEntryTitle(id)}
           <ArrowRight className="w-3 h-3" />
-        </button>
+        </a>
       ))}
     </div>
   )

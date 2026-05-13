@@ -131,6 +131,9 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
       onMouseLeave={() => setIsHovered(false)}
     >
       <motion.div
+        role="button"
+        tabIndex={0}
+        aria-label={`Open ${project.title} details`}
         className="relative overflow-hidden cursor-pointer"
         style={{
           backgroundColor: theme.bg,
@@ -138,6 +141,12 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
           boxShadow: isDark ? '0 16px 32px rgba(0, 0, 0, 0.4)' : '0 16px 32px rgba(0, 0, 0, 0.15)',
         }}
         onClick={() => setIsExpanded(true)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault()
+            setIsExpanded(true)
+          }
+        }}
         animate={isHovered ? {
           y: -6,
           scale: 1.025,
@@ -235,7 +244,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
         >
           <Image
             src={images[currentImageIndex]}
-            alt={`${project.title}`}
+            alt={images.length > 1 ? `${project.title} — screenshot ${currentImageIndex + 1} of ${images.length}` : project.title}
             fill
             className={`object-cover transition-transform duration-500 ${
               images[currentImageIndex].includes("stables3") ? "object-[50%_25%]" : "object-center"
@@ -473,7 +482,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                 <div className="relative aspect-video bg-black">
                   <Image
                     src={images[currentImageIndex]}
-                    alt={`${project.title}`}
+                    alt={images.length > 1 ? `${project.title} — screenshot ${currentImageIndex + 1} of ${images.length}` : project.title}
                     fill
                     className="object-contain"
                   />
@@ -503,13 +512,13 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
 
                 {/* Full Content */}
                 <div className="p-6">
-                  <h3
+                  <h2
                     id={`project-${project.id}-title`}
                     className="text-xl font-bold mb-4 font-mono tracking-wide uppercase"
                     style={{ color: theme.text }}
                   >
                     {project.title}
-                  </h3>
+                  </h2>
 
                   <p
                     className="text-sm mb-6 leading-relaxed"

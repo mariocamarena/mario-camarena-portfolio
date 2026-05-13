@@ -92,7 +92,7 @@ export const ContactSection = () => {
           offsetY={0}
           scale={2}
           rotation={0}
-          speed={0.05}
+          speed={shouldReduceMotion ? 0 : 0.05}
         />
       </div>
 
@@ -201,7 +201,7 @@ export const ContactSection = () => {
                     onFocus={() => setFocusedField(field.name)}
                     onBlur={() => setFocusedField(null)}
                     placeholder={field.placeholder}
-                    className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus:outline-none border-b placeholder:opacity-30"
+                    className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus-visible:outline-none border-b placeholder:opacity-30"
                     style={{
                       backgroundColor: 'transparent',
                       borderBottomWidth: focusedField === field.name ? '2px' : '1px',
@@ -234,7 +234,7 @@ export const ContactSection = () => {
                   onFocus={() => setFocusedField("message")}
                   onBlur={() => setFocusedField(null)}
                   placeholder="Your message here…"
-                  className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus:outline-none min-h-[100px] resize-none border-b placeholder:opacity-30"
+                  className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus-visible:outline-none min-h-[100px] resize-none border-b placeholder:opacity-30"
                   style={{
                     backgroundColor: 'transparent',
                     borderBottomWidth: focusedField === "message" ? '2px' : '1px',

@@ -20,7 +20,11 @@ export function AsciiThemeToggle() {
     const idx = cycle.indexOf(mode)
     const next = cycle[(idx + 1) % cycle.length]
 
-    if (!document.startViewTransition) {
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+
+    if (!document.startViewTransition || prefersReduced) {
       applyModeClasses(next)
       localStorage.setItem("theme", next)
       window.dispatchEvent(new CustomEvent("themeChange", { detail: { mode: next } }))
@@ -55,13 +59,12 @@ export function AsciiThemeToggle() {
   return (
     <button
       onClick={handleToggle}
-      aria-label={`Switch theme — currently ${mode}`}
-      className="fixed bottom-4 right-4 z-50 font-mono text-[10px] leading-none cursor-pointer opacity-60 hover:opacity-100 transition-all duration-300 group"
+      aria-label={`Switch theme — currently ${mode === "dark" ? "dark mode" : "light mode"}`}
+      className="fixed bottom-4 right-4 z-50 font-mono text-[10px] leading-none cursor-pointer opacity-60 hover:opacity-100 transition-all duration-300 group py-[7px] px-[10px]"
       style={{
         backgroundColor: `${theme.bg}99`,
         backdropFilter: "blur(4px)",
         border: `1px solid ${theme.borderDim}`,
-        padding: "7px 10px",
       }}
       onMouseEnter={(e) => { e.currentTarget.style.borderColor = theme.text }}
       onMouseLeave={(e) => { e.currentTarget.style.borderColor = theme.borderDim }}

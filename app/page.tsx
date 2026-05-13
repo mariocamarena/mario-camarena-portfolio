@@ -82,7 +82,8 @@ export default function Portfolio() {
 
   // scroll handler
   useEffect(() => {
-    updateSectionCache()
+    // Build initial cache after the next paint so offsets reflect post-layout state
+    const rafId = requestAnimationFrame(updateSectionCache)
 
     const handleResize = throttle(updateSectionCache, 250)
     window.addEventListener("resize", handleResize)
@@ -115,6 +116,7 @@ export default function Portfolio() {
     handleScroll()
 
     return () => {
+      cancelAnimationFrame(rafId)
       window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("resize", handleResize)
     }
@@ -277,7 +279,7 @@ export default function Portfolio() {
         )}
       </AnimatePresence>
 
-      <main id="main-content">
+      <main id="main-content" aria-hidden={isLoading || undefined} inert={isLoading || undefined}>
         {/* Hero Section - blurred while loading, sharpens on complete */}
         <motion.div
           initial={{ filter: "blur(8px)", opacity: 0.6 }}

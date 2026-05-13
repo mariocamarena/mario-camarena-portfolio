@@ -26,7 +26,7 @@ export default function ThesisPage() {
   return (
     <div className="min-h-screen relative" style={{ backgroundColor: theme.bg }}>
       {/* Fixed animated ASCII background */}
-      <div className="fixed inset-0 z-0">
+      <div aria-hidden="true" className="fixed inset-0 z-0">
         <DelicateAsciiDots
           backgroundColor={theme.bg}
           textColor={isDark ? "255, 255, 255" : "80, 80, 80"}
@@ -37,10 +37,10 @@ export default function ThesisPage() {
       </div>
 
       {/* Corner Frame Accents */}
-      <div className="fixed top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }} />
-      <div className="fixed top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }} />
-      <div className="fixed bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }} />
-      <div className="fixed bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }} />
+      <div aria-hidden="true" className="fixed top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }} />
+      <div aria-hidden="true" className="fixed top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }} />
+      <div aria-hidden="true" className="fixed bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }} />
+      <div aria-hidden="true" className="fixed bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }} />
 
       {/* Back Link */}
       <div className="fixed top-6 left-6 z-40 lg:left-[17rem] xl:left-[18rem]">
@@ -53,8 +53,8 @@ export default function ThesisPage() {
             color: theme.textMuted,
           }}
         >
-          <span className="group-hover:opacity-100 opacity-60 transition-opacity" style={{ color: theme.text }}>←</span>
-          <span className="group-hover:opacity-100 opacity-70 transition-opacity uppercase" style={{ color: theme.textSoft }}>Back</span>
+          <span className="group-hover:opacity-100 group-focus-visible:opacity-100 opacity-60 transition-opacity" style={{ color: theme.text }}>←</span>
+          <span className="group-hover:opacity-100 group-focus-visible:opacity-100 opacity-70 transition-opacity uppercase" style={{ color: theme.textSoft }}>Back</span>
         </button>
       </div>
 

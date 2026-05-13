@@ -38,7 +38,7 @@ export function CitationCard({ citation }: CitationCardProps) {
         href={citation.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="font-mono text-xs transition-colors"
+        className="font-mono text-xs transition-colors hover:underline hover:[color:var(--th-text)] focus-visible:underline focus-visible:[color:var(--th-text)]"
         style={{ color: 'var(--th-text-dim)' }}
       >
         {getDisplayUrl(citation.url)}

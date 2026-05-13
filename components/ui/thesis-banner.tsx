@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { useTheme } from "@/lib/useTheme"
 
 export const ThesisBanner = () => {
   const { theme, isDark } = useTheme()
+  const shouldReduceMotion = useReducedMotion()
   const [isHovered, setIsHovered] = useState(false)
 
   // Only show hover effects on actual hover (not stuck on mobile)
@@ -65,15 +66,16 @@ export const ThesisBanner = () => {
           </div>
 
           {/* Corner Accents */}
-          <div className="absolute top-0 left-0 w-3 h-3 border-t border-l z-10" style={{ borderColor: `${theme.text}4d` }} />
-          <div className="absolute top-0 right-0 w-3 h-3 border-t border-r z-10" style={{ borderColor: `${theme.text}4d` }} />
-          <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l z-10" style={{ borderColor: `${theme.text}4d` }} />
-          <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r z-10" style={{ borderColor: `${theme.text}4d` }} />
+          <div aria-hidden="true" className="absolute top-0 left-0 w-3 h-3 border-t border-l z-10" style={{ borderColor: `${theme.text}4d` }} />
+          <div aria-hidden="true" className="absolute top-0 right-0 w-3 h-3 border-t border-r z-10" style={{ borderColor: `${theme.text}4d` }} />
+          <div aria-hidden="true" className="absolute bottom-0 left-0 w-3 h-3 border-b border-l z-10" style={{ borderColor: `${theme.text}4d` }} />
+          <div aria-hidden="true" className="absolute bottom-0 right-0 w-3 h-3 border-b border-r z-10" style={{ borderColor: `${theme.text}4d` }} />
 
           {/* Scan Double Effect */}
-          {showHoverState && (
+          {showHoverState && !shouldReduceMotion && (
             <>
               <motion.div
+                aria-hidden="true"
                 className="absolute left-0 right-0 h-[1px] z-20 pointer-events-none"
                 style={{ background: `linear-gradient(to right, transparent, ${theme.text}66, transparent)` }}
                 initial={{ top: 0 }}
@@ -81,6 +83,7 @@ export const ThesisBanner = () => {
                 transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
               />
               <motion.div
+                aria-hidden="true"
                 className="absolute left-0 right-0 h-[1px] z-20 pointer-events-none"
                 style={{ background: `linear-gradient(to right, transparent, ${theme.text}66, transparent)` }}
                 initial={{ top: "100%" }}
@@ -193,14 +196,14 @@ export const ThesisBanner = () => {
           </motion.div>
 
           {/* Bottom decorative dots */}
-          <div className="absolute bottom-2 right-4 flex gap-1 opacity-30">
+          <div aria-hidden="true" className="absolute bottom-2 right-4 flex gap-1 opacity-30">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="w-0.5 h-0.5 rounded-full" style={{ backgroundColor: theme.text }} />
             ))}
           </div>
 
           {/* Left decorative element */}
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-1 opacity-20">
+          <div aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-1 opacity-20">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="w-0.5 h-0.5 rounded-full" style={{ backgroundColor: theme.text }} />
             ))}

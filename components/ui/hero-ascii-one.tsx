@@ -9,6 +9,12 @@ export default function HeroAsciiBackground() {
     if (initialized.current) return;
     initialized.current = true;
 
+    // Honor reduced-motion: skip initializing the animated WebGL background.
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
     // Load and initialize Unicorn Studio
     const loadScript = (attempt = 1) => {
       // Check if already loaded and initialized

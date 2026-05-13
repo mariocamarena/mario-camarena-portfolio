@@ -56,13 +56,16 @@ export function TimelinePhase({ phase, defaultOpen = true }: { phase: Phase; def
             </button>
           </div>
           {!isOpen && (
-            <p
+            <button
+              type="button"
               onClick={() => setIsOpen(true)}
-              className="font-mono text-[11px] mt-3 cursor-pointer transition-colors"
-              style={{ color: 'var(--th-text-dim)' }}
+              aria-expanded={false}
+              aria-label={`Expand ${phase.title} (${phase.entries.length} entries)`}
+              className="font-mono text-[11px] mt-3 cursor-pointer transition-colors text-left"
+              style={{ color: 'var(--th-text-dim)', background: 'none', border: 'none', padding: 0 }}
             >
               {phase.entries.length} entries — click to expand
-            </p>
+            </button>
           )}
         </div>
 
