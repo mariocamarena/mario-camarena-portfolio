@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { motion } from "framer-motion"
+import Link from "next/link"
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react"
 import { Dithering } from "@paper-design/shaders-react"
 import { Spinner } from "@/components/ui/spinner"
@@ -412,9 +413,9 @@ export const ContactSection = () => {
           transition={{ duration: 0.4, delay: 0.3 }}
           viewport={{ once: true }}
         >
-          <button
-            onClick={() => window.location.href = '/admin'}
-            className="text-[10px] font-mono tracking-wider px-3 py-1.5 transition-all duration-200 border"
+          <Link
+            href="/admin"
+            className="inline-block text-[10px] font-mono tracking-wider px-3 py-1.5 transition-all duration-200 border"
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = theme.text
               e.currentTarget.style.color = theme.text
@@ -430,7 +431,7 @@ export const ContactSection = () => {
             }}
           >
             ADMIN DASHBOARD
-          </button>
+          </Link>
         </motion.div>
       </div>
     </section>

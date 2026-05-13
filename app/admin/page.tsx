@@ -7,6 +7,7 @@ import {
   BarChart3, Users, Monitor, Smartphone, Tablet, MapPin,
   Clock, TrendingUp, Chrome, Layout
 } from 'lucide-react'
+import { useDialogA11y } from '@/lib/useDialogA11y'
 
 const theme = {
   bg: "#0a0a0a",
@@ -86,6 +87,15 @@ export default function AdminDashboard() {
   const [analytics, setAnalytics] = useState<Analytics | null>(null)
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
   const [activeTab, setActiveTab] = useState<'contacts' | 'analytics'>('analytics')
+
+  const { dialogRef: loginDialogRef } = useDialogA11y({
+    open: !isAuthenticated,
+    onClose: () => { window.location.href = '/' },
+  })
+  const { dialogRef: contactDialogRef } = useDialogA11y({
+    open: !!selectedContact,
+    onClose: () => setSelectedContact(null),
+  })
 
   useEffect(() => {
     const authToken = localStorage.getItem('admin_auth')
@@ -516,9 +526,14 @@ export default function AdminDashboard() {
           animate={{ opacity: 1 }}
         >
           <motion.div
+            ref={loginDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="admin-login-title"
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             className="w-full max-w-md"
+            style={{ overscrollBehavior: 'contain' }}
           >
             <div className="p-8 border" style={{ backgroundColor: theme.surface, borderColor: theme.border }}>
               <button
@@ -530,7 +545,7 @@ export default function AdminDashboard() {
                 Back to Portfolio
               </button>
 
-              <h1 className="text-2xl font-bold text-center mb-2 font-mono" style={{ color: theme.text }}>
+              <h1 id="admin-login-title" className="text-2xl font-bold text-center mb-2 font-mono" style={{ color: theme.text }}>
                 Admin Dashboard
               </h1>
               <p className="text-center mb-8 text-sm" style={{ color: theme.textMuted }}>
@@ -539,8 +554,12 @@ export default function AdminDashboard() {
 
               <form onSubmit={handleLogin} className="space-y-6">
                 <div className="relative">
+                  <label htmlFor="admin-password" className="sr-only">Password</label>
                   <input
+                    id="admin-password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-3 border bg-transparent focus:outline-none transition-all font-mono"
@@ -551,6 +570,8 @@ export default function AdminDashboard() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-pressed={showPassword}
                     className="absolute right-3 top-1/2 -translate-y-1/2"
                     style={{ color: theme.textMuted }}
                   >
@@ -559,7 +580,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {error && (
-                  <p className="text-sm text-center p-3 border" style={{ color: theme.error, borderColor: theme.error }}>
+                  <p role="alert" aria-live="assertive" className="text-sm text-center p-3 border" style={{ color: theme.error, borderColor: theme.error }}>
                     {error}
                   </p>
                 )}
@@ -585,13 +606,17 @@ export default function AdminDashboard() {
           onClick={() => setSelectedContact(null)}
         >
           <motion.div
+            ref={contactDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="contact-detail-title"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="max-w-2xl w-full p-6 border"
-            style={{ backgroundColor: theme.surface, borderColor: theme.border }}
+            style={{ backgroundColor: theme.surface, borderColor: theme.border, overscrollBehavior: 'contain' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-bold mb-4 font-mono" style={{ color: theme.text }}>
+            <h3 id="contact-detail-title" className="text-xl font-bold mb-4 font-mono" style={{ color: theme.text }}>
               Message from {selectedContact.name}
             </h3>
 

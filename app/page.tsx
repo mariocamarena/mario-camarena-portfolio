@@ -15,6 +15,7 @@ import { AsciiThemeToggle } from "@/components/ui/ascii-theme-toggle"
 
 // Configuration imports
 import { useTheme } from "@/lib/useTheme"
+import { useDialogA11y } from "@/lib/useDialogA11y"
 import { navigation } from "@/lib/constants"
 
 // throttle helper
@@ -42,6 +43,7 @@ export default function Portfolio() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
+  const { dialogRef: mobileMenuRef } = useDialogA11y({ open: menuOpen, onClose: () => setMenuOpen(false) })
 
   // cached section positions
   const sectionCacheRef = useRef<{ id: string; top: number; bottom: number }[]>([])
@@ -204,9 +206,13 @@ export default function Portfolio() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            ref={mobileMenuRef}
             id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site navigation"
             className="md:hidden fixed inset-0 z-50"
-            style={{ backgroundColor: theme.bg }}
+            style={{ backgroundColor: theme.bg, overscrollBehavior: 'contain' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

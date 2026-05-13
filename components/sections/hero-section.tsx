@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { ArrowDown } from "lucide-react"
 import Link from "next/link"
 import HeroAsciiBackground from "@/components/ui/hero-ascii-one"
@@ -19,12 +19,19 @@ const taglineText = "CS Master's student working on NASA-funded AAM flight-graph
 // Hero landing section - merging technical ASCII aesthetic with existing functionality
 export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = true }: HeroSectionProps) => {
   const { theme, isDark } = useTheme()
+  const shouldReduceMotion = useReducedMotion()
   const [displayedText, setDisplayedText] = useState("")
   const [isTypingComplete, setIsTypingComplete] = useState(false)
 
   // Wait for visibility before starting animations
   useEffect(() => {
     if (!isVisible) return
+
+    if (shouldReduceMotion) {
+      setDisplayedText(taglineText)
+      setIsTypingComplete(true)
+      return
+    }
 
     let typingInterval: NodeJS.Timeout | null = null
 
@@ -46,7 +53,7 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
       clearTimeout(startDelay)
       if (typingInterval) clearInterval(typingInterval)
     }
-  }, [isVisible])
+  }, [isVisible, shouldReduceMotion])
 
   return (
     <section
@@ -129,8 +136,9 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
                 <motion.span
                   className="inline-block w-[2px] h-[1.1em] ml-0.5 align-middle"
                   style={{ backgroundColor: theme.text }}
-                  animate={{ opacity: isTypingComplete ? [1, 0] : 1 }}
-                  transition={isTypingComplete ? { duration: 0.8, repeat: Infinity, repeatType: "reverse" } : {}}
+                  aria-hidden="true"
+                  animate={{ opacity: isTypingComplete && !shouldReduceMotion ? [1, 0] : 1 }}
+                  transition={isTypingComplete && !shouldReduceMotion ? { duration: 0.8, repeat: Infinity, repeatType: "reverse" } : {}}
                 />
               </div>
 
@@ -212,8 +220,8 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
           onClick={onScrollToAbout}
           className="p-2 rounded-full transition-colors"
           style={{ color: `${theme.text}80` }}
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          animate={shouldReduceMotion ? { y: 0 } : { y: [0, 6, 0] }}
+          transition={shouldReduceMotion ? { duration: 0 } : { duration: 2, repeat: Infinity, ease: "easeInOut" }}
           aria-label="Scroll to about"
         >
           <ArrowDown className="w-5 h-5" />

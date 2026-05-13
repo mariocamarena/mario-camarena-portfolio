@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Github, ExternalLink, FileText, X } from "lucide-react"
 import Image from "next/image"
 import { useTheme } from "@/lib/useTheme"
+import { useDialogA11y } from "@/lib/useDialogA11y"
 
 interface ProjectProps {
   project: {
@@ -39,6 +40,7 @@ const PixelArrow = ({ direction, onClick }: { direction: "left" | "right"; onCli
       e.stopPropagation()
       onClick()
     }}
+    aria-label={direction === "left" ? "Previous image" : "Next image"}
     className="group/arrow p-2 bg-black/60 border border-white/30 hover:border-white hover:bg-black/80 transition-all duration-150"
   >
     <svg
@@ -63,9 +65,9 @@ const PixelArrow = ({ direction, onClick }: { direction: "left" | "right"; onCli
 export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => {
   const { theme, isDark } = useTheme()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [loading, setLoading] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+  const { dialogRef } = useDialogA11y({ open: isExpanded, onClose: () => setIsExpanded(false) })
 
   // Project image arrays - organized by project folder
   const imageMap: Record<string, string[]> = {
@@ -98,38 +100,10 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
     return () => clearInterval(interval)
   }, [images.length, isExpanded])
 
-  // lock scroll when modal open
+  // Reset hover when modal closes (body-scroll lock + Esc handled by useDialogA11y)
   useEffect(() => {
-    if (isExpanded) {
-      document.body.classList.add('modal-open')
-    } else {
-      document.body.classList.remove('modal-open')
-      setIsHovered(false) // reset hover when modal closes
-    }
-    return () => {
-      document.body.classList.remove('modal-open')
-    }
+    if (!isExpanded) setIsHovered(false)
   }, [isExpanded])
-
-  // Close modal on scroll (triggered by nav clicks)
-  useEffect(() => {
-    if (!isExpanded) return
-
-    const handleScroll = () => {
-      setIsExpanded(false)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isExpanded])
-
-  const handleDemo = async () => {
-    if (!project.demo) return
-    setLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setLoading(false)
-    window.open(project.demo, "_blank")
-  }
 
   const isPCBuilds = project.title.includes("Custom PC Builds")
   const isResearch = !!project.paper // Research projects have papers
@@ -296,6 +270,8 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                     e.stopPropagation()
                     setCurrentImageIndex(idx)
                   }}
+                  aria-label={`Go to image ${idx + 1}`}
+                  aria-current={idx === currentImageIndex ? "true" : undefined}
                   className="w-3 h-3 transition-all duration-200"
                   style={{
                     backgroundColor: idx === currentImageIndex ? theme.accent : "rgba(255,255,255,0.4)",
@@ -369,11 +345,11 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
           <div className="flex gap-2 min-h-[32px]">
             {/* Primary CTA - Research: Paper, Product: Demo */}
             {isResearch ? (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  window.open(project.paper, "_blank")
-                }}
+              <a
+                href={project.paper}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
                 className="relative flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-wider transition-all duration-200 group/btn"
                 style={{ backgroundColor: theme.text, color: theme.bg }}
                 onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
@@ -383,14 +359,13 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                 <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
                 <FileText className="w-3 h-3" />
                 PAPER
-              </button>
+              </a>
             ) : isProduct ? (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleDemo()
-                }}
-                disabled={loading}
+              <a
+                href={project.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
                 className="relative flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-wider transition-all duration-200 group/btn"
                 style={{ backgroundColor: theme.text, color: theme.bg }}
                 onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
@@ -398,24 +373,18 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
               >
                 <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
                 <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
-                {loading ? (
-                  <span className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <ExternalLink className="w-3 h-3" />
-                    DEMO
-                  </>
-                )}
-              </button>
+                <ExternalLink className="w-3 h-3" />
+                DEMO
+              </a>
             ) : null}
 
             {/* Secondary CTA - Code (if has github) */}
             {project.github && !isPCBuilds && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  window.open(project.github, "_blank")
-                }}
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
                 className="relative flex items-center gap-1.5 px-3 py-1.5 bg-transparent font-mono text-[10px] tracking-wider transition-all duration-200 group/btn"
                 style={{ border: `1px solid ${theme.text}80`, color: theme.text }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg; e.currentTarget.style.borderColor = theme.text }}
@@ -425,7 +394,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                 <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
                 <Github className="w-3 h-3" />
                 CODE
-              </button>
+              </a>
             )}
           </div>
         </div>
@@ -459,10 +428,15 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
 
               {/* Modal Content */}
               <motion.div
+                ref={dialogRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={`project-${project.id}-title`}
                 className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto"
                 style={{
                   backgroundColor: theme.surface,
                   border: `1px solid ${theme.borderDim}`,
+                  overscrollBehavior: 'contain',
                 }}
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -485,6 +459,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                   </span>
                   <button
                     onClick={() => setIsExpanded(false)}
+                    aria-label="Close project details"
                     className="p-1 hover:bg-white/10 transition-colors"
                   >
                     <X className="w-4 h-4" style={{ color: theme.textSoft }} />
@@ -526,6 +501,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                 {/* Full Content */}
                 <div className="p-6">
                   <h3
+                    id={`project-${project.id}-title`}
                     className="text-xl font-bold mb-4 font-mono tracking-wide uppercase"
                     style={{ color: theme.text }}
                   >
@@ -568,11 +544,11 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                   <div className="flex gap-3 pt-4 border-t" style={{ borderColor: theme.borderDim }}>
                     {/* Primary CTA */}
                     {isResearch ? (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          window.open(project.paper, "_blank")
-                        }}
+                      <a
+                        href={project.paper}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
                         className="relative flex items-center gap-2 px-4 py-2 font-mono text-[11px] tracking-wider transition-all duration-200 group/btn"
                         style={{ backgroundColor: theme.text, color: theme.bg }}
                         onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
@@ -582,13 +558,13 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                         <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
                         <FileText className="w-4 h-4" />
                         VIEW PAPER
-                      </button>
+                      </a>
                     ) : isProduct ? (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          window.open(project.demo, "_blank")
-                        }}
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
                         className="relative flex items-center gap-2 px-4 py-2 font-mono text-[11px] tracking-wider transition-all duration-200 group/btn"
                         style={{ backgroundColor: theme.text, color: theme.bg }}
                         onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
@@ -598,16 +574,16 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                         <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
                         <ExternalLink className="w-4 h-4" />
                         VIEW DEMO
-                      </button>
+                      </a>
                     ) : null}
 
                     {/* Secondary CTA - Code */}
                     {project.github && !isPCBuilds && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          window.open(project.github, "_blank")
-                        }}
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
                         className="relative flex items-center gap-2 px-4 py-2 bg-transparent font-mono text-[11px] tracking-wider transition-all duration-200 group/btn"
                         style={{ border: `1px solid ${theme.text}80`, color: theme.text }}
                         onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg; e.currentTarget.style.borderColor = theme.text }}
@@ -617,7 +593,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                         <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover/btn:opacity-100 transition-opacity" style={{ borderColor: theme.text }}></span>
                         <Github className="w-4 h-4" />
                         VIEW CODE
-                      </button>
+                      </a>
                     )}
                   </div>
                 </div>

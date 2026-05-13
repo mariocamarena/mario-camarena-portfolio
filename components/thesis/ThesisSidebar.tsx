@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import type { Phase } from "@/lib/thesis-types"
 import { ChevronDown, List, X } from "lucide-react"
+import { useDialogA11y } from "@/lib/useDialogA11y"
 
 const phaseIcons: Record<string, string> = {
   'foundational-research': '◈',
@@ -18,6 +19,7 @@ interface ThesisSidebarProps {
 export function ThesisSidebar({ phases }: ThesisSidebarProps) {
   const [activeEntry, setActiveEntry] = useState<string>('')
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { dialogRef: sheetRef } = useDialogA11y({ open: mobileOpen, onClose: () => setMobileOpen(false) })
 
   // Scrollspy: track which entry is in viewport
   useEffect(() => {
@@ -47,26 +49,7 @@ export function ThesisSidebar({ phases }: ThesisSidebarProps) {
     return () => observer.disconnect()
   }, [phases])
 
-  // Lock body scroll when mobile nav is open
-  useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => { document.body.style.overflow = '' }
-  }, [mobileOpen])
-
-  // Close on Escape key
-  useEffect(() => {
-    function handleKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setMobileOpen(false)
-    }
-    if (mobileOpen) {
-      window.addEventListener('keydown', handleKey)
-      return () => window.removeEventListener('keydown', handleKey)
-    }
-  }, [mobileOpen])
+  // Scroll lock + Esc handled by useDialogA11y
 
   const scrollTo = useCallback((id: string) => {
     const el = document.getElementById(id)
@@ -107,12 +90,15 @@ export function ThesisSidebar({ phases }: ThesisSidebarProps) {
 
           {/* Bottom sheet */}
           <div
+            ref={sheetRef}
             className="absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-hidden flex flex-col animate-in slide-in-from-bottom duration-200"
             style={{
               backgroundColor: 'var(--th-bg)',
               borderTop: '1px solid var(--th-border)',
+              overscrollBehavior: 'contain',
             }}
             role="dialog"
+            aria-modal="true"
             aria-label="Timeline navigation"
           >
             {/* Header */}

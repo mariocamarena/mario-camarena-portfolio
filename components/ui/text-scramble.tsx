@@ -74,6 +74,16 @@ export function TextScramble({
   useEffect(() => {
     if (!trigger) return;
 
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      setDisplayText(text);
+      onScrambleComplete?.();
+      return;
+    }
+
     scramble();
   }, [trigger]);
 
