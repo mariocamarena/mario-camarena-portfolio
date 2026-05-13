@@ -30,12 +30,12 @@ export function AboutSection() {
   }
 
   return (
-    <section id="about" aria-labelledby="about-heading" className="min-h-screen py-20 px-6 relative overflow-hidden" style={{ backgroundColor: theme.surface }}>
+    <section id="about" aria-labelledby="about-heading" className="min-h-screen py-20 sm:py-24 lg:py-28 px-6 sm:px-8 relative overflow-hidden scroll-mt-20" style={{ backgroundColor: theme.surface }}>
       {/* Corner Frame Accents - softer on surface bg */}
-      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
 
       {/* Subtle dithering background effect */}
       <div aria-hidden="true" className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.3 }}>
@@ -53,7 +53,7 @@ export function AboutSection() {
           speed={shouldReduceMotion ? 0 : 0.05}
         />
       </div>
-      <div className="container mx-auto max-w-6xl relative z-10">
+      <div className="container mx-auto max-w-5xl relative z-10">
         {/* Title with hero treatment */}
         <motion.div
           className="text-center mb-10"
@@ -84,7 +84,7 @@ export function AboutSection() {
         </motion.div>
 
         {/* Two-terminal grid - aligned pair */}
-        <div className="grid md:grid-cols-[1fr_0.85fr] gap-6 items-start">
+        <div className="grid lg:grid-cols-[1.4fr_1fr] gap-6 lg:gap-10 items-start">
           {/* Left terminal - README */}
           <motion.div
             initial={{ opacity: 0, x: -14 }}
@@ -184,7 +184,7 @@ export function AboutSection() {
                     {skills.map((tech) => (
                       <li
                         key={tech}
-                        className="px-2 py-0.5 text-[10px] font-mono tracking-wide uppercase transition-colors duration-150"
+                        className="px-2 py-0.5 text-[10px] sm:text-[11px] font-mono tracking-wide uppercase"
                         style={{
                           backgroundColor: "transparent",
                           color: theme.textMuted,
@@ -216,6 +216,7 @@ export function AboutSection() {
 
           {/* Right terminal - Profile */}
           <motion.div
+            className="lg:sticky lg:top-24 lg:self-start"
             initial={{ opacity: 0, x: 14 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
@@ -281,7 +282,7 @@ export function AboutSection() {
                       />
                     </div>
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0 overflow-hidden">
                     <pre
                       aria-hidden="true"
                       className="font-mono text-[8px] sm:text-[9px] leading-[1.15] tracking-tight"
@@ -295,7 +296,7 @@ export function AboutSection() {
                 </div>
 
                 {/* Terminal-style metadata - aligned fields */}
-                <div className="font-mono text-[11px] space-y-2">
+                <div className="font-mono text-[11px] sm:text-[12px] space-y-2">
                   <div className="flex">
                     <span className="w-20 opacity-40 shrink-0" style={{ color: theme.text }}>role:</span>
                     <span style={{ color: theme.textSoft }}>Graduate Research Assistant</span>
