@@ -14,7 +14,7 @@ interface HeroSectionProps {
   isVisible?: boolean
 }
 
-const taglineText = "CS Master's student working on NASA-funded AAM flight-graph security thesis and enhancing autonomous-driving vision models"
+const taglineText = "CS Master’s student working on NASA-funded AAM flight-graph security thesis and enhancing autonomous-driving vision models"
 
 // Hero landing section - merging technical ASCII aesthetic with existing functionality
 export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = true }: HeroSectionProps) => {

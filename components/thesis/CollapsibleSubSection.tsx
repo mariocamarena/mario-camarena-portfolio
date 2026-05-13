@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { ChevronDown } from "lucide-react"
 
 interface CollapsibleSubSectionProps {
@@ -32,17 +32,20 @@ export function CollapsibleSubSection({ title, children, defaultOpen = false }: 
           />
         </button>
       </div>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          className="p-3 md:p-4"
-          style={{ borderTop: '1px solid var(--th-border)' }}
-        >
-          {children}
-        </motion.div>
-      )}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="p-3 md:p-4" style={{ borderTop: '1px solid var(--th-border)' }}>
+              {children}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

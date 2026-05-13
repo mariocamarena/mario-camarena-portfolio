@@ -8,18 +8,7 @@ import {
   Clock, TrendingUp, Chrome, Layout
 } from 'lucide-react'
 import { useDialogA11y } from '@/lib/useDialogA11y'
-
-const theme = {
-  bg: "#0a0a0a",
-  surface: "#111111",
-  elevated: "#1a1a1a",
-  accent: "#f5f5f5",
-  text: "#f5f5f5",
-  textSoft: "#a0a0a0",
-  textMuted: "#666666",
-  border: "#2a2a2a",
-  error: "#888888",
-}
+import { useTheme } from '@/lib/useTheme'
 
 interface Contact {
   id: number
@@ -77,8 +66,10 @@ interface Analytics {
 }
 
 export default function AdminDashboard() {
+  const { theme, isDark } = useTheme()
   const shouldReduceMotion = useReducedMotion()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false)
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -96,6 +87,10 @@ export default function AdminDashboard() {
   const { dialogRef: contactDialogRef } = useDialogA11y({
     open: !!selectedContact,
     onClose: () => setSelectedContact(null),
+  })
+  const { dialogRef: logoutDialogRef } = useDialogA11y({
+    open: logoutConfirmOpen,
+    onClose: () => setLogoutConfirmOpen(false),
   })
 
   useEffect(() => {
@@ -221,9 +216,12 @@ export default function AdminDashboard() {
                 aria-controls="panel-analytics"
                 tabIndex={activeTab === 'analytics' ? 0 : -1}
                 onClick={() => setActiveTab('analytics')}
-                className={`px-4 py-2 font-mono text-sm transition-all ${
-                  activeTab === 'analytics' ? 'bg-white text-black' : 'border border-white/30 text-white/60 hover:text-white'
-                }`}
+                className="px-4 py-2 font-mono text-sm transition-all"
+                style={
+                  activeTab === 'analytics'
+                    ? { backgroundColor: theme.text, color: theme.bg, border: `1px solid ${theme.text}` }
+                    : { backgroundColor: 'transparent', color: theme.textSoft, border: `1px solid ${theme.border}` }
+                }
               >
                 <BarChart3 className="w-4 h-4 inline mr-2" />
                 Analytics
@@ -235,9 +233,12 @@ export default function AdminDashboard() {
                 aria-controls="panel-contacts"
                 tabIndex={activeTab === 'contacts' ? 0 : -1}
                 onClick={() => setActiveTab('contacts')}
-                className={`px-4 py-2 font-mono text-sm transition-all ${
-                  activeTab === 'contacts' ? 'bg-white text-black' : 'border border-white/30 text-white/60 hover:text-white'
-                }`}
+                className="px-4 py-2 font-mono text-sm transition-all"
+                style={
+                  activeTab === 'contacts'
+                    ? { backgroundColor: theme.text, color: theme.bg, border: `1px solid ${theme.text}` }
+                    : { backgroundColor: 'transparent', color: theme.textSoft, border: `1px solid ${theme.border}` }
+                }
               >
                 <Mail className="w-4 h-4 inline mr-2" />
                 Contacts
@@ -245,7 +246,7 @@ export default function AdminDashboard() {
             </div>
           </div>
           <button
-            onClick={handleLogout}
+            onClick={() => setLogoutConfirmOpen(true)}
             className="px-4 py-2 border transition-colors font-mono text-sm"
             style={{ borderColor: theme.border, color: theme.textSoft }}
           >
@@ -276,7 +277,7 @@ export default function AdminDashboard() {
                   <div className="flex items-center justify-between mb-2">
                     <stat.icon className="w-4 h-4" style={{ color: theme.textMuted }} />
                   </div>
-                  <p className="text-2xl font-bold font-mono" style={{ color: theme.text }}>{stat.value}</p>
+                  <p className="text-2xl font-bold font-mono tabular-nums" style={{ color: theme.text }}>{stat.value}</p>
                   <p className="text-xs" style={{ color: theme.textMuted }}>{stat.label}</p>
                 </motion.div>
               ))}
@@ -299,8 +300,10 @@ export default function AdminDashboard() {
                           type="button"
                           aria-label={`${formatShortDate(day.date)}: ${day.views} views`}
                           title={`${day.views} views`}
-                          className="w-full bg-white/80 transition-all hover:bg-white cursor-default"
-                          style={{ height: `${Math.max(height, 5)}%` }}
+                          className="w-full transition-all cursor-default"
+                          style={{ height: `${Math.max(height, 5)}%`, backgroundColor: theme.text, opacity: 0.8 }}
+                          onMouseEnter={(e) => { e.currentTarget.style.opacity = '1' }}
+                          onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.8' }}
                         />
                         <span className="text-[9px]" style={{ color: theme.textMuted }}>
                           {formatShortDate(day.date)}
@@ -326,7 +329,7 @@ export default function AdminDashboard() {
                         <span className="flex-1 text-xs capitalize" style={{ color: theme.textSoft }}>
                           {device.device_type}
                         </span>
-                        <span className="text-xs font-mono" style={{ color: theme.text }}>{percent}%</span>
+                        <span className="text-xs font-mono tabular-nums" style={{ color: theme.text }}>{percent}%</span>
                       </div>
                     )
                   })}
@@ -345,7 +348,7 @@ export default function AdminDashboard() {
                     return (
                       <div key={browser.browser} className="flex items-center gap-2">
                         <span className="flex-1 text-xs" style={{ color: theme.textSoft }}>{browser.browser}</span>
-                        <span className="text-xs font-mono" style={{ color: theme.text }}>{percent}%</span>
+                        <span className="text-xs font-mono tabular-nums" style={{ color: theme.text }}>{percent}%</span>
                       </div>
                     )
                   })}
@@ -366,7 +369,7 @@ export default function AdminDashboard() {
                       <span className="text-xs truncate flex-1" style={{ color: theme.textSoft }}>
                         {page.page_path}
                       </span>
-                      <span className="text-xs font-mono ml-2" style={{ color: theme.text }}>
+                      <span className="text-xs font-mono tabular-nums ml-2" style={{ color: theme.text }}>
                         {page.views}
                       </span>
                     </div>
@@ -383,7 +386,7 @@ export default function AdminDashboard() {
                   {analytics.countryStats.map((country) => (
                     <div key={country.country} className="flex items-center justify-between">
                       <span className="text-xs" style={{ color: theme.textSoft }}>{country.country}</span>
-                      <span className="text-xs font-mono" style={{ color: theme.text }}>{country.count}</span>
+                      <span className="text-xs font-mono tabular-nums" style={{ color: theme.text }}>{country.count}</span>
                     </div>
                   ))}
                   {analytics.countryStats.length === 0 && (
@@ -467,7 +470,7 @@ export default function AdminDashboard() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p style={{ color: theme.textMuted }}>{stat.label}</p>
-                        <p className="text-2xl font-bold font-mono" style={{ color: theme.text }}>{stat.value}</p>
+                        <p className="text-2xl font-bold font-mono tabular-nums" style={{ color: theme.text }}>{stat.value}</p>
                       </div>
                       <stat.icon size={24} style={{ color: theme.accent }} />
                     </div>
@@ -477,7 +480,13 @@ export default function AdminDashboard() {
             )}
 
             {/* Contacts Table */}
-            <div className="border overflow-hidden" style={{ backgroundColor: theme.surface, borderColor: theme.border }}>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+              className="border overflow-hidden"
+              style={{ backgroundColor: theme.surface, borderColor: theme.border }}
+            >
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -490,12 +499,9 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {(isAuthenticated ? contacts : mockContacts).map((contact, index) => (
-                      <motion.tr
+                    {(isAuthenticated ? contacts : mockContacts).map((contact) => (
+                      <tr
                         key={contact.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: shouldReduceMotion ? 0 : index * 0.05 }}
                         className="border-t"
                         style={{ borderColor: theme.border }}
                       >
@@ -521,12 +527,12 @@ export default function AdminDashboard() {
                             View
                           </button>
                         </td>
-                      </motion.tr>
+                      </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-            </div>
+            </motion.div>
 
             {contacts.length === 0 && isAuthenticated && (
               <div className="text-center py-12">
@@ -557,8 +563,10 @@ export default function AdminDashboard() {
             <div className="p-8 border" style={{ backgroundColor: theme.surface, borderColor: theme.border }}>
               <button
                 onClick={() => window.location.href = '/'}
-                className="flex items-center gap-2 text-sm mb-6 transition-colors hover:text-white"
+                className="flex items-center gap-2 text-sm mb-6 transition-colors"
                 style={{ color: theme.textMuted }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = theme.text }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = theme.textMuted }}
               >
                 <ArrowLeft size={16} />
                 Back to Portfolio
@@ -581,7 +589,7 @@ export default function AdminDashboard() {
                     autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 border bg-transparent focus:outline-none transition-all font-mono"
+                    className="w-full px-4 py-3 border bg-transparent focus-visible:outline-none transition-all font-mono"
                     style={{ borderColor: theme.border, color: theme.text }}
                     placeholder="Enter password"
                     required
@@ -610,7 +618,7 @@ export default function AdminDashboard() {
                   className="w-full py-3 font-mono text-sm transition-all"
                   style={{ backgroundColor: theme.accent, color: theme.bg }}
                 >
-                  {loading ? 'Logging in...' : 'Access Dashboard'}
+                  {loading ? 'Logging in…' : 'Access Dashboard'}
                 </button>
               </form>
             </div>
@@ -676,6 +684,54 @@ export default function AdminDashboard() {
             >
               Close
             </button>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Logout Confirmation Modal */}
+      {logoutConfirmOpen && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50"
+          onClick={() => setLogoutConfirmOpen(false)}
+        >
+          <motion.div
+            ref={logoutDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="logout-confirm-title"
+            aria-describedby="logout-confirm-desc"
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="max-w-sm w-full p-6 border"
+            style={{ backgroundColor: theme.surface, borderColor: theme.border, overscrollBehavior: 'contain' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 id="logout-confirm-title" className="text-lg font-bold mb-2 font-mono" style={{ color: theme.text }}>
+              Sign out?
+            </h3>
+            <p id="logout-confirm-desc" className="text-sm mb-6 font-mono" style={{ color: theme.textSoft }}>
+              You’ll need to re-enter the password to access the dashboard again.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                type="button"
+                onClick={() => setLogoutConfirmOpen(false)}
+                className="px-4 py-2 border font-mono text-sm transition-colors"
+                style={{ borderColor: theme.border, color: theme.textSoft, backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = theme.text; e.currentTarget.style.borderColor = theme.text }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = theme.textSoft; e.currentTarget.style.borderColor = theme.border }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => { setLogoutConfirmOpen(false); handleLogout() }}
+                className="px-4 py-2 font-mono text-sm transition-colors"
+                style={{ backgroundColor: theme.text, color: theme.bg, border: `1px solid ${theme.text}` }}
+              >
+                Sign out
+              </button>
+            </div>
           </motion.div>
         </div>
       )}

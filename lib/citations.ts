@@ -391,7 +391,7 @@ export function getDisplayUrl(url: string): string {
     let display = urlObj.hostname.replace('www.', '');
     const path = urlObj.pathname;
     if (path && path !== '/') {
-      const shortPath = path.length > 20 ? path.substring(0, 17) + '...' : path;
+      const shortPath = path.length > 20 ? path.substring(0, 19) + '…' : path;
       display += shortPath;
     }
     return display;

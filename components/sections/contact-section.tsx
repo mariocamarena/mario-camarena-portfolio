@@ -1,13 +1,16 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react"
 import { Dithering } from "@paper-design/shaders-react"
 import { Spinner } from "@/components/ui/spinner"
 import { useTheme } from "@/lib/useTheme"
+
+type FieldName = "name" | "email" | "message"
+type FieldErrors = Partial<Record<FieldName, string>>
 
 // Contact form and social links - Terminal/ASCII aesthetic
 export const ContactSection = () => {
@@ -21,9 +24,49 @@ export const ContactSection = () => {
   const [submitting, setSubmitting] = useState(false)
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle")
   const [focusedField, setFocusedField] = useState<string | null>(null)
+  const [errors, setErrors] = useState<FieldErrors>({})
+  const fieldRefs = useRef<Record<FieldName, HTMLInputElement | HTMLTextAreaElement | null>>({
+    name: null,
+    email: null,
+    message: null,
+  })
+
+  // Warn before navigating away with unsaved input
+  useEffect(() => {
+    const hasUnsaved = (form.name || form.email || form.message).trim().length > 0
+    if (!hasUnsaved || status === "success") return
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ""
+    }
+    window.addEventListener("beforeunload", handler)
+    return () => window.removeEventListener("beforeunload", handler)
+  }, [form, status])
+
+  const validate = (data: typeof form): FieldErrors => {
+    const next: FieldErrors = {}
+    if (!data.name.trim()) next.name = "Name is required"
+    else if (data.name.trim().length < 2) next.name = "Name must be at least 2 characters"
+    if (!data.email.trim()) next.email = "Email is required"
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) next.email = "Enter a valid email address"
+    if (!data.message.trim()) next.message = "Message is required"
+    else if (data.message.trim().length < 10) next.message = "Message must be at least 10 characters"
+    return next
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    const nextErrors = validate(form)
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors)
+      // Focus first invalid field
+      const firstInvalid = (["name", "email", "message"] as const).find((k) => nextErrors[k])
+      if (firstInvalid) fieldRefs.current[firstInvalid]?.focus()
+      return
+    }
+
+    setErrors({})
     setSubmitting(true)
 
     try {
@@ -65,10 +108,18 @@ export const ContactSection = () => {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const name = e.target.name as FieldName
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: e.target.value,
     })
+    // Clear this field's error as the user types
+    if (errors[name]) {
+      setErrors((prev) => {
+        const { [name]: _, ...rest } = prev
+        return rest
+      })
+    }
   }
 
   return (
@@ -173,47 +224,66 @@ export const ContactSection = () => {
           {/* Form Content */}
           <form
             onSubmit={handleSubmit}
+            noValidate
             className="p-7 space-y-6 relative"
           >
             {([
               { name: "name", type: "text", label: "NAME", placeholder: "John Doe", autoComplete: "name" },
               { name: "email", type: "email", label: "EMAIL", placeholder: "john@example.com", autoComplete: "email", inputMode: "email" as const, spellCheck: false },
-            ] as const).map((field) => (
-              <div key={field.name}>
-                <label
-                  htmlFor={field.name}
-                  className="block text-[11px] font-mono tracking-[0.15em] uppercase mb-2 transition-colors duration-200"
-                  style={{ color: focusedField === field.name ? theme.text : theme.textSoft }}
-                >
-                  {focusedField === field.name && <span className="opacity-60 mr-1">&gt;</span>}
-                  {field.label}
-                </label>
-                <div className="relative">
-                  <input
-                    type={field.type}
-                    id={field.name}
-                    name={field.name}
-                    autoComplete={field.autoComplete}
-                    inputMode={"inputMode" in field ? field.inputMode : undefined}
-                    spellCheck={"spellCheck" in field ? field.spellCheck : undefined}
-                    value={form[field.name as keyof typeof form]}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField(field.name)}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder={field.placeholder}
-                    className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus-visible:outline-none border-b placeholder:opacity-30"
-                    style={{
-                      backgroundColor: 'transparent',
-                      borderBottomWidth: focusedField === field.name ? '2px' : '1px',
-                      borderBottomStyle: 'solid',
-                      borderBottomColor: focusedField === field.name ? theme.text : theme.borderHover,
-                      color: theme.text,
-                    }}
-                    required
-                  />
+            ] as const).map((field) => {
+              const fieldError = errors[field.name as FieldName]
+              const errorBorder = fieldError ? '#ff5f56' : (focusedField === field.name ? theme.text : theme.borderHover)
+              return (
+                <div key={field.name}>
+                  <label
+                    htmlFor={field.name}
+                    className="block text-[11px] font-mono tracking-[0.15em] uppercase mb-2 transition-colors duration-200"
+                    style={{ color: focusedField === field.name ? theme.text : theme.textSoft }}
+                  >
+                    {focusedField === field.name && <span className="opacity-60 mr-1">&gt;</span>}
+                    {field.label}
+                  </label>
+                  <div className="relative">
+                    <input
+                      ref={(el) => { fieldRefs.current[field.name as FieldName] = el }}
+                      type={field.type}
+                      id={field.name}
+                      name={field.name}
+                      autoComplete={field.autoComplete}
+                      inputMode={"inputMode" in field ? field.inputMode : undefined}
+                      spellCheck={"spellCheck" in field ? field.spellCheck : undefined}
+                      value={form[field.name as keyof typeof form]}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField(field.name)}
+                      onBlur={() => setFocusedField(null)}
+                      placeholder={field.placeholder}
+                      aria-invalid={!!fieldError}
+                      aria-describedby={fieldError ? `${field.name}-error` : undefined}
+                      aria-required="true"
+                      required
+                      className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus-visible:outline-none border-b placeholder:opacity-30"
+                      style={{
+                        backgroundColor: 'transparent',
+                        borderBottomWidth: focusedField === field.name || fieldError ? '2px' : '1px',
+                        borderBottomStyle: 'solid',
+                        borderBottomColor: errorBorder,
+                        color: theme.text,
+                      }}
+                    />
+                  </div>
+                  {fieldError && (
+                    <p
+                      id={`${field.name}-error`}
+                      role="alert"
+                      className="mt-1.5 text-[10px] font-mono tracking-wide"
+                      style={{ color: '#ff5f56' }}
+                    >
+                      [err] {fieldError}
+                    </p>
+                  )}
                 </div>
-              </div>
-            ))}
+              )
+            })}
 
             <div>
               <label
@@ -226,6 +296,7 @@ export const ContactSection = () => {
               </label>
               <div className="relative">
                 <textarea
+                  ref={(el) => { fieldRefs.current.message = el }}
                   id="message"
                   name="message"
                   autoComplete="off"
@@ -233,18 +304,31 @@ export const ContactSection = () => {
                   onChange={handleChange}
                   onFocus={() => setFocusedField("message")}
                   onBlur={() => setFocusedField(null)}
-                  placeholder="Your message here…"
+                  placeholder="What are you working on? What brings you here?"
+                  aria-invalid={!!errors.message}
+                  aria-describedby={errors.message ? "message-error" : undefined}
+                  aria-required="true"
+                  required
                   className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus-visible:outline-none min-h-[100px] resize-none border-b placeholder:opacity-30"
                   style={{
                     backgroundColor: 'transparent',
-                    borderBottomWidth: focusedField === "message" ? '2px' : '1px',
+                    borderBottomWidth: focusedField === "message" || errors.message ? '2px' : '1px',
                     borderBottomStyle: 'solid',
-                    borderBottomColor: focusedField === "message" ? theme.text : theme.borderHover,
+                    borderBottomColor: errors.message ? '#ff5f56' : (focusedField === "message" ? theme.text : theme.borderHover),
                     color: theme.text,
                   }}
-                  required
                 />
               </div>
+              {errors.message && (
+                <p
+                  id="message-error"
+                  role="alert"
+                  className="mt-1.5 text-[10px] font-mono tracking-wide"
+                  style={{ color: '#ff5f56' }}
+                >
+                  [err] {errors.message}
+                </p>
+              )}
             </div>
 
             {/* Submit button - outlined style matching hero */}

@@ -125,11 +125,11 @@ export const ThesisBanner = () => {
                 </span>
               </div>
               <motion.h3
-                className="font-bold font-mono tracking-wide uppercase mb-0 md:mb-2 truncate md:whitespace-normal"
+                className="text-2xl font-bold font-mono tracking-wide uppercase mb-0 md:mb-2 truncate md:whitespace-normal origin-left"
                 style={{ color: theme.text }}
                 initial={false}
                 animate={{
-                  fontSize: showHoverState ? "1.75rem" : "1.5rem",
+                  scale: showHoverState ? 1.167 : 1,
                 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               >
