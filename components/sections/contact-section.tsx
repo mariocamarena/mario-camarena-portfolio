@@ -109,7 +109,9 @@ export const ContactSection = () => {
               <span className="text-[10px] font-mono tracking-wider" style={{ color: theme.text }}>○</span>
               <div className="w-8 h-px" style={{ backgroundColor: theme.text }}></div>
             </div>
+            <h2 className="sr-only">Contact</h2>
             <pre
+              aria-hidden="true"
               className="font-mono text-[14px] sm:text-[18px] md:text-[22px] lg:text-[26px] leading-[1.1] tracking-tight"
               style={{ color: theme.text }}
             >{`█▀▀ █▀█ █▄░█ ▀█▀ ▄▀█ █▀▀ ▀█▀

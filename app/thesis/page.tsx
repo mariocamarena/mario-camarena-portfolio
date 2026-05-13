@@ -62,7 +62,7 @@ export default function ThesisPage() {
       <ThesisSidebar phases={thesisData.phases} />
 
       {/* Main Content */}
-      <main className="relative z-10 pt-16 lg:pt-20 lg:pl-60 xl:pl-64">
+      <main id="main-content" className="relative z-10 pt-16 lg:pt-20 lg:pl-60 xl:pl-64">
         <div className="max-w-4xl mx-auto px-6 py-12">
           {/* Header */}
           <ThesisHeader

@@ -54,6 +54,7 @@ export default function RootLayout({
         />
       </head>
       <body className="font-mono" suppressHydrationWarning>
+        <a href="#main-content" className="skip-link">Skip to content</a>
         {/* <AnalyticsTracker /> — disabled until analytics backend is fixed */}
         {children}
       </body>

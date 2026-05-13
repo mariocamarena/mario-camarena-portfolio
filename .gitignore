@@ -171,10 +171,16 @@ $RECYCLE.BIN/
 # Instructions folder (private)
 /instructions/
 
+# Design system (private — local reference only)
+DESIGN_SYSTEM.md
+
+# Audit / review artifacts (private — local reference only)
+audit_Results_andoptions.md
+
 # PWA files
 **/public/sw.js
 **/public/workbox-*.js
 **/public/worker-*.js
 **/public/sw.js.map
 **/public/workbox-*.js.map
-**/public/worker-*.js.map".claude/" 
+**/public/worker-*.js.map

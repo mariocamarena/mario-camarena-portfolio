@@ -56,7 +56,7 @@ export function AsciiThemeToggle() {
     <button
       onClick={handleToggle}
       aria-label={`Switch theme — currently ${mode}`}
-      className="fixed bottom-4 right-4 z-50 font-mono text-[10px] leading-none cursor-pointer opacity-60 hover:opacity-100 transition-all duration-300 focus:outline-none group"
+      className="fixed bottom-4 right-4 z-50 font-mono text-[10px] leading-none cursor-pointer opacity-60 hover:opacity-100 transition-all duration-300 group"
       style={{
         backgroundColor: `${theme.bg}99`,
         backdropFilter: "blur(4px)",

@@ -95,6 +95,7 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
               <div className="hidden lg:block absolute -right-3 top-0 bottom-0 w-1 dither-pattern opacity-40"></div>
               <TextScramble
                 as="h1"
+                aria-label="Mario Camarena"
                 className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-4 lg:mb-6 leading-tight font-mono tracking-wider"
                 style={{ letterSpacing: '0.05em', color: theme.text }}
                 initial={{ opacity: 0, y: 20 }}

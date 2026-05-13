@@ -187,7 +187,7 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: theme.bg }}>
       {/* Main Content */}
-      <div className={`max-w-7xl mx-auto px-4 py-8 transition-all duration-500 ${
+      <main id="main-content" className={`max-w-7xl mx-auto px-4 py-8 transition-all duration-500 ${
         !isAuthenticated ? 'filter blur-sm opacity-50 pointer-events-none select-none' : ''
       }`}>
         {/* Header */}
@@ -506,7 +506,7 @@ export default function AdminDashboard() {
             )}
           </div>
         )}
-      </div>
+      </main>
 
       {/* Login Modal */}
       {!isAuthenticated && (

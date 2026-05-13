@@ -157,7 +157,7 @@ export default function Portfolio() {
                 <button
                   key={item.id}
                   onClick={() => scrollTo(item.id)}
-                  className="relative px-4 py-2 font-medium uppercase tracking-wider text-sm transition-colors duration-200 focus:outline-none"
+                  className="relative px-4 py-2 font-medium uppercase tracking-wider text-sm transition-colors duration-200"
                   style={{
                     color: activeSection === item.id ? theme.text : theme.textSoft,
                   }}
@@ -186,9 +186,12 @@ export default function Portfolio() {
             {/* Mobile menu button */}
             <div className="md:hidden flex items-center ml-auto gap-2">
               <button
-                className="p-2 rounded-lg transition-colors duration-200 focus:outline-none"
+                className="p-2 rounded-lg transition-colors duration-200"
                 style={{ color: theme.textSoft }}
                 onClick={() => setMenuOpen(!menuOpen)}
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={menuOpen}
+                aria-controls="mobile-menu"
               >
                 {menuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -201,6 +204,7 @@ export default function Portfolio() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            id="mobile-menu"
             className="md:hidden fixed inset-0 z-50"
             style={{ backgroundColor: theme.bg }}
             initial={{ opacity: 0 }}
@@ -220,9 +224,10 @@ export default function Portfolio() {
 
             {/* Close button */}
             <button
-              className="absolute top-4 right-4 p-2 focus:outline-none"
+              className="absolute top-4 right-4 p-2"
               style={{ color: theme.textSoft }}
               onClick={() => setMenuOpen(false)}
+              aria-label="Close menu"
             >
               <X size={24} />
             </button>
@@ -232,7 +237,7 @@ export default function Portfolio() {
                 <button
                   key={item.id}
                   onClick={() => scrollTo(item.id)}
-                  className="text-xl font-medium uppercase tracking-wider px-6 py-3 transition-colors duration-200 focus:outline-none"
+                  className="text-xl font-medium uppercase tracking-wider px-6 py-3 transition-colors duration-200"
                   style={{
                     color: activeSection === item.id ? theme.text : theme.textSoft,
                   }}
@@ -251,26 +256,28 @@ export default function Portfolio() {
         )}
       </AnimatePresence>
 
-      {/* Hero Section - blurred while loading, sharpens on complete */}
-      <motion.div
-        initial={{ filter: "blur(8px)", opacity: 0.6 }}
-        animate={{
-          filter: isLoading ? "blur(8px)" : "blur(0px)",
-          opacity: isLoading ? 0.6 : 1,
-        }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-      >
-        <HeroSection onScrollToProjects={scrollToProjects} onScrollToAbout={scrollToAbout} isVisible={!isLoading} />
-      </motion.div>
+      <main id="main-content">
+        {/* Hero Section - blurred while loading, sharpens on complete */}
+        <motion.div
+          initial={{ filter: "blur(8px)", opacity: 0.6 }}
+          animate={{
+            filter: isLoading ? "blur(8px)" : "blur(0px)",
+            opacity: isLoading ? 0.6 : 1,
+          }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <HeroSection onScrollToProjects={scrollToProjects} onScrollToAbout={scrollToAbout} isVisible={!isLoading} />
+        </motion.div>
 
-      {/* About Section */}
-      <AboutSection />
+        {/* About Section */}
+        <AboutSection />
 
-      {/* Projects Section */}
-      <ProjectsSection />
+        {/* Projects Section */}
+        <ProjectsSection />
 
-      {/* Contact Section */}
-      <ContactSection />
+        {/* Contact Section */}
+        <ContactSection />
+      </main>
 
       {/* Theme toggle */}
       <AsciiThemeToggle />

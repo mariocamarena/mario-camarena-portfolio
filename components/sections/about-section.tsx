@@ -67,7 +67,9 @@ export function AboutSection() {
               <span className="text-[10px] font-mono tracking-wider" style={{ color: theme.text }}>○</span>
               <div className="w-8 h-px" style={{ backgroundColor: theme.text }}></div>
             </div>
+            <h2 className="sr-only">About</h2>
             <pre
+              aria-hidden="true"
               className="font-mono text-[18px] sm:text-[20px] md:text-[24px] lg:text-[28px] leading-[1.1] tracking-tight"
               style={{ color: theme.text }}
             >{`▄▀█ █▄▄ █▀█ █ █ ▀█▀
@@ -136,7 +138,10 @@ export function AboutSection() {
                     BACKGROUND
                   </span>
                   <p className="text-sm leading-relaxed" style={{ color: theme.textSoft }}>
-                    M.S. Computer Science @ UTRGV (Expected May 2027). I've been building systems since I was about 10, custom PCs and hardware.
+                    M.S. Computer Science @ UTRGV, expected May 2027. I started building systems through custom PCs, hardware repair, and small software projects. Over time, that turned into full-stack development, applied AI, and research work.
+                  </p>
+                  <p className="text-sm leading-relaxed mt-2" style={{ color: theme.textSoft }}>
+                    This summer, I'll be joining Textron Systems in Slidell, Louisiana as an IT Analyst Intern. The role sits at the intersection of software development, cybersecurity, infrastructure IT, and front-facing business support, which fits well with the way I've been building across both research and applied systems.
                   </p>
                 </div>
 
@@ -146,23 +151,26 @@ export function AboutSection() {
                     RESEARCH
                   </span>
                   <p className="text-sm leading-relaxed" style={{ color: theme.textSoft }}>
-                    I'm an AI Research Assistant at UTRGV MECIS (NSF CREST). I lead AD-SAM, a dual-encoder urban-scene segmentation model: +29% accuracy improvement, using a deformable decoder + hybrid losses. I also did a Summer 2024 ML REU at UC Riverside, benchmarking segmentation baselines.
+                    I'm an AI Research Assistant at UTRGV MECIS (NSF CREST), where I work on computer vision, transportation AI, and graph-based risk modeling.
                   </p>
                   <p className="text-sm leading-relaxed mt-2" style={{ color: theme.textSoft }}>
-                    Current focus: my Master's thesis on NASA-funded AAM flight-graph security, modeling flight operations as graphs and studying how to detect and reduce security risks in those systems.
+                    I lead AD-SAM, a dual-encoder urban-scene segmentation model for autonomous-driving environments. The work focuses on improving segmentation with deformable decoding, hybrid losses, and stronger class-level performance across urban scenes.
+                  </p>
+                  <p className="text-sm leading-relaxed mt-2" style={{ color: theme.textSoft }}>
+                    My current M.S. thesis is NASA-funded and focuses on AAM flight security risk modeling. Right now, the project models aircraft interactions from OpenSky ADS-B data as dynamic graph events, using surrogate safety signals like proximity and encounter geometry to study risk in future airspace systems.
                   </p>
                 </div>
 
-                {/* Products */}
+                {/* Builds */}
                 <div>
                   <span className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-2 block" style={{ color: theme.text }}>
-                    PRODUCTS
+                    BUILDS
                   </span>
                   <p className="text-sm leading-relaxed" style={{ color: theme.textSoft }}>
-                    STABLES: project lead + lead developer for a parking app managing 800+ spots across 3 lots (live availability + reservations). Built the Node/Express + PostgreSQL backend.
+                    STABLES: project lead + lead developer for a parking management app covering 800+ parking spots across 3 lots. Built the Node.js/Express + PostgreSQL backend for live availability, reservations, spatial checks, and double-booking prevention.
                   </p>
                   <p className="text-sm leading-relaxed mt-2" style={{ color: theme.textSoft }}>
-                    This portfolio: Next.js + TypeScript + PostgreSQL contact pipeline with an admin dashboard.
+                    This portfolio: built with Next.js, TypeScript, Tailwind, Framer Motion, and PostgreSQL. Designed as a terminal-inspired personal system with ASCII visuals, responsive animations, a full-stack contact pipeline, and an admin dashboard.
                   </p>
                 </div>
 
@@ -273,6 +281,7 @@ export function AboutSection() {
                   </div>
                   <div className="flex-1">
                     <pre
+                      aria-hidden="true"
                       className="font-mono text-[8px] sm:text-[9px] leading-[1.15] tracking-tight"
                       style={{ color: theme.text }}
                     >{`█▀▄▀█ ▄▀█ █▀█ █ █▀█
