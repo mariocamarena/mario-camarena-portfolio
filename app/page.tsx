@@ -279,7 +279,7 @@ export default function Portfolio() {
         )}
       </AnimatePresence>
 
-      <main id="main-content" aria-hidden={isLoading || undefined} inert={isLoading || undefined}>
+      <main id="main-content" aria-hidden={isLoading || undefined} {...(isLoading ? { inert: '' } : {})}>
         {/* Hero Section - blurred while loading, sharpens on complete */}
         <motion.div
           initial={{ filter: "blur(8px)", opacity: 0.6 }}

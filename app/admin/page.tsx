@@ -196,7 +196,7 @@ export default function AdminDashboard() {
       <main
         id="main-content"
         aria-hidden={!isAuthenticated || undefined}
-        inert={!isAuthenticated || undefined}
+        {...(!isAuthenticated ? { inert: '' } : {})}
         className={`max-w-7xl mx-auto px-4 py-8 transition-all duration-500 ${
           !isAuthenticated ? 'filter blur-sm opacity-50 pointer-events-none select-none' : ''
         }`}

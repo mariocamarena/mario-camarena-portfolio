@@ -93,13 +93,13 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
   const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % images.length)
   const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
 
-  // Image carousel auto-rotation (pause when expanded or reduced-motion)
+  // Image carousel auto-rotation (pause when expanded, hovered, or reduced-motion)
   useEffect(() => {
-    if (images.length <= 1 || isExpanded || shouldReduceMotion) return
+    if (images.length <= 1 || isExpanded || isHovered || shouldReduceMotion) return
 
     const interval = setInterval(nextImage, 3000)
     return () => clearInterval(interval)
-  }, [images.length, isExpanded, shouldReduceMotion])
+  }, [images.length, isExpanded, isHovered, shouldReduceMotion])
 
   // Reset hover when modal closes (body-scroll lock + Esc handled by useDialogA11y)
   useEffect(() => {
