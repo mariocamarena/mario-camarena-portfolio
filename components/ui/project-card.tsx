@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useEffect, memo } from "react"
 import { createPortal } from "react-dom"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Github, ExternalLink, FileText, X } from "lucide-react"
 import Image from "next/image"
 import { useTheme } from "@/lib/useTheme"
@@ -64,6 +64,7 @@ const PixelArrow = ({ direction, onClick }: { direction: "left" | "right"; onCli
 // project card component
 export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => {
   const { theme, isDark } = useTheme()
+  const shouldReduceMotion = useReducedMotion()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -92,13 +93,13 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
   const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % images.length)
   const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
 
-  // Image carousel auto-rotation (pause when expanded)
+  // Image carousel auto-rotation (pause when expanded or reduced-motion)
   useEffect(() => {
-    if (images.length <= 1 || isExpanded) return
+    if (images.length <= 1 || isExpanded || shouldReduceMotion) return
 
     const interval = setInterval(nextImage, 3000)
     return () => clearInterval(interval)
-  }, [images.length, isExpanded])
+  }, [images.length, isExpanded, shouldReduceMotion])
 
   // Reset hover when modal closes (body-scroll lock + Esc handled by useDialogA11y)
   useEffect(() => {
@@ -180,9 +181,10 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
         <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r z-20" style={{ borderColor: `${theme.text}4d` }}></div>
 
         {/* Scan Double Effect */}
-        {isHovered && (
+        {isHovered && !shouldReduceMotion && (
           <>
             <motion.div
+              aria-hidden="true"
               className="absolute left-0 right-0 h-[1px] z-20 pointer-events-none"
               style={{ background: `linear-gradient(to right, transparent, ${theme.text}66, transparent)` }}
               initial={{ top: 0 }}
@@ -190,6 +192,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             />
             <motion.div
+              aria-hidden="true"
               className="absolute left-0 right-0 h-[1px] z-20 pointer-events-none"
               style={{ background: `linear-gradient(to right, transparent, ${theme.text}66, transparent)` }}
               initial={{ top: "100%" }}

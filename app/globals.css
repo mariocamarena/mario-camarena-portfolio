@@ -192,14 +192,6 @@ html:not(.dark) button:focus-visible {
   outline: none;
 }
 
-/* hover effects */
-@media (hover: hover) {
-  button:hover,
-  a:hover {
-    transform: translateY(-1px);
-  }
-}
-
 /* typography - dark mode */
 html.dark h1,
 html.dark h2,

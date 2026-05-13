@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import Image from "next/image"
 import { Dithering } from "@paper-design/shaders-react"
 import { useTheme } from "@/lib/useTheme"
@@ -15,6 +15,7 @@ const skills = [
 
 export function AboutSection() {
   const { theme, isDark } = useTheme()
+  const shouldReduceMotion = useReducedMotion()
 
   // Terminal chrome styling - reacts to theme
   const terminalChrome = {
@@ -31,13 +32,13 @@ export function AboutSection() {
   return (
     <section id="about" className="min-h-screen py-20 px-6 relative overflow-hidden" style={{ backgroundColor: theme.surface }}>
       {/* Corner Frame Accents - softer on surface bg */}
-      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
 
       {/* Subtle dithering background effect */}
-      <div className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.3 }}>
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.3 }}>
         <Dithering
           style={{ height: "100%", width: "100%" }}
           colorBack={theme.bg}
@@ -201,10 +202,11 @@ export function AboutSection() {
                   <div className="flex items-center font-mono text-[11px]">
                     <span style={{ color: theme.textMuted }}>cat ~/README.md</span>
                     <motion.span
+                      aria-hidden="true"
                       className="ml-1 w-2 h-3.5 inline-block"
                       style={{ backgroundColor: theme.text }}
-                      animate={{ opacity: [1, 0] }}
-                      transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+                      animate={shouldReduceMotion ? { opacity: 1 } : { opacity: [1, 0] }}
+                      transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
                     />
                   </div>
                 </div>
@@ -310,10 +312,11 @@ export function AboutSection() {
                     <span className="w-20 opacity-40 shrink-0" style={{ color: theme.text }}>status:</span>
                     <span className="flex items-center gap-1.5">
                       <motion.span
+                        aria-hidden="true"
                         className="w-1.5 h-1.5 rounded-full"
                         style={{ backgroundColor: '#27ca40' }}
-                        animate={{ opacity: [1, 0.4, 1] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        animate={shouldReduceMotion ? { opacity: 1 } : { opacity: [1, 0.4, 1] }}
+                        transition={shouldReduceMotion ? { duration: 0 } : { duration: 2, repeat: Infinity, ease: "easeInOut" }}
                       />
                       <span style={{ color: theme.textSoft }}>Open to opportunities</span>
                     </span>
@@ -325,10 +328,11 @@ export function AboutSection() {
                   <div className="flex items-center font-mono text-[11px]">
                     <span style={{ color: theme.textMuted }}>mario@portfolio:~$</span>
                     <motion.span
+                      aria-hidden="true"
                       className="ml-1 w-2 h-3.5 inline-block"
                       style={{ backgroundColor: theme.text }}
-                      animate={{ opacity: [1, 0] }}
-                      transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+                      animate={shouldReduceMotion ? { opacity: 1 } : { opacity: [1, 0] }}
+                      transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
                     />
                   </div>
                 </div>

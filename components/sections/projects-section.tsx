@@ -17,19 +17,21 @@ export function ProjectsSection() {
       style={{ backgroundColor: theme.bg }}
     >
       {/* Animated ASCII dots background */}
-      <DelicateAsciiDots
-        backgroundColor={theme.bg}
-        textColor={isDark ? "255, 255, 255" : "80, 80, 80"}
-        gridSize={45}
-        animationSpeed={0.3}
-        targetCellSize={42}
-      />
+      <div aria-hidden="true">
+        <DelicateAsciiDots
+          backgroundColor={theme.bg}
+          textColor={isDark ? "255, 255, 255" : "80, 80, 80"}
+          gridSize={45}
+          animationSpeed={0.3}
+          targetCellSize={42}
+        />
+      </div>
 
       {/* Corner Frame Accents - medium on dark bg */}
-      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
-      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
-      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
-      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div

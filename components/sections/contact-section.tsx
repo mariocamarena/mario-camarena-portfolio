@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react"
 import { Dithering } from "@paper-design/shaders-react"
@@ -12,6 +12,7 @@ import { useTheme } from "@/lib/useTheme"
 // Contact form and social links - Terminal/ASCII aesthetic
 export const ContactSection = () => {
   const { theme, isDark } = useTheme()
+  const shouldReduceMotion = useReducedMotion()
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -73,13 +74,13 @@ export const ContactSection = () => {
   return (
     <section id="contact" className="min-h-screen py-20 px-6 relative overflow-hidden" style={{ backgroundColor: theme.surface }}>
       {/* Corner Frame Accents - softer on surface bg */}
-      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
 
       {/* Same dithering background as About section */}
-      <div className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.3 }}>
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.3 }}>
         <Dithering
           style={{ height: "100%", width: "100%" }}
           colorBack={theme.bg}
@@ -317,8 +318,8 @@ export const ContactSection = () => {
                   {submitting && (
                     <motion.span
                       className="opacity-60"
-                      animate={{ opacity: [1, 0.3, 1] }}
-                      transition={{ duration: 0.8, repeat: Infinity }}
+                      animate={shouldReduceMotion ? { opacity: 0.6 } : { opacity: [1, 0.3, 1] }}
+                      transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.8, repeat: Infinity }}
                     >
                       …
                     </motion.span>
@@ -351,13 +352,13 @@ export const ContactSection = () => {
                     <motion.span
                       className="w-1.5 h-1.5 rounded-full"
                       style={{ backgroundColor: theme.textMuted }}
-                      animate={{ opacity: [0.4, 1, 0.4] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      animate={shouldReduceMotion ? { opacity: 0.7 } : { opacity: [0.4, 1, 0.4] }}
+                      transition={shouldReduceMotion ? { duration: 0 } : { duration: 2, repeat: Infinity, ease: "easeInOut" }}
                     />
                     <motion.span
                       style={{ color: theme.textMuted }}
-                      animate={{ opacity: [0.3, 1, 0.3] }}
-                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                      animate={shouldReduceMotion ? { opacity: 0.65 } : { opacity: [0.3, 1, 0.3] }}
+                      transition={shouldReduceMotion ? { duration: 0 } : { duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                     >
                       awaiting input
                     </motion.span>
@@ -405,10 +406,11 @@ export const ContactSection = () => {
                 mario@portfolio:~$
               </span>
               <motion.span
+                aria-hidden="true"
                 className="ml-1 w-1.5 h-3 inline-block"
                 style={{ backgroundColor: theme.text }}
-                animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+                animate={shouldReduceMotion ? { opacity: 1 } : { opacity: [1, 0] }}
+                transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
               />
             </div>
           </div>

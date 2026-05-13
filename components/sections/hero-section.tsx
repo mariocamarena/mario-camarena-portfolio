@@ -62,24 +62,28 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
       style={{ backgroundColor: isDark ? '#000000' : theme.bg }}
     >
       {/* ASCII Background Animation — invert in light mode */}
-      <div style={
-        isDark ? undefined :
-        { filter: 'invert(1)', opacity: 0.5 }
-      }>
+      <div
+        aria-hidden="true"
+        style={
+          isDark ? undefined :
+          { filter: 'invert(1)', opacity: 0.5 }
+        }
+      >
         <HeroAsciiBackground />
       </div>
 
       {/* Mobile blur overlay */}
       <div
+        aria-hidden="true"
         className="absolute inset-0 backdrop-blur-[2px] z-[5] lg:hidden"
         style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(232,232,232,0.4)' }}
       />
 
       {/* Corner Frame Accents */}
-      <div className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
-      <div className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
-      <div className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
-      <div className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
+      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
+      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
+      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
+      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
 
       {/* Main Content */}
       <div className="relative z-10 flex min-h-screen items-center justify-center lg:justify-end pt-16 lg:pt-0">
@@ -87,6 +91,7 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
           <div className="max-w-xl relative lg:ml-auto text-center lg:text-left">
             {/* Top decorative line */}
             <motion.div
+              aria-hidden="true"
               className="flex items-center gap-2 mb-4 opacity-60"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 0.6, x: 0 }}
@@ -119,6 +124,7 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
 
             {/* Decorative dots pattern - desktop only */}
             <motion.div
+              aria-hidden="true"
               className="hidden lg:flex gap-1 mb-4 opacity-40 justify-start"
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.4 }}
@@ -143,7 +149,7 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
               </div>
 
               {/* Technical corner accent - desktop only */}
-              <div className="hidden lg:block absolute -left-4 top-1/2 w-3 h-3 opacity-30" style={{ transform: 'translateY(-50%)', border: `1px solid ${theme.text}` }}>
+              <div aria-hidden="true" className="hidden lg:block absolute -left-4 top-1/2 w-3 h-3 opacity-30" style={{ transform: 'translateY(-50%)', border: `1px solid ${theme.text}` }}>
                 <div className="absolute top-1/2 left-1/2 w-1 h-1" style={{ transform: 'translate(-50%, -50%)', backgroundColor: theme.text }}></div>
               </div>
             </div>
@@ -161,6 +167,8 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
                 style={{ border: `1px solid ${theme.text}`, color: theme.text }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
                 onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
+                onFocus={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
+                onBlur={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
               >
                 <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
                 <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
@@ -175,6 +183,8 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
                 style={{ backgroundColor: theme.text, border: `1px solid ${theme.text}`, color: theme.bg }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
                 onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
+                onFocus={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
+                onBlur={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
               >
                 <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
                 <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
@@ -187,6 +197,8 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
                 style={{ border: `1px solid ${theme.text}`, color: theme.text }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
                 onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
+                onFocus={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
+                onBlur={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
               >
                 <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
                 <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
@@ -196,6 +208,7 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
 
             {/* Bottom technical notation - desktop only */}
             <motion.div
+              aria-hidden="true"
               className="hidden lg:flex items-center gap-2 mt-8 opacity-40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.4 }}
