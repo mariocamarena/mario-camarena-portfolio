@@ -174,10 +174,10 @@ export const ContactSection = () => {
             onSubmit={handleSubmit}
             className="p-7 space-y-6 relative"
           >
-            {[
-              { name: "name", type: "text", label: "NAME", placeholder: "John Doe" },
-              { name: "email", type: "email", label: "EMAIL", placeholder: "john@example.com" },
-            ].map((field) => (
+            {([
+              { name: "name", type: "text", label: "NAME", placeholder: "John Doe", autoComplete: "name" },
+              { name: "email", type: "email", label: "EMAIL", placeholder: "john@example.com", autoComplete: "email", inputMode: "email" as const, spellCheck: false },
+            ] as const).map((field) => (
               <div key={field.name}>
                 <label
                   htmlFor={field.name}
@@ -192,6 +192,9 @@ export const ContactSection = () => {
                     type={field.type}
                     id={field.name}
                     name={field.name}
+                    autoComplete={field.autoComplete}
+                    inputMode={"inputMode" in field ? field.inputMode : undefined}
+                    spellCheck={"spellCheck" in field ? field.spellCheck : undefined}
                     value={form[field.name as keyof typeof form]}
                     onChange={handleChange}
                     onFocus={() => setFocusedField(field.name)}
@@ -224,11 +227,12 @@ export const ContactSection = () => {
                 <textarea
                   id="message"
                   name="message"
+                  autoComplete="off"
                   value={form.message}
                   onChange={handleChange}
                   onFocus={() => setFocusedField("message")}
                   onBlur={() => setFocusedField(null)}
-                  placeholder="Your message here..."
+                  placeholder="Your message here…"
                   className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus:outline-none min-h-[100px] resize-none border-b placeholder:opacity-30"
                   style={{
                     backgroundColor: 'transparent',
@@ -273,7 +277,7 @@ export const ContactSection = () => {
                   {submitting ? (
                     <>
                       <Spinner />
-                      <span>SENDING...</span>
+                      <span>SENDING…</span>
                     </>
                   ) : status === "success" ? (
                     <>
@@ -301,8 +305,13 @@ export const ContactSection = () => {
               </button>
 
               {/* Terminal-style status output */}
-              <div className="mt-4 font-mono text-[11px] border-t pt-4" style={{ borderColor: theme.border }}>
-                <div className="flex items-center gap-2">
+              <div
+                role="status"
+                aria-live="polite"
+                className="mt-4 font-mono text-[11px] border-t pt-4"
+                style={{ borderColor: theme.border }}
+              >
+                <div aria-hidden="true" className="flex items-center gap-2">
                   <span style={{ color: theme.textMuted }}>$</span>
                   <span style={{ color: theme.textSoft }}>send_message</span>
                   {submitting && (
@@ -311,7 +320,7 @@ export const ContactSection = () => {
                       animate={{ opacity: [1, 0.3, 1] }}
                       transition={{ duration: 0.8, repeat: Infinity }}
                     >
-                      ...
+                      …
                     </motion.span>
                   )}
                 </div>
@@ -338,7 +347,7 @@ export const ContactSection = () => {
                   </motion.div>
                 )}
                 {status === "idle" && !submitting && (
-                  <div className="mt-2 flex items-center gap-2">
+                  <div aria-hidden="true" className="mt-2 flex items-center gap-2">
                     <motion.span
                       className="w-1.5 h-1.5 rounded-full"
                       style={{ backgroundColor: theme.textMuted }}

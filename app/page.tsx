@@ -123,7 +123,10 @@ export default function Portfolio() {
   const scrollTo = (id: string) => {
     const element = document.getElementById(id)
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+      const prefersReduced =
+        typeof window !== "undefined" &&
+        window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+      element.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth" })
     }
     setMenuOpen(false)
   }
@@ -156,9 +159,15 @@ export default function Portfolio() {
             {/* Desktop navigation */}
             <div className="hidden md:flex items-center space-x-8 flex-1 justify-center">
               {navigation.map((item) => (
-                <button
+                <a
                   key={item.id}
-                  onClick={() => scrollTo(item.id)}
+                  href={`#${item.id}`}
+                  onClick={(e) => {
+                    if (e.metaKey || e.ctrlKey || e.shiftKey) return
+                    e.preventDefault()
+                    scrollTo(item.id)
+                  }}
+                  aria-current={activeSection === item.id ? "location" : undefined}
                   className="relative px-4 py-2 font-medium uppercase tracking-wider text-sm transition-colors duration-200"
                   style={{
                     color: activeSection === item.id ? theme.text : theme.textSoft,
@@ -181,7 +190,7 @@ export default function Portfolio() {
                       style={{ backgroundColor: theme.text }}
                     />
                   )}
-                </button>
+                </a>
               ))}
             </div>
 
@@ -240,9 +249,15 @@ export default function Portfolio() {
 
             <div className="flex flex-col items-center justify-center h-full space-y-6">
               {navigation.map((item) => (
-                <button
+                <a
                   key={item.id}
-                  onClick={() => scrollTo(item.id)}
+                  href={`#${item.id}`}
+                  onClick={(e) => {
+                    if (e.metaKey || e.ctrlKey || e.shiftKey) return
+                    e.preventDefault()
+                    scrollTo(item.id)
+                  }}
+                  aria-current={activeSection === item.id ? "location" : undefined}
                   className="text-xl font-medium uppercase tracking-wider px-6 py-3 transition-colors duration-200"
                   style={{
                     color: activeSection === item.id ? theme.text : theme.textSoft,
@@ -255,7 +270,7 @@ export default function Portfolio() {
                       style={{ backgroundColor: theme.text }}
                     />
                   )}
-                </button>
+                </a>
               ))}
             </div>
           </motion.div>

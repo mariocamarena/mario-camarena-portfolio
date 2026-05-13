@@ -9,12 +9,15 @@
   mix-blend-mode: normal;
 }
 
-html {
-  scroll-behavior: smooth;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Theme custom properties — used by thesis and other components */
 html.dark {
+  color-scheme: dark;
   --th-bg: #0a0a0a;
   --th-surface: #111111;
   --th-elevated: #1a1a1a;
@@ -31,6 +34,7 @@ html.dark {
   --th-bg-emphasis: rgba(255,255,255,0.15);
 }
 html:not(.dark) {
+  color-scheme: light;
   --th-bg: #e8e8e8;
   --th-surface: #dcdcdc;
   --th-elevated: #d0d0d0;

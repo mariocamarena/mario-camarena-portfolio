@@ -24,8 +24,8 @@ export function CitationCard({ citation }: CitationCardProps) {
 
   // Format the citation title with venue
   const formattedTitle = citation.venue
-    ? `${citation.authors} (${citation.year}). "${citation.title}" ${citation.venue}`
-    : `${citation.authors} (${citation.year}). "${citation.title}"`
+    ? `${citation.authors} (${citation.year}). “${citation.title}” ${citation.venue}`
+    : `${citation.authors} (${citation.year}). “${citation.title}”`
 
   return (
     <div className="rounded-lg p-4" style={containerStyle}>
