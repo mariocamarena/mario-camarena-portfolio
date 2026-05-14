@@ -176,7 +176,7 @@ export const ThesisBanner = () => {
                 Read More
               </span>
               <motion.div
-                className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 border transition-all duration-200"
+                className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 border transition duration-200"
                 style={{
                   borderColor: showHoverState ? theme.text : `${theme.text}4d`,
                   backgroundColor: showHoverState ? theme.text : 'transparent',

@@ -60,11 +60,13 @@ export function AsciiThemeToggle() {
     <button
       onClick={handleToggle}
       aria-label={`Switch theme — currently ${mode === "dark" ? "dark mode" : "light mode"}`}
-      className="fixed bottom-4 right-4 z-50 font-mono text-[10px] leading-none cursor-pointer opacity-60 hover:opacity-100 transition-all duration-300 group py-[7px] px-[10px]"
+      className="fixed z-50 font-mono text-[10px] leading-none cursor-pointer opacity-60 hover:opacity-100 transition duration-300 group py-[7px] px-[10px]"
       style={{
         backgroundColor: `${theme.bg}99`,
         backdropFilter: "blur(4px)",
         border: `1px solid ${theme.borderDim}`,
+        bottom: "max(1rem, env(safe-area-inset-bottom))",
+        right: "max(1rem, env(safe-area-inset-right))",
       }}
       onMouseEnter={(e) => { e.currentTarget.style.borderColor = theme.text }}
       onMouseLeave={(e) => { e.currentTarget.style.borderColor = theme.borderDim }}

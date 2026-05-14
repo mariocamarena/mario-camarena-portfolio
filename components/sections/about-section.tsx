@@ -32,10 +32,10 @@ export function AboutSection() {
   return (
     <section id="about" aria-labelledby="about-heading" className="min-h-screen py-20 sm:py-24 lg:py-28 px-6 sm:px-8 relative overflow-hidden scroll-mt-20" style={{ backgroundColor: theme.surface }}>
       {/* Corner Frame Accents - softer on surface bg */}
-      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
 
       {/* Subtle dithering background effect */}
       <div aria-hidden="true" className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.3 }}>
@@ -71,14 +71,15 @@ export function AboutSection() {
             <h2 id="about-heading" className="sr-only">About</h2>
             <pre
               aria-hidden="true"
-              className="font-mono text-[18px] sm:text-[20px] md:text-[24px] lg:text-[28px] leading-[1.1] tracking-tight"
+              translate="no"
+              className="font-mono text-[14px] sm:text-[18px] md:text-[22px] lg:text-[26px] leading-[1.1] tracking-tight"
               style={{ color: theme.text }}
             >{`▄▀█ █▄▄ █▀█ █ █ ▀█▀
 █▀█ █▄█ █▄█ █▄█ ░█░`}</pre>
             <div className="flex items-center gap-3 mt-3 justify-center opacity-60">
-              <div className="flex-1 max-w-[60px] h-px" style={{ backgroundColor: theme.text }}></div>
+              <div className="flex-1 max-w-[80px] h-px" style={{ backgroundColor: theme.text }}></div>
               <span className="text-[9px] font-mono" style={{ color: theme.text }}>BIO.2026</span>
-              <div className="flex-1 max-w-[60px] h-px" style={{ backgroundColor: theme.text }}></div>
+              <div className="flex-1 max-w-[80px] h-px" style={{ backgroundColor: theme.text }}></div>
             </div>
           </div>
         </motion.div>
@@ -125,9 +126,9 @@ export function AboutSection() {
                   ABOUT — README.md
                 </span>
                 <div className={`flex items-center ${terminalChrome.dotGap}`}>
-                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: '#ff5f56' }} />
-                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: '#ffbd2e' }} />
-                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: '#27ca40' }} />
+                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: theme.terminalDots.red }} />
+                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: theme.terminalDots.yellow }} />
+                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: theme.terminalDots.green }} />
                 </div>
               </div>
 
@@ -138,10 +139,10 @@ export function AboutSection() {
                   <span className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-2 block" style={{ color: theme.text }}>
                     BACKGROUND
                   </span>
-                  <p className="text-sm leading-relaxed" style={{ color: theme.textSoft }}>
+                  <p className="text-sm leading-relaxed text-pretty" style={{ color: theme.textSoft }}>
                     M.S. Computer Science @ UTRGV, expected May 2027. I started building systems through custom PCs, hardware repair, and small software projects. Over time, that turned into full-stack development, applied AI, and research work.
                   </p>
-                  <p className="text-sm leading-relaxed mt-2" style={{ color: theme.textSoft }}>
+                  <p className="text-sm leading-relaxed text-pretty mt-2" style={{ color: theme.textSoft }}>
                     This summer, I’ll be joining Textron Systems in Slidell, Louisiana as an IT Analyst Intern. The role sits at the intersection of software development, cybersecurity, infrastructure IT, and front-facing business support, which fits well with the way I’ve been building across both research and applied systems.
                   </p>
                 </div>
@@ -151,13 +152,13 @@ export function AboutSection() {
                   <span className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-2 block" style={{ color: theme.text }}>
                     RESEARCH
                   </span>
-                  <p className="text-sm leading-relaxed" style={{ color: theme.textSoft }}>
+                  <p className="text-sm leading-relaxed text-pretty" style={{ color: theme.textSoft }}>
                     I’m an AI Research Assistant at UTRGV MECIS (NSF CREST), where I work on computer vision, transportation AI, and graph-based risk modeling.
                   </p>
-                  <p className="text-sm leading-relaxed mt-2" style={{ color: theme.textSoft }}>
+                  <p className="text-sm leading-relaxed text-pretty mt-2" style={{ color: theme.textSoft }}>
                     I lead AD-SAM, a dual-encoder urban-scene segmentation model for autonomous-driving environments. The work focuses on improving segmentation with deformable decoding, hybrid losses, and stronger class-level performance across urban scenes.
                   </p>
-                  <p className="text-sm leading-relaxed mt-2" style={{ color: theme.textSoft }}>
+                  <p className="text-sm leading-relaxed text-pretty mt-2" style={{ color: theme.textSoft }}>
                     My current M.S. thesis is NASA-funded and focuses on AAM flight security risk modeling. Right now, the project models aircraft interactions from OpenSky ADS-B data as dynamic graph events, using surrogate safety signals like proximity and encounter geometry to study risk in future airspace systems.
                   </p>
                 </div>
@@ -167,10 +168,10 @@ export function AboutSection() {
                   <span className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-2 block" style={{ color: theme.text }}>
                     BUILDS
                   </span>
-                  <p className="text-sm leading-relaxed" style={{ color: theme.textSoft }}>
+                  <p className="text-sm leading-relaxed text-pretty" style={{ color: theme.textSoft }}>
                     STABLES: project lead + lead developer for a parking management app covering 800+ parking spots across 3 lots. Built the Node.js/Express + PostgreSQL backend for live availability, reservations, spatial checks, and double-booking prevention.
                   </p>
-                  <p className="text-sm leading-relaxed mt-2" style={{ color: theme.textSoft }}>
+                  <p className="text-sm leading-relaxed text-pretty mt-2" style={{ color: theme.textSoft }}>
                     This portfolio: built with Next.js, TypeScript, Tailwind, Framer Motion, and PostgreSQL. Designed as a terminal-inspired personal system with ASCII visuals, responsive animations, a full-stack contact pipeline, and an admin dashboard.
                   </p>
                 </div>
@@ -255,9 +256,9 @@ export function AboutSection() {
                   PROFILE — TERMINAL
                 </span>
                 <div className={`flex items-center ${terminalChrome.dotGap}`}>
-                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: '#ff5f56' }} />
-                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: '#ffbd2e' }} />
-                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: '#27ca40' }} />
+                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: theme.terminalDots.red }} />
+                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: theme.terminalDots.yellow }} />
+                  <div className={`${terminalChrome.dotSize} rounded-full`} style={{ backgroundColor: theme.terminalDots.green }} />
                 </div>
               </div>
 
@@ -285,13 +286,13 @@ export function AboutSection() {
                   <div className="flex-1 min-w-0 overflow-hidden">
                     <pre
                       aria-hidden="true"
-                      className="font-mono text-[8px] sm:text-[9px] leading-[1.15] tracking-tight"
+                      translate="no"
+                      className="font-mono text-[10px] sm:text-[11px] leading-[1.5] tracking-tight opacity-60"
                       style={{ color: theme.text }}
-                    >{`█▀▄▀█ ▄▀█ █▀█ █ █▀█
-█░▀░█ █▀█ █▀▄ █ █▄█
-
-█▀▀ ▄▀█ █▀▄▀█ ▄▀█ █▀█ █▀▀ █▄░█ ▄▀█
-█▄▄ █▀█ █░▀░█ █▀█ █▀▄ ██▄ █░▀█ █▀█`}</pre>
+                    >{`$ identify profile.png
+≡ 96 × 96  srgb
+≡ png  8-bit  rgb
+≡ ~/assets/mc`}</pre>
                   </div>
                 </div>
 
@@ -315,7 +316,7 @@ export function AboutSection() {
                       <motion.span
                         aria-hidden="true"
                         className="w-1.5 h-1.5 rounded-full"
-                        style={{ backgroundColor: '#27ca40' }}
+                        style={{ backgroundColor: theme.terminalDots.green }}
                         animate={shouldReduceMotion ? { opacity: 1 } : { opacity: [1, 0.4, 1] }}
                         transition={shouldReduceMotion ? { duration: 0 } : { duration: 2, repeat: Infinity, ease: "easeInOut" }}
                       />

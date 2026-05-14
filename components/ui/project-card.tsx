@@ -41,7 +41,7 @@ const PixelArrow = ({ direction, onClick }: { direction: "left" | "right"; onCli
       onClick()
     }}
     aria-label={direction === "left" ? "Previous image" : "Next image"}
-    className="group/arrow p-2 bg-black/60 border border-white/30 hover:border-white hover:bg-black/80 transition-all duration-150"
+    className="group/arrow p-2 bg-black/60 border border-white/30 hover:border-white hover:bg-black/80 transition duration-150"
   >
     <svg
       width="10"
@@ -246,6 +246,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
             src={images[currentImageIndex]}
             alt={images.length > 1 ? `${project.title} — screenshot ${currentImageIndex + 1} of ${images.length}` : project.title}
             fill
+            sizes="(min-width: 768px) 50vw, 100vw"
             className={`object-cover transition-transform duration-500 ${
               images[currentImageIndex].includes("stables3") ? "object-[50%_25%]" : "object-center"
             }`}
@@ -284,9 +285,9 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                   }}
                   aria-label={`Go to image ${idx + 1}`}
                   aria-current={idx === currentImageIndex ? "true" : undefined}
-                  className="w-3 h-3 transition-all duration-200"
+                  className="w-3 h-3 transition duration-200"
                   style={{
-                    backgroundColor: idx === currentImageIndex ? theme.accent : "rgba(255,255,255,0.4)",
+                    backgroundColor: idx === currentImageIndex ? "#ffffff" : "rgba(255,255,255,0.4)",
                   }}
                 />
               ))}
@@ -362,7 +363,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="relative flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-wider transition-all duration-200 group/btn"
+                className="relative flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-wider transition duration-200 group/btn"
                 style={{ backgroundColor: theme.text, color: theme.bg }}
                 onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
                 onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
@@ -378,7 +379,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="relative flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-wider transition-all duration-200 group/btn"
+                className="relative flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] tracking-wider transition duration-200 group/btn"
                 style={{ backgroundColor: theme.text, color: theme.bg }}
                 onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
                 onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
@@ -397,7 +398,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="relative flex items-center gap-1.5 px-3 py-1.5 bg-transparent font-mono text-[10px] tracking-wider transition-all duration-200 group/btn"
+                className="relative flex items-center gap-1.5 px-3 py-1.5 bg-transparent font-mono text-[10px] tracking-wider transition duration-200 group/btn"
                 style={{ border: `1px solid ${theme.text}80`, color: theme.text }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg; e.currentTarget.style.borderColor = theme.text }}
                 onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text; e.currentTarget.style.borderColor = `${theme.text}80` }}
@@ -444,6 +445,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby={`project-${project.id}-title`}
+                aria-describedby={`project-${project.id}-desc`}
                 className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto"
                 style={{
                   backgroundColor: theme.surface,
@@ -484,6 +486,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                     src={images[currentImageIndex]}
                     alt={images.length > 1 ? `${project.title} — screenshot ${currentImageIndex + 1} of ${images.length}` : project.title}
                     fill
+                    sizes="(min-width: 1024px) 1024px, 100vw"
                     className="object-contain"
                   />
 
@@ -521,7 +524,8 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                   </h2>
 
                   <p
-                    className="text-sm mb-6 leading-relaxed"
+                    id={`project-${project.id}-desc`}
+                    className="text-sm mb-6 leading-relaxed text-pretty"
                     style={{ color: theme.textSoft }}
                   >
                     {project.description.replace("**You're viewing this site right now!**", "").trim()}
@@ -561,7 +565,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="relative flex items-center gap-2 px-4 py-2 font-mono text-[11px] tracking-wider transition-all duration-200 group/btn"
+                        className="relative flex items-center gap-2 px-4 py-2 font-mono text-[11px] tracking-wider transition duration-200 group/btn"
                         style={{ backgroundColor: theme.text, color: theme.bg }}
                         onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
                         onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
@@ -577,7 +581,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="relative flex items-center gap-2 px-4 py-2 font-mono text-[11px] tracking-wider transition-all duration-200 group/btn"
+                        className="relative flex items-center gap-2 px-4 py-2 font-mono text-[11px] tracking-wider transition duration-200 group/btn"
                         style={{ backgroundColor: theme.text, color: theme.bg }}
                         onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.85' }}
                         onMouseLeave={(e) => { e.currentTarget.style.opacity = '1' }}
@@ -596,7 +600,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="relative flex items-center gap-2 px-4 py-2 bg-transparent font-mono text-[11px] tracking-wider transition-all duration-200 group/btn"
+                        className="relative flex items-center gap-2 px-4 py-2 bg-transparent font-mono text-[11px] tracking-wider transition duration-200 group/btn"
                         style={{ border: `1px solid ${theme.text}80`, color: theme.text }}
                         onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg; e.currentTarget.style.borderColor = theme.text }}
                         onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text; e.currentTarget.style.borderColor = `${theme.text}80` }}

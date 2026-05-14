@@ -153,7 +153,10 @@ nav,
 /* focus states - keyboard only (dark mode) */
 html.dark input:focus-visible,
 html.dark textarea:focus-visible,
-html.dark button:focus-visible {
+html.dark button:focus-visible,
+html.dark a:focus-visible,
+html.dark [role="button"]:focus-visible,
+html.dark [tabindex]:focus-visible {
   outline: 2px solid #f5f5f5;
   outline-offset: 2px;
 }
@@ -161,7 +164,10 @@ html.dark button:focus-visible {
 /* focus states - keyboard only (light mode) */
 html:not(.dark) input:focus-visible,
 html:not(.dark) textarea:focus-visible,
-html:not(.dark) button:focus-visible {
+html:not(.dark) button:focus-visible,
+html:not(.dark) a:focus-visible,
+html:not(.dark) [role="button"]:focus-visible,
+html:not(.dark) [tabindex]:focus-visible {
   outline: 2px solid #2e2e2e;
   outline-offset: 2px;
 }
@@ -251,7 +257,33 @@ html:not(.dark) ::selection {
   }
 }
 
-/* high contrast mode */
+/* high contrast mode — strengthen borders, hide decorative dot-grids, drop dim opacities */
+@media (prefers-contrast: more) {
+  body::before {
+    display: none;
+  }
+  html.dark {
+    --th-border: #ffffff;
+    --th-border-dim: #ffffff;
+    --th-border-hover: #ffffff;
+    --th-text-soft: #ffffff;
+    --th-text-muted: #e5e5e5;
+  }
+  html:not(.dark) {
+    --th-border: #000000;
+    --th-border-dim: #000000;
+    --th-border-hover: #000000;
+    --th-text-soft: #000000;
+    --th-text-muted: #1a1a1a;
+  }
+  /* Hide decorative overlays (dot grids, dither, scan lines, grain) */
+  .pointer-events-none[style*="opacity"],
+  .pointer-events-none[style*="background-image"] {
+    display: none !important;
+  }
+}
+
+/* legacy alias — older browsers report prefers-contrast: high */
 @media (prefers-contrast: high) {
   body::before {
     display: none;

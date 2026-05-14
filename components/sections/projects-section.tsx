@@ -5,33 +5,32 @@ import { ProjectCard } from "@/components/ui/project-card"
 import { ThesisBanner } from "@/components/ui/thesis-banner"
 import { useTheme } from "@/lib/useTheme"
 import { portfolio } from "@/lib/constants"
-import DelicateAsciiDots from "@/components/ui/delicate-ascii-dots"
 
 export function ProjectsSection() {
-  const { theme, isDark } = useTheme()
+  const { theme } = useTheme()
 
   return (
     <section
       id="projects"
-      className="py-20 relative overflow-hidden"
+      className="py-20 sm:py-24 lg:py-28 relative overflow-hidden scroll-mt-20"
       style={{ backgroundColor: theme.bg }}
     >
-      {/* Animated ASCII dots background */}
-      <div aria-hidden="true">
-        <DelicateAsciiDots
-          backgroundColor={theme.bg}
-          textColor={isDark ? "255, 255, 255" : "80, 80, 80"}
-          gridSize={45}
-          animationSpeed={0.3}
-          targetCellSize={42}
-        />
-      </div>
+      {/* Dot grid overlay - matches mobile nav menu */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          opacity: 0.04,
+          backgroundImage: `radial-gradient(circle, ${theme.text}cc 1px, transparent 1px)`,
+          backgroundSize: '24px 24px',
+        }}
+      />
 
       {/* Corner Frame Accents - medium on dark bg */}
-      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
-      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
-      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
-      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="hidden md:block absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="hidden md:block absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="hidden md:block absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="hidden md:block absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
@@ -50,14 +49,15 @@ export function ProjectsSection() {
             <h2 className="sr-only">Projects</h2>
             <pre
               aria-hidden="true"
+              translate="no"
               className="font-mono text-[14px] sm:text-[18px] md:text-[22px] lg:text-[26px] leading-[1.1] tracking-tight"
               style={{ color: theme.text }}
             >{`█▀█ █▀█ █▀█ ░░█ █▀▀ █▀▀ ▀█▀ █▀
 █▀▀ █▀▄ █▄█ █▄█ ██▄ █▄▄ ░█░ ▄█`}</pre>
             <div className="flex items-center gap-3 mt-3 justify-center opacity-60">
-              <div className="flex-1 max-w-[100px] h-px" style={{ backgroundColor: theme.text }}></div>
+              <div className="flex-1 max-w-[80px] h-px" style={{ backgroundColor: theme.text }}></div>
               <span className="text-[9px] font-mono" style={{ color: theme.text }}>PORTFOLIO.2026</span>
-              <div className="flex-1 max-w-[100px] h-px" style={{ backgroundColor: theme.text }}></div>
+              <div className="flex-1 max-w-[80px] h-px" style={{ backgroundColor: theme.text }}></div>
             </div>
           </div>
         </motion.div>

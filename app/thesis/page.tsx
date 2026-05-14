@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation"
 import { useCallback } from "react"
 import { FileText } from "lucide-react"
-import DelicateAsciiDots from "@/components/ui/delicate-ascii-dots"
 import { ThesisHeader, ThesisSidebar, TimelinePhase, CollapsibleSection, CitationsSection } from "@/components/thesis"
 import { thesisData } from "@/lib/thesis-data"
 import { useTheme } from "@/lib/useTheme"
@@ -25,16 +24,16 @@ export default function ThesisPage() {
 
   return (
     <div className="min-h-screen relative" style={{ backgroundColor: theme.bg }}>
-      {/* Fixed animated ASCII background */}
-      <div aria-hidden="true" className="fixed inset-0 z-0">
-        <DelicateAsciiDots
-          backgroundColor={theme.bg}
-          textColor={isDark ? "255, 255, 255" : "80, 80, 80"}
-          gridSize={45}
-          animationSpeed={0.3}
-          targetCellSize={42}
-        />
-      </div>
+      {/* Fixed dot grid overlay - matches mobile nav menu */}
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 z-0 pointer-events-none"
+        style={{
+          opacity: 0.04,
+          backgroundImage: `radial-gradient(circle, ${theme.text}cc 1px, transparent 1px)`,
+          backgroundSize: '24px 24px',
+        }}
+      />
 
       {/* Corner Frame Accents */}
       <div aria-hidden="true" className="fixed top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }} />

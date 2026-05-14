@@ -150,10 +150,13 @@ export default function Portfolio() {
 
       {/* Navigation */}
       <nav
-        className="fixed top-0 left-0 right-0 z-40 transition-all duration-200"
+        className="fixed top-0 left-0 right-0 z-40 transition duration-200"
         style={{
           backgroundColor: scrolled ? theme.bg : "transparent",
           borderBottom: scrolled ? `1px solid ${theme.border}` : "none",
+          paddingTop: "env(safe-area-inset-top)",
+          paddingLeft: "env(safe-area-inset-left)",
+          paddingRight: "env(safe-area-inset-right)",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -241,8 +244,12 @@ export default function Portfolio() {
 
             {/* Close button */}
             <button
-              className="absolute top-4 right-4 p-2"
-              style={{ color: theme.textSoft }}
+              className="absolute p-2"
+              style={{
+                color: theme.textSoft,
+                top: "max(1rem, env(safe-area-inset-top))",
+                right: "max(1rem, env(safe-area-inset-right))",
+              }}
               onClick={() => setMenuOpen(false)}
               aria-label="Close menu"
             >
@@ -301,6 +308,27 @@ export default function Portfolio() {
         {/* Contact Section */}
         <ContactSection />
       </main>
+
+      {/* Page footer — semantic landmark, terminal signature */}
+      <footer
+        role="contentinfo"
+        className="font-mono text-[10px] tracking-wider border-t"
+        style={{
+          backgroundColor: theme.surface,
+          borderColor: theme.border,
+          color: theme.textMuted,
+          paddingLeft: "max(1.5rem, env(safe-area-inset-left))",
+          paddingRight: "max(1.5rem, env(safe-area-inset-right))",
+          paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
+        }}
+      >
+        <div className="max-w-6xl mx-auto py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <span translate="no">PORTFOLIO.2026 — © Mario Camarena</span>
+          <span className="flex items-center gap-1" translate="no" aria-hidden="true">
+            mario@portfolio:~$ logout
+          </span>
+        </div>
+      </footer>
 
       {/* Theme toggle */}
       <AsciiThemeToggle />

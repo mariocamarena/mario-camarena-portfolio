@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import { ArrowDown } from "lucide-react"
 import Link from "next/link"
@@ -22,6 +22,17 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
   const shouldReduceMotion = useReducedMotion()
   const [displayedText, setDisplayedText] = useState("")
   const [isTypingComplete, setIsTypingComplete] = useState(false)
+  const [hasScrolled, setHasScrolled] = useState(false)
+  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const startDelayRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Fade scroll indicator once the user starts scrolling away from hero
+  useEffect(() => {
+    const onScroll = () => setHasScrolled(window.scrollY > 80)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
 
   // Wait for visibility before starting animations
   useEffect(() => {
@@ -33,27 +44,33 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
       return
     }
 
-    let typingInterval: NodeJS.Timeout | null = null
-
-    // Start typing after heading animation (0.6s delay)
-    const startDelay = setTimeout(() => {
+    // Start typing after heading animation (0.7s delay)
+    startDelayRef.current = setTimeout(() => {
       let currentIndex = 0
-      typingInterval = setInterval(() => {
+      typingIntervalRef.current = setInterval(() => {
         if (currentIndex < taglineText.length) {
           setDisplayedText(taglineText.slice(0, currentIndex + 1))
           currentIndex++
         } else {
-          if (typingInterval) clearInterval(typingInterval)
+          if (typingIntervalRef.current) clearInterval(typingIntervalRef.current)
           setIsTypingComplete(true)
         }
       }, 25)
     }, 700)
 
     return () => {
-      clearTimeout(startDelay)
-      if (typingInterval) clearInterval(typingInterval)
+      if (startDelayRef.current) clearTimeout(startDelayRef.current)
+      if (typingIntervalRef.current) clearInterval(typingIntervalRef.current)
     }
   }, [isVisible, shouldReduceMotion])
+
+  const skipTyping = () => {
+    if (isTypingComplete) return
+    if (startDelayRef.current) clearTimeout(startDelayRef.current)
+    if (typingIntervalRef.current) clearInterval(typingIntervalRef.current)
+    setDisplayedText(taglineText)
+    setIsTypingComplete(true)
+  }
 
   return (
     <section
@@ -72,18 +89,18 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
         <HeroAsciiBackground />
       </div>
 
-      {/* Mobile blur overlay */}
+      {/* Mobile dim overlay — light enough to let ASCII background read through */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 backdrop-blur-[2px] z-[5] lg:hidden"
-        style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(232,232,232,0.4)' }}
+        className="absolute inset-0 z-[5] lg:hidden"
+        style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.15)' : 'rgba(232,232,232,0.25)' }}
       />
 
       {/* Corner Frame Accents */}
-      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
-      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
-      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
-      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}4d` }} />
+      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }} />
+      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }} />
+      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }} />
+      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }} />
 
       {/* Main Content */}
       <div className="relative z-10 flex min-h-screen items-center justify-center lg:justify-end pt-16 lg:pt-0">
@@ -108,7 +125,8 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
               <TextScramble
                 as="h1"
                 aria-label="Mario Camarena"
-                className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-4 lg:mb-6 leading-tight font-mono tracking-wider"
+                translate="no"
+                className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-4 lg:mb-6 leading-tight font-mono tracking-wider text-balance"
                 style={{ letterSpacing: '0.05em', color: theme.text }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
@@ -135,9 +153,22 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
               ))}
             </motion.div>
 
-            {/* Description with typing animation */}
+            {/* Description with typing animation — tap/click to skip while typing */}
             <div className="relative">
-              <div className="text-base lg:text-lg mb-6 lg:mb-8 leading-relaxed font-mono min-h-[3.5rem] lg:min-h-[4rem]">
+              <div
+                className="text-base lg:text-lg mb-6 lg:mb-8 leading-relaxed font-mono min-h-[3.5rem] lg:min-h-[4rem]"
+                onClick={skipTyping}
+                onKeyDown={(e) => {
+                  if (!isTypingComplete && (e.key === "Enter" || e.key === " ")) {
+                    e.preventDefault()
+                    skipTyping()
+                  }
+                }}
+                role={!isTypingComplete ? "button" : undefined}
+                tabIndex={!isTypingComplete ? 0 : undefined}
+                aria-label={!isTypingComplete ? "Skip typing animation" : undefined}
+                style={{ cursor: !isTypingComplete ? "pointer" : "default" }}
+              >
                 <span className="opacity-80" style={{ color: theme.textSoft }}>{displayedText}</span>
                 <motion.span
                   className="inline-block w-[2px] h-[1.1em] ml-0.5 align-middle"
@@ -163,7 +194,7 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
             >
               <button
                 onClick={onScrollToProjects}
-                className="relative px-5 lg:px-6 py-2.5 lg:py-3 bg-transparent font-mono text-sm transition-all duration-200 group"
+                className="relative px-5 lg:px-6 py-2.5 lg:py-3 bg-transparent font-mono text-sm transition duration-200 group"
                 style={{ border: `1px solid ${theme.text}`, color: theme.text }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
                 onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
@@ -179,7 +210,7 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
                 href="/CS_Mario_Camarena_Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative px-5 lg:px-6 py-2.5 lg:py-3 font-mono text-sm transition-all duration-200 text-center group"
+                className="relative px-5 lg:px-6 py-2.5 lg:py-3 font-mono text-sm transition duration-200 text-center group"
                 style={{ backgroundColor: theme.text, border: `1px solid ${theme.text}`, color: theme.bg }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
                 onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
@@ -193,16 +224,11 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
 
               <Link
                 href="/thesis"
-                className="relative px-4 lg:px-5 py-2 lg:py-2.5 bg-transparent font-mono text-sm transition-all duration-200 text-center group"
-                style={{ border: `1px solid ${theme.text}`, color: theme.text }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
-                onFocus={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
-                onBlur={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
+                className="inline-flex items-center justify-center lg:justify-start gap-1.5 px-2 py-2.5 lg:py-3 font-mono text-sm tracking-wide underline-offset-4 decoration-1 hover:underline transition-colors duration-200"
+                style={{ color: theme.text }}
               >
-                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
-                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
                 THESIS
+                <span aria-hidden="true">→</span>
               </Link>
             </motion.div>
 
@@ -222,12 +248,13 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
         </div>
       </div>
 
-      {/* Scroll indicator */}
+      {/* Scroll indicator — fades out once the user scrolls past the hero */}
       <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.6 }}
+        animate={{ opacity: hasScrolled ? 0 : 1 }}
+        transition={{ delay: hasScrolled ? 0 : 1, duration: 0.4 }}
+        style={{ pointerEvents: hasScrolled ? "none" : "auto" }}
       >
         <motion.button
           onClick={onScrollToAbout}

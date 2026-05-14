@@ -123,12 +123,12 @@ export const ContactSection = () => {
   }
 
   return (
-    <section id="contact" className="min-h-screen py-20 px-6 relative overflow-hidden" style={{ backgroundColor: theme.surface }}>
+    <section id="contact" className="min-h-screen py-20 sm:py-24 lg:py-28 px-6 relative overflow-hidden scroll-mt-20" style={{ backgroundColor: theme.surface }}>
       {/* Corner Frame Accents - softer on surface bg */}
-      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
-      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}33` }}></div>
+      <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
+      <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
 
       {/* Same dithering background as About section */}
       <div aria-hidden="true" className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.3 }}>
@@ -165,14 +165,15 @@ export const ContactSection = () => {
             <h2 className="sr-only">Contact</h2>
             <pre
               aria-hidden="true"
+              translate="no"
               className="font-mono text-[14px] sm:text-[18px] md:text-[22px] lg:text-[26px] leading-[1.1] tracking-tight"
               style={{ color: theme.text }}
             >{`█▀▀ █▀█ █▄░█ ▀█▀ ▄▀█ █▀▀ ▀█▀
 █▄▄ █▄█ █░▀█ ░█░ █▀█ █▄▄ ░█░`}</pre>
             <div className="flex items-center gap-3 mt-3 justify-center opacity-60">
-              <div className="flex-1 max-w-[60px] h-px" style={{ backgroundColor: theme.text }}></div>
+              <div className="flex-1 max-w-[80px] h-px" style={{ backgroundColor: theme.text }}></div>
               <span className="text-[9px] font-mono" style={{ color: theme.text }}>MSG.2026</span>
-              <div className="flex-1 max-w-[60px] h-px" style={{ backgroundColor: theme.text }}></div>
+              <div className="flex-1 max-w-[80px] h-px" style={{ backgroundColor: theme.text }}></div>
             </div>
           </div>
         </motion.div>
@@ -215,9 +216,9 @@ export const ContactSection = () => {
               CONTACT — FORM
             </span>
             <div className="flex items-center gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#ff5f56' }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#ffbd2e' }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#27ca40' }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: theme.terminalDots.red }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: theme.terminalDots.yellow }} />
+              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: theme.terminalDots.green }} />
             </div>
           </div>
 
@@ -232,7 +233,7 @@ export const ContactSection = () => {
               { name: "email", type: "email", label: "EMAIL", placeholder: "john@example.com", autoComplete: "email", inputMode: "email" as const, spellCheck: false },
             ] as const).map((field) => {
               const fieldError = errors[field.name as FieldName]
-              const errorBorder = fieldError ? '#ff5f56' : (focusedField === field.name ? theme.text : theme.borderHover)
+              const errorBorder = fieldError ? theme.terminalDots.red : (focusedField === field.name ? theme.text : theme.borderHover)
               return (
                 <div key={field.name}>
                   <label
@@ -261,7 +262,7 @@ export const ContactSection = () => {
                       aria-describedby={fieldError ? `${field.name}-error` : undefined}
                       aria-required="true"
                       required
-                      className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus-visible:outline-none border-b placeholder:opacity-30"
+                      className="w-full px-0 py-2 font-mono text-sm transition duration-200 focus-visible:outline-none border-b placeholder:opacity-30"
                       style={{
                         backgroundColor: 'transparent',
                         borderBottomWidth: focusedField === field.name || fieldError ? '2px' : '1px',
@@ -276,7 +277,7 @@ export const ContactSection = () => {
                       id={`${field.name}-error`}
                       role="alert"
                       className="mt-1.5 text-[10px] font-mono tracking-wide"
-                      style={{ color: '#ff5f56' }}
+                      style={{ color: theme.terminalDots.red }}
                     >
                       [err] {fieldError}
                     </p>
@@ -309,12 +310,12 @@ export const ContactSection = () => {
                   aria-describedby={errors.message ? "message-error" : undefined}
                   aria-required="true"
                   required
-                  className="w-full px-0 py-2 font-mono text-sm transition-all duration-200 focus-visible:outline-none min-h-[100px] resize-none border-b placeholder:opacity-30"
+                  className="w-full px-0 py-2 font-mono text-sm transition duration-200 focus-visible:outline-none min-h-[100px] resize-none border-b placeholder:opacity-30"
                   style={{
                     backgroundColor: 'transparent',
                     borderBottomWidth: focusedField === "message" || errors.message ? '2px' : '1px',
                     borderBottomStyle: 'solid',
-                    borderBottomColor: errors.message ? '#ff5f56' : (focusedField === "message" ? theme.text : theme.borderHover),
+                    borderBottomColor: errors.message ? theme.terminalDots.red : (focusedField === "message" ? theme.text : theme.borderHover),
                     color: theme.text,
                   }}
                 />
@@ -324,7 +325,7 @@ export const ContactSection = () => {
                   id="message-error"
                   role="alert"
                   className="mt-1.5 text-[10px] font-mono tracking-wide"
-                  style={{ color: '#ff5f56' }}
+                  style={{ color: theme.terminalDots.red }}
                 >
                   [err] {errors.message}
                 </p>
@@ -336,7 +337,7 @@ export const ContactSection = () => {
               <button
                 type="submit"
                 disabled={submitting || status === "success"}
-                className="relative w-full py-3 font-mono text-sm tracking-wide uppercase transition-all duration-200 group"
+                className="relative w-full py-3 font-mono text-sm tracking-wide uppercase transition duration-200 group"
                 style={{
                   backgroundColor: 'transparent',
                   border: `1px solid ${theme.text}`,
@@ -416,7 +417,7 @@ export const ContactSection = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <span style={{ color: '#27ca40' }}>[ok]</span>
+                    <span style={{ color: theme.terminalDots.green }}>[ok]</span>
                     <span style={{ color: theme.textSoft }}>message transmitted successfully</span>
                   </motion.div>
                 )}
@@ -427,7 +428,7 @@ export const ContactSection = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <span style={{ color: '#ff5f56' }}>[err]</span>
+                    <span style={{ color: theme.terminalDots.red }}>[err]</span>
                     <span style={{ color: theme.textSoft }}>transmission failed, retry</span>
                   </motion.div>
                 )}
@@ -468,7 +469,7 @@ export const ContactSection = () => {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 transition-all duration-200"
+                  className="p-2 transition duration-200"
                   style={{ color: theme.textMuted }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.color = theme.text
@@ -510,7 +511,7 @@ export const ContactSection = () => {
         >
           <Link
             href="/admin"
-            className="inline-block text-[10px] font-mono tracking-wider px-3 py-1.5 transition-all duration-200 border"
+            className="inline-block text-[10px] font-mono tracking-wider px-3 py-1.5 transition duration-200 border"
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = theme.text
               e.currentTarget.style.color = theme.text
