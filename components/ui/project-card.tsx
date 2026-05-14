@@ -41,7 +41,7 @@ const PixelArrow = ({ direction, onClick }: { direction: "left" | "right"; onCli
       onClick()
     }}
     aria-label={direction === "left" ? "Previous image" : "Next image"}
-    className="group/arrow p-2 bg-black/60 border border-white/30 hover:border-white hover:bg-black/80 transition duration-150"
+    className="group/arrow p-3 md:p-2 bg-black/60 border border-white/30 hover:border-white hover:bg-black/80 transition duration-150"
   >
     <svg
       width="10"
@@ -68,6 +68,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
   const { dialogRef } = useDialogA11y({ open: isExpanded, onClose: () => setIsExpanded(false) })
 
   // Project image arrays - organized by project folder
@@ -93,13 +94,13 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
   const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % images.length)
   const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
 
-  // Image carousel auto-rotation (pause when expanded, hovered, or reduced-motion)
+  // Image carousel auto-rotation (pause when expanded, hovered, paused by user, or reduced-motion)
   useEffect(() => {
-    if (images.length <= 1 || isExpanded || isHovered || shouldReduceMotion) return
+    if (images.length <= 1 || isExpanded || isHovered || isPaused || shouldReduceMotion) return
 
     const interval = setInterval(nextImage, 3000)
     return () => clearInterval(interval)
-  }, [images.length, isExpanded, isHovered, shouldReduceMotion])
+  }, [images.length, isExpanded, isHovered, isPaused, shouldReduceMotion])
 
   // Reset hover when modal closes (body-scroll lock + Esc handled by useDialogA11y)
   useEffect(() => {
@@ -134,6 +135,8 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
         role="button"
         tabIndex={0}
         aria-label={`Open ${project.title} details`}
+        aria-haspopup="dialog"
+        aria-expanded={isExpanded}
         className="relative overflow-hidden cursor-pointer"
         style={{
           backgroundColor: theme.bg,
@@ -285,13 +288,34 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                   }}
                   aria-label={`Go to image ${idx + 1}`}
                   aria-current={idx === currentImageIndex ? "true" : undefined}
-                  className="w-3 h-3 transition duration-200"
-                  style={{
-                    backgroundColor: idx === currentImageIndex ? "#ffffff" : "rgba(255,255,255,0.4)",
-                  }}
-                />
+                  className="p-1.5 -m-0.5 transition duration-200"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="block w-3 h-3"
+                    style={{
+                      backgroundColor: idx === currentImageIndex ? "#ffffff" : "rgba(255,255,255,0.4)",
+                    }}
+                  />
+                </button>
               ))}
             </div>
+          )}
+
+          {/* Carousel pause/play toggle — only when multiple images */}
+          {images.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                setIsPaused((p) => !p)
+              }}
+              aria-label={isPaused ? "Resume image rotation" : "Pause image rotation"}
+              aria-pressed={isPaused}
+              className="absolute top-2 right-2 z-20 px-1.5 py-0.5 font-mono text-[10px] leading-none bg-black/60 border border-white/30 text-white/80 hover:text-white hover:border-white transition duration-150"
+              translate="no"
+            >
+              {isPaused ? "[▶]" : "[❚❚]"}
+            </button>
           )}
         </motion.div>
 
@@ -318,7 +342,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
               className="text-xs leading-relaxed"
               style={{ color: theme.textSoft }}
             >
-              {project.description.replace("**You're viewing this site right now!**", "").trim()}
+              {project.description.replace(/\*\*(.*?)\*\*/g, "").trim()}
             </p>
           </motion.div>
 
@@ -502,9 +526,12 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                     </>
                   )}
 
-                  {/* Image counter */}
+                  {/* Image counter — announced to screen readers as user pages */}
                   {images.length > 1 && (
                     <div
+                      role="status"
+                      aria-live="polite"
+                      aria-atomic="true"
                       className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 font-mono text-[10px]"
                       style={{ backgroundColor: 'rgba(0,0,0,0.7)', color: theme.textSoft }}
                     >
@@ -528,7 +555,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                     className="text-sm mb-6 leading-relaxed text-pretty"
                     style={{ color: theme.textSoft }}
                   >
-                    {project.description.replace("**You're viewing this site right now!**", "").trim()}
+                    {project.description.replace(/\*\*(.*?)\*\*/g, "").trim()}
                   </p>
 
                   {/* Tech Stack */}

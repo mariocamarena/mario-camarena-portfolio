@@ -172,6 +172,58 @@ html:not(.dark) [tabindex]:focus-visible {
   outline-offset: 2px;
 }
 
+/* terminal CTA + nav utilities — CSS-driven hover/focus swap (no JS handlers) */
+.btn-outline {
+  background-color: transparent;
+  color: var(--th-text);
+  border: 1px solid var(--th-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.btn-outline:hover,
+.btn-outline:focus-visible {
+  background-color: var(--th-text);
+  color: var(--th-bg);
+}
+.btn-filled {
+  background-color: var(--th-text);
+  color: var(--th-bg);
+  border: 1px solid var(--th-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.btn-filled:hover,
+.btn-filled:focus-visible {
+  background-color: transparent;
+  color: var(--th-text);
+}
+.nav-link {
+  color: var(--th-text-soft);
+  transition: color 0.15s ease;
+}
+.nav-link:hover,
+.nav-link:focus-visible,
+.nav-link[aria-current="location"] {
+  color: var(--th-text);
+}
+
+/* disabled inputs/buttons — dim + not-allowed cursor */
+input:disabled,
+textarea:disabled,
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* kill 300ms tap delay on mobile for all interactive elements */
+button,
+a,
+input,
+textarea,
+select,
+summary,
+[role="button"] {
+  touch-action: manipulation;
+}
+
 /* skip to content link - hidden until focused */
 .skip-link {
   position: absolute;
@@ -287,6 +339,26 @@ html:not(.dark) ::selection {
 @media (prefers-contrast: high) {
   body::before {
     display: none;
+  }
+}
+
+/* Reduced transparency — drop backdrop-filter blurs for users who opted out */
+@media (prefers-reduced-transparency: reduce) {
+  [style*="backdrop-filter"],
+  [style*="backdropFilter"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* Save-data mode — drop heavy decorative layers (shaders, grain, dot grids) */
+@media (prefers-reduced-data: reduce) {
+  body::before {
+    display: none !important;
+  }
+  .pointer-events-none[style*="opacity"],
+  .pointer-events-none[style*="background-image"] {
+    display: none !important;
   }
 }
 

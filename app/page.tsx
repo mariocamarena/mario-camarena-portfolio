@@ -148,7 +148,8 @@ export default function Portfolio() {
         {isLoading && <LoadingScreen />}
       </AnimatePresence>
 
-      {/* Navigation */}
+      {/* Site header — semantic landmark wrapping the fixed nav */}
+      <header role="banner">
       <nav
         className="fixed top-0 left-0 right-0 z-40 transition duration-200"
         style={{
@@ -173,24 +174,12 @@ export default function Portfolio() {
                     scrollTo(item.id)
                   }}
                   aria-current={activeSection === item.id ? "location" : undefined}
-                  className="relative px-4 py-2 font-medium uppercase tracking-wider text-sm transition-colors duration-200"
-                  style={{
-                    color: activeSection === item.id ? theme.text : theme.textSoft,
-                  }}
-                  onMouseEnter={(e) => {
-                    if (activeSection !== item.id) {
-                      e.currentTarget.style.color = theme.text
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (activeSection !== item.id) {
-                      e.currentTarget.style.color = theme.textSoft
-                    }
-                  }}
+                  className="nav-link relative px-4 py-2 font-medium uppercase tracking-wider text-sm"
                 >
                   {item.name}
                   {activeSection === item.id && (
                     <span
+                      aria-hidden="true"
                       className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full"
                       style={{ backgroundColor: theme.text }}
                     />
@@ -215,6 +204,7 @@ export default function Portfolio() {
           </div>
         </div>
       </nav>
+      </header>
 
       {/* Mobile Menu */}
       <AnimatePresence>
@@ -267,14 +257,12 @@ export default function Portfolio() {
                     scrollTo(item.id)
                   }}
                   aria-current={activeSection === item.id ? "location" : undefined}
-                  className="text-xl font-medium uppercase tracking-wider px-6 py-3 transition-colors duration-200"
-                  style={{
-                    color: activeSection === item.id ? theme.text : theme.textSoft,
-                  }}
+                  className="nav-link text-xl font-medium uppercase tracking-wider px-6 py-3"
                 >
                   {item.name}
                   {activeSection === item.id && (
                     <span
+                      aria-hidden="true"
                       className="block w-4 h-0.5 mx-auto mt-1 rounded-full"
                       style={{ backgroundColor: theme.text }}
                     />

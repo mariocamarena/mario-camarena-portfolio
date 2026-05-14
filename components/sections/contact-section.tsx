@@ -226,11 +226,12 @@ export const ContactSection = () => {
           <form
             onSubmit={handleSubmit}
             noValidate
+            aria-busy={submitting}
             className="p-7 space-y-6 relative"
           >
             {([
-              { name: "name", type: "text", label: "NAME", placeholder: "John Doe", autoComplete: "name" },
-              { name: "email", type: "email", label: "EMAIL", placeholder: "john@example.com", autoComplete: "email", inputMode: "email" as const, spellCheck: false },
+              { name: "name", type: "text", label: "NAME", placeholder: "John Doe", autoComplete: "name", maxLength: 80 },
+              { name: "email", type: "email", label: "EMAIL", placeholder: "john@example.com", autoComplete: "email", inputMode: "email" as const, spellCheck: false, maxLength: 254 },
             ] as const).map((field) => {
               const fieldError = errors[field.name as FieldName]
               const errorBorder = fieldError ? theme.terminalDots.red : (focusedField === field.name ? theme.text : theme.borderHover)
@@ -251,6 +252,8 @@ export const ContactSection = () => {
                       id={field.name}
                       name={field.name}
                       autoComplete={field.autoComplete}
+                      maxLength={field.maxLength}
+                      disabled={submitting || status === "success"}
                       inputMode={"inputMode" in field ? field.inputMode : undefined}
                       spellCheck={"spellCheck" in field ? field.spellCheck : undefined}
                       value={form[field.name as keyof typeof form]}
@@ -301,6 +304,8 @@ export const ContactSection = () => {
                   id="message"
                   name="message"
                   autoComplete="off"
+                  maxLength={2000}
+                  disabled={submitting || status === "success"}
                   value={form.message}
                   onChange={handleChange}
                   onFocus={() => setFocusedField("message")}
@@ -458,7 +463,7 @@ export const ContactSection = () => {
             className="px-7 py-4 border-t flex items-center justify-between"
             style={{ borderColor: theme.border }}
           >
-            <div className="flex items-center gap-4">
+            <address className="not-italic flex items-center gap-4">
               {[
                 { icon: Github, href: "https://github.com/mariocamarena", label: "GitHub" },
                 { icon: Linkedin, href: "https://www.linkedin.com/in/marioacamarena/", label: "LinkedIn" },
@@ -479,10 +484,10 @@ export const ContactSection = () => {
                   }}
                   aria-label={label}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-5 h-5" aria-hidden="true" />
                 </a>
               ))}
-            </div>
+            </address>
             <div className="flex items-center">
               <span
                 className="text-[9px] font-mono tracking-wider"

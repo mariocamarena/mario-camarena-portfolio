@@ -194,15 +194,10 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
             >
               <button
                 onClick={onScrollToProjects}
-                className="relative px-5 lg:px-6 py-2.5 lg:py-3 bg-transparent font-mono text-sm transition duration-200 group"
-                style={{ border: `1px solid ${theme.text}`, color: theme.text }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
-                onFocus={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
-                onBlur={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
+                className="btn-outline relative px-5 lg:px-6 py-2.5 lg:py-3 font-mono text-sm group"
               >
-                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
-                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
+                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
+                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
                 VIEW PROJECTS
               </button>
 
@@ -210,15 +205,10 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
                 href="/CS_Mario_Camarena_Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative px-5 lg:px-6 py-2.5 lg:py-3 font-mono text-sm transition duration-200 text-center group"
-                style={{ backgroundColor: theme.text, border: `1px solid ${theme.text}`, color: theme.bg }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
-                onFocus={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = theme.text }}
-                onBlur={(e) => { e.currentTarget.style.backgroundColor = theme.text; e.currentTarget.style.color = theme.bg }}
+                className="btn-filled relative px-5 lg:px-6 py-2.5 lg:py-3 font-mono text-sm text-center group"
               >
-                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
-                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
+                <span className="hidden lg:block absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
+                <span className="hidden lg:block absolute -bottom-1 -right-1 w-2 h-2 border-b border-r opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
                 GET RESUME
               </a>
 
