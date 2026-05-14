@@ -25,9 +25,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Script to set theme before page renders to prevent flash
+  // Script to set theme + theme-color meta before page renders (prevents flash)
+  // Also re-syncs theme-color whenever the theme toggles at runtime.
   const themeScript = `
     (function() {
+      const DARK_BG = '#0a0a0a';
+      const LIGHT_BG = '#e8e8e8';
       const savedTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const shouldBeDark = savedTheme ? savedTheme === 'dark' : prefersDark;
@@ -36,6 +39,19 @@ export default function RootLayout({
       } else {
         document.documentElement.classList.remove('dark');
       }
+      function setMeta(color) {
+        var meta = document.querySelector('meta[name="theme-color"]:not([media])');
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('name', 'theme-color');
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', color);
+      }
+      setMeta(shouldBeDark ? DARK_BG : LIGHT_BG);
+      window.addEventListener('themeChange', function(e) {
+        setMeta(e.detail && e.detail.mode === 'dark' ? DARK_BG : LIGHT_BG);
+      });
     })();
   `
 
@@ -43,8 +59,6 @@ export default function RootLayout({
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
-        <meta name="theme-color" content="#e8e8e8" media="(prefers-color-scheme: light)" />
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/favicon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect, memo } from "react"
+import { useState, useEffect, useRef, memo } from "react"
 import { createPortal } from "react-dom"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Github, ExternalLink, FileText, X } from "lucide-react"
@@ -69,6 +69,8 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
   const [isHovered, setIsHovered] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
+  const [isInView, setIsInView] = useState(true)
+  const cardRef = useRef<HTMLDivElement>(null)
   const { dialogRef } = useDialogA11y({ open: isExpanded, onClose: () => setIsExpanded(false) })
 
   // Project image arrays - organized by project folder
@@ -94,18 +96,46 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
   const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % images.length)
   const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
 
-  // Image carousel auto-rotation (pause when expanded, hovered, paused by user, or reduced-motion)
+  // Image carousel auto-rotation (pause when expanded, hovered, paused, offscreen, or reduced-motion)
   useEffect(() => {
-    if (images.length <= 1 || isExpanded || isHovered || isPaused || shouldReduceMotion) return
+    if (images.length <= 1 || isExpanded || isHovered || isPaused || !isInView || shouldReduceMotion) return
 
     const interval = setInterval(nextImage, 3000)
     return () => clearInterval(interval)
-  }, [images.length, isExpanded, isHovered, isPaused, shouldReduceMotion])
+  }, [images.length, isExpanded, isHovered, isPaused, isInView, shouldReduceMotion])
+
+  // IntersectionObserver — pause auto-rotation when the card scrolls offscreen
+  useEffect(() => {
+    if (!cardRef.current || typeof IntersectionObserver === "undefined") return
+    const node = cardRef.current
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.1 }
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
 
   // Reset hover when modal closes (body-scroll lock + Esc handled by useDialogA11y)
   useEffect(() => {
     if (!isExpanded) setIsHovered(false)
   }, [isExpanded])
+
+  // Modal: left/right arrow keys page through images
+  useEffect(() => {
+    if (!isExpanded || images.length <= 1) return
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault()
+        prevImage()
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault()
+        nextImage()
+      }
+    }
+    document.addEventListener("keydown", handler)
+    return () => document.removeEventListener("keydown", handler)
+  }, [isExpanded, images.length])
 
   const isPCBuilds = project.title.includes("Custom PC Builds")
   const isResearch = !!project.paper // Research projects have papers
@@ -119,6 +149,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
 
   return (
     <motion.div
+      ref={cardRef}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{
@@ -132,27 +163,21 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
       onMouseLeave={() => setIsHovered(false)}
     >
       <motion.div
-        role="button"
-        tabIndex={0}
-        aria-label={`Open ${project.title} details`}
-        aria-haspopup="dialog"
-        aria-expanded={isExpanded}
         className="relative overflow-hidden cursor-pointer"
         style={{
           backgroundColor: theme.bg,
           border: `1px solid ${theme.border}`,
           boxShadow: isDark ? '0 16px 32px rgba(0, 0, 0, 0.4)' : '0 16px 32px rgba(0, 0, 0, 0.15)',
         }}
-        onClick={() => setIsExpanded(true)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault()
-            setIsExpanded(true)
-          }
+        onClick={(e) => {
+          // Don't open modal if click originated on a nested interactive element
+          const target = e.target as HTMLElement
+          if (target.closest("button, a")) return
+          setIsExpanded(true)
         }}
         animate={isHovered ? {
-          y: -6,
-          scale: 1.025,
+          y: shouldReduceMotion ? 0 : -6,
+          scale: shouldReduceMotion ? 1 : 1.025,
           borderColor: theme.borderHover,
           boxShadow: isDark ? "0 20px 40px rgba(0, 0, 0, 0.6)" : "0 20px 40px rgba(0, 0, 0, 0.2)",
         } : {
@@ -241,7 +266,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
           className="relative overflow-hidden"
           initial={false}
           animate={{
-            height: isHovered ? 220 : 128,
+            height: isHovered && !shouldReduceMotion ? 220 : 128,
           }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
         >
@@ -334,7 +359,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
             className="overflow-hidden"
             initial={false}
             animate={{
-              height: isHovered ? "auto" : "2.5rem",
+              height: isHovered && !shouldReduceMotion ? "auto" : "2.5rem",
             }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
@@ -351,7 +376,7 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
             className="flex flex-wrap gap-1.5 mt-3 mb-3 overflow-hidden"
             initial={false}
             animate={{
-              height: isHovered ? "auto" : "1.5rem",
+              height: isHovered && !shouldReduceMotion ? "auto" : "1.5rem",
             }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
@@ -433,6 +458,22 @@ export const ProjectCard: React.FC<ProjectProps> = memo(({ project, index }) => 
                 CODE
               </a>
             )}
+
+            {/* Tertiary CTA - explicit modal opener (keyboard a11y; mouse users can also click anywhere on card) */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                setIsExpanded(true)
+              }}
+              aria-haspopup="dialog"
+              aria-expanded={isExpanded}
+              aria-label={`Open ${project.title} details`}
+              className="icon-link ml-auto flex items-center gap-1 px-2 py-1.5 font-mono text-[10px] tracking-wider"
+            >
+              DETAILS
+              <span aria-hidden="true">→</span>
+            </button>
           </div>
         </div>
 

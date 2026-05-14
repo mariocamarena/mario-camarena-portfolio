@@ -42,10 +42,10 @@ export const lightTheme = {
   surface: "#dcdcdc",
   elevated: "#d0d0d0",
 
-  // Text — softened for comfort on gray
+  // Text — softened for comfort on gray (textMuted bumped from #666 → #5a5a5a, ~6:1 on bg)
   text: "#2e2e2e",
   textSoft: "#4a4a4a",
-  textMuted: "#666666",
+  textMuted: "#5a5a5a",
 
   // Borders — neutral gray
   border: "#c4c4c4",

@@ -3,9 +3,14 @@
 import type React from "react"
 import { useEffect, useRef, useState } from "react"
 import { motion, useReducedMotion } from "framer-motion"
-import Link from "next/link"
 import { ArrowRight, Github, Linkedin, Mail } from "lucide-react"
-import { Dithering } from "@paper-design/shaders-react"
+import dynamic from "next/dynamic"
+
+// Lazy-load WebGL shader (heavy bundle); skip SSR to avoid canvas hydration mismatch
+const Dithering = dynamic(
+  () => import("@paper-design/shaders-react").then((m) => ({ default: m.Dithering })),
+  { ssr: false }
+)
 import { Spinner } from "@/components/ui/spinner"
 import { useTheme } from "@/lib/useTheme"
 
@@ -70,12 +75,17 @@ export const ContactSection = () => {
     setSubmitting(true)
 
     try {
+      const payload = {
+        name: form.name.trim(),
+        email: form.email.trim(),
+        message: form.message.trim(),
+      }
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       })
 
       const data = await response.json()
@@ -253,6 +263,7 @@ export const ContactSection = () => {
                       name={field.name}
                       autoComplete={field.autoComplete}
                       maxLength={field.maxLength}
+                      enterKeyHint="next"
                       disabled={submitting || status === "success"}
                       inputMode={"inputMode" in field ? field.inputMode : undefined}
                       spellCheck={"spellCheck" in field ? field.spellCheck : undefined}
@@ -342,23 +353,7 @@ export const ContactSection = () => {
               <button
                 type="submit"
                 disabled={submitting || status === "success"}
-                className="relative w-full py-3 font-mono text-sm tracking-wide uppercase transition duration-200 group"
-                style={{
-                  backgroundColor: 'transparent',
-                  border: `1px solid ${theme.text}`,
-                  color: theme.text,
-                  opacity: submitting || status === "success" ? 0.6 : 1
-                }}
-                onMouseEnter={(e) => {
-                  if (!submitting && status !== "success") {
-                    e.currentTarget.style.backgroundColor = theme.text
-                    e.currentTarget.style.color = theme.bg
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                  e.currentTarget.style.color = theme.text
-                }}
+                className="btn-outline relative w-full py-3 font-mono text-sm tracking-wide uppercase group"
               >
                 {/* Corner accents on hover */}
                 <span className="absolute -top-1 -left-1 w-2 h-2 border-t border-l opacity-0 group-hover:opacity-100 transition-opacity" style={{ borderColor: theme.text }} />
@@ -465,23 +460,16 @@ export const ContactSection = () => {
           >
             <address className="not-italic flex items-center gap-4">
               {[
-                { icon: Github, href: "https://github.com/mariocamarena", label: "GitHub" },
-                { icon: Linkedin, href: "https://www.linkedin.com/in/marioacamarena/", label: "LinkedIn" },
-                { icon: Mail, href: "mailto:cs.mario.camarena@gmail.com", label: "Email" },
-              ].map(({ icon: Icon, href, label }) => (
+                { icon: Github, href: "https://github.com/mariocamarena", label: "GitHub", external: true },
+                { icon: Linkedin, href: "https://www.linkedin.com/in/marioacamarena/", label: "LinkedIn", external: true },
+                { icon: Mail, href: "mailto:cs.mario.camarena@gmail.com", label: "Email", external: false },
+              ].map(({ icon: Icon, href, label, external }) => (
                 <a
                   key={label}
                   href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 transition duration-200"
-                  style={{ color: theme.textMuted }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = theme.text
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = theme.textMuted
-                  }}
+                  target={external ? "_blank" : undefined}
+                  rel={external ? "noopener noreferrer" : undefined}
+                  className="icon-link p-2"
                   aria-label={label}
                 >
                   <Icon className="w-5 h-5" aria-hidden="true" />
@@ -506,34 +494,6 @@ export const ContactSection = () => {
           </div>
         </motion.div>
 
-        {/* Footer with admin link */}
-        <motion.div
-          className="mt-8 text-center"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-          viewport={{ once: true }}
-        >
-          <Link
-            href="/admin"
-            className="inline-block text-[10px] font-mono tracking-wider px-3 py-1.5 transition duration-200 border"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = theme.text
-              e.currentTarget.style.color = theme.text
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = theme.borderDim
-              e.currentTarget.style.color = theme.textMuted
-            }}
-            style={{
-              color: theme.textMuted,
-              backgroundColor: 'transparent',
-              borderColor: theme.borderDim,
-            }}
-          >
-            ADMIN DASHBOARD
-          </Link>
-        </motion.div>
       </div>
     </section>
   )

@@ -78,13 +78,14 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
       className="relative min-h-screen overflow-hidden"
       style={{ backgroundColor: isDark ? '#000000' : theme.bg }}
     >
-      {/* ASCII Background Animation — invert in light mode */}
+      {/* ASCII Background Animation — invert in light mode (smooth flip on theme toggle) */}
       <div
         aria-hidden="true"
-        style={
-          isDark ? undefined :
-          { filter: 'invert(1)', opacity: 0.5 }
-        }
+        style={{
+          filter: isDark ? 'none' : 'invert(1)',
+          opacity: isDark ? 1 : 0.5,
+          transition: 'filter 0.3s ease, opacity 0.3s ease',
+        }}
       >
         <HeroAsciiBackground />
       </div>
@@ -240,11 +241,14 @@ export const HeroSection = ({ onScrollToProjects, onScrollToAbout, isVisible = t
 
       {/* Scroll indicator — fades out once the user scrolls past the hero */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
+        className="absolute left-1/2 -translate-x-1/2 z-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: hasScrolled ? 0 : 1 }}
         transition={{ delay: hasScrolled ? 0 : 1, duration: 0.4 }}
-        style={{ pointerEvents: hasScrolled ? "none" : "auto" }}
+        style={{
+          pointerEvents: hasScrolled ? "none" : "auto",
+          bottom: "max(2rem, env(safe-area-inset-bottom))",
+        }}
       >
         <motion.button
           onClick={onScrollToAbout}

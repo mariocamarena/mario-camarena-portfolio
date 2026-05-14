@@ -2,8 +2,14 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 import Image from "next/image"
-import { Dithering } from "@paper-design/shaders-react"
+import dynamic from "next/dynamic"
 import { useTheme } from "@/lib/useTheme"
+
+// Lazy-load WebGL shader (heavy bundle); skip SSR to avoid canvas hydration mismatch
+const Dithering = dynamic(
+  () => import("@paper-design/shaders-react").then((m) => ({ default: m.Dithering })),
+  { ssr: false }
+)
 
 // Skills data - combined from languages, frameworks, tools
 const skills = [
@@ -134,11 +140,12 @@ export function AboutSection() {
 
               {/* Terminal Content */}
               <div className="p-6 space-y-5 relative">
+                <h3 className="sr-only">README</h3>
                 {/* Background */}
                 <div>
-                  <span className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-2 block" style={{ color: theme.text }}>
+                  <h4 className="text-[10px] font-mono font-normal tracking-widest uppercase opacity-50 mb-2 block" style={{ color: theme.text }}>
                     BACKGROUND
-                  </span>
+                  </h4>
                   <p className="text-sm leading-relaxed text-pretty" style={{ color: theme.textSoft }}>
                     M.S. Computer Science @ UTRGV, expected May 2027. I started building systems through custom PCs, hardware repair, and small software projects. Over time, that turned into full-stack development, applied AI, and research work.
                   </p>
@@ -149,9 +156,9 @@ export function AboutSection() {
 
                 {/* Research */}
                 <div>
-                  <span className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-2 block" style={{ color: theme.text }}>
+                  <h4 className="text-[10px] font-mono font-normal tracking-widest uppercase opacity-50 mb-2 block" style={{ color: theme.text }}>
                     RESEARCH
-                  </span>
+                  </h4>
                   <p className="text-sm leading-relaxed text-pretty" style={{ color: theme.textSoft }}>
                     I’m an AI Research Assistant at UTRGV MECIS (NSF CREST), where I work on computer vision, transportation AI, and graph-based risk modeling.
                   </p>
@@ -165,9 +172,9 @@ export function AboutSection() {
 
                 {/* Builds */}
                 <div>
-                  <span className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-2 block" style={{ color: theme.text }}>
+                  <h4 className="text-[10px] font-mono font-normal tracking-widest uppercase opacity-50 mb-2 block" style={{ color: theme.text }}>
                     BUILDS
-                  </span>
+                  </h4>
                   <p className="text-sm leading-relaxed text-pretty" style={{ color: theme.textSoft }}>
                     STABLES: project lead + lead developer for a parking management app covering 800+ parking spots across 3 lots. Built the Node.js/Express + PostgreSQL backend for live availability, reservations, spatial checks, and double-booking prevention.
                   </p>
@@ -178,9 +185,9 @@ export function AboutSection() {
 
                 {/* Combined Skills section */}
                 <div className="pt-2">
-                  <span className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-3 block" style={{ color: theme.text }}>
+                  <h4 className="text-[10px] font-mono font-normal tracking-widest uppercase opacity-50 mb-3 block" style={{ color: theme.text }}>
                     SKILLS
-                  </span>
+                  </h4>
                   <ul className="flex flex-wrap gap-1.5 list-none p-0 m-0">
                     {skills.map((tech) => (
                       <li
@@ -264,6 +271,7 @@ export function AboutSection() {
 
               {/* Terminal Content */}
               <div className="p-6 space-y-5 relative">
+                <h3 className="sr-only">Profile</h3>
                 {/* Photo with file label */}
                 <div className="flex items-center gap-4">
                   <div>
@@ -297,7 +305,7 @@ export function AboutSection() {
                 </div>
 
                 {/* Terminal-style metadata - aligned fields */}
-                <div className="font-mono text-[11px] sm:text-[12px] space-y-2">
+                <address className="not-italic font-mono text-[11px] sm:text-[12px] space-y-2">
                   <div className="flex">
                     <span className="w-20 opacity-40 shrink-0" style={{ color: theme.text }}>role:</span>
                     <span style={{ color: theme.textSoft }}>Graduate Research Assistant</span>
@@ -323,7 +331,7 @@ export function AboutSection() {
                       <span style={{ color: theme.textSoft }}>Open to opportunities</span>
                     </span>
                   </div>
-                </div>
+                </address>
 
                 {/* Footer prompt with single blinking cursor */}
                 <div className="pt-3 border-t" style={{ borderColor: theme.border }}>

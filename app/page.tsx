@@ -2,8 +2,9 @@
 
 import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, MotionConfig } from "framer-motion"
 import { Menu, X } from "lucide-react"
+import Link from "next/link"
 
 // Component imports
 import { LoadingScreen } from "@/components/ui/loading-screen"
@@ -142,6 +143,7 @@ export default function Portfolio() {
   }
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="min-h-screen relative" style={{ backgroundColor: theme.bg }}>
       {/* Loading screen overlay */}
       <AnimatePresence>
@@ -300,6 +302,7 @@ export default function Portfolio() {
       {/* Page footer — semantic landmark, terminal signature */}
       <footer
         role="contentinfo"
+        aria-labelledby="footer-heading"
         className="font-mono text-[10px] tracking-wider border-t"
         style={{
           backgroundColor: theme.surface,
@@ -310,16 +313,23 @@ export default function Portfolio() {
           paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
         }}
       >
-        <div className="max-w-6xl mx-auto py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <h2 id="footer-heading" className="sr-only">Site footer</h2>
+        <div className="max-w-6xl mx-auto py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <span translate="no">PORTFOLIO.2026 — © Mario Camarena</span>
-          <span className="flex items-center gap-1" translate="no" aria-hidden="true">
-            mario@portfolio:~$ logout
-          </span>
+          <div className="flex items-center gap-4">
+            <Link href="/admin" className="nav-link uppercase tracking-wider">
+              Admin
+            </Link>
+            <span className="flex items-center gap-1" translate="no" aria-hidden="true">
+              mario@portfolio:~$ logout
+            </span>
+          </div>
         </div>
       </footer>
 
       {/* Theme toggle */}
       <AsciiThemeToggle />
     </div>
+    </MotionConfig>
   )
 }

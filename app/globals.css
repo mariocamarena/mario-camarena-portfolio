@@ -40,7 +40,7 @@ html:not(.dark) {
   --th-elevated: #d0d0d0;
   --th-text: #2e2e2e;
   --th-text-soft: #4a4a4a;
-  --th-text-muted: #666666;
+  --th-text-muted: #5a5a5a;
   --th-text-dim: rgba(46,46,46,0.65);
   --th-text-faint: rgba(46,46,46,0.45);
   --th-border: #c4c4c4;
@@ -205,6 +205,15 @@ html:not(.dark) [tabindex]:focus-visible {
   color: var(--th-text);
 }
 
+.icon-link {
+  color: var(--th-text-muted);
+  transition: color 0.2s ease;
+}
+.icon-link:hover,
+.icon-link:focus-visible {
+  color: var(--th-text);
+}
+
 /* disabled inputs/buttons — dim + not-allowed cursor */
 input:disabled,
 textarea:disabled,
@@ -224,20 +233,29 @@ summary,
   touch-action: manipulation;
 }
 
-/* skip to content link - hidden until focused */
+/* skip to content link - visually hidden via modern clip-path until focused */
 .skip-link {
   position: absolute;
-  left: -9999px;
   width: 1px;
   height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 .skip-link:focus {
   position: fixed;
-  left: 0.75rem;
-  top: 0.75rem;
+  left: max(0.75rem, env(safe-area-inset-left));
+  top: max(0.75rem, env(safe-area-inset-top));
   width: auto;
   height: auto;
+  margin: 0;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
   z-index: 100;
   padding: 0.5rem 0.875rem;
   font-family: "JetBrains Mono", ui-monospace, monospace;
@@ -349,6 +367,23 @@ html:not(.dark) ::selection {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
+}
+
+/* Perf hint — let the browser skip rendering offscreen sections (hero stays eager) */
+main > section:not(#home) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
+/* Print stylesheet — strip decorative layers, force readable colors */
+@media print {
+  body::before { display: none !important; }
+  body { background: #ffffff !important; color: #000000 !important; }
+  .pointer-events-none[style*="opacity"],
+  .pointer-events-none[style*="background-image"] { display: none !important; }
+  /* Hide overlays and floating chrome that don't make sense in print */
+  [role="dialog"],
+  .skip-link { display: none !important; }
 }
 
 /* Save-data mode — drop heavy decorative layers (shaders, grain, dot grids) */

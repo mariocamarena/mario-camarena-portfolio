@@ -60,6 +60,7 @@ export function AsciiThemeToggle() {
     <button
       onClick={handleToggle}
       aria-label={`Switch theme — currently ${mode === "dark" ? "dark mode" : "light mode"}`}
+      aria-pressed={isDark}
       className="fixed z-50 font-mono text-[10px] leading-none cursor-pointer opacity-60 hover:opacity-100 transition duration-300 group py-[7px] px-[10px]"
       style={{
         backgroundColor: `${theme.bg}99`,
