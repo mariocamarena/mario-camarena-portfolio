@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence, MotionConfig } from "framer-motion"
-import { Menu, X } from "lucide-react"
+import { Menu, X, Github, Linkedin, Mail, ArrowUp } from "lucide-react"
 import Link from "next/link"
 
 // Component imports
@@ -37,7 +37,7 @@ let hasPlayedBootAnimation = false
 
 export default function Portfolio() {
   // Theme hook for reactive color updates
-  const { theme } = useTheme()
+  const { theme, isDark } = useTheme()
 
   // Only show loading if animation hasn't played yet in this JS context
   const [isLoading, setIsLoading] = useState(!hasPlayedBootAnimation)
@@ -153,7 +153,7 @@ export default function Portfolio() {
       {/* Site header — semantic landmark wrapping the fixed nav */}
       <header role="banner">
       <nav
-        className="fixed top-0 left-0 right-0 z-40 transition duration-200"
+        className="fixed top-0 left-0 right-0 z-40 transition duration-200 overflow-hidden"
         style={{
           backgroundColor: scrolled ? theme.bg : "transparent",
           borderBottom: scrolled ? `1px solid ${theme.border}` : "none",
@@ -162,7 +162,18 @@ export default function Portfolio() {
           paddingRight: "env(safe-area-inset-right)",
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {scrolled && (
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              opacity: isDark ? 0.04 : 0.14,
+              backgroundImage: `radial-gradient(circle, ${theme.text}cc 1px, transparent 1px)`,
+              backgroundSize: '24px 24px',
+            }}
+          />
+        )}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex justify-between items-center py-4">
             {/* Desktop navigation */}
             <div className="hidden md:flex items-center space-x-8 flex-1 justify-center">
@@ -228,7 +239,7 @@ export default function Portfolio() {
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                opacity: 0.04,
+                opacity: isDark ? 0.04 : 0.14,
                 backgroundImage: `radial-gradient(circle, ${theme.text}cc 1px, transparent 1px)`,
                 backgroundSize: '24px 24px',
               }}
@@ -299,13 +310,13 @@ export default function Portfolio() {
         <ContactSection />
       </main>
 
-      {/* Page footer — semantic landmark, terminal signature */}
+      {/* Page footer — terminal signature panel */}
       <footer
         role="contentinfo"
         aria-labelledby="footer-heading"
-        className="font-mono text-[10px] tracking-wider border-t"
+        className="relative overflow-hidden border-t"
         style={{
-          backgroundColor: theme.surface,
+          backgroundColor: theme.bg,
           borderColor: theme.border,
           color: theme.textMuted,
           paddingLeft: "max(1.5rem, env(safe-area-inset-left))",
@@ -313,16 +324,99 @@ export default function Portfolio() {
           paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
         }}
       >
+        {/* Dot grid overlay — matches projects */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            opacity: isDark ? 0.04 : 0.14,
+            backgroundImage: `radial-gradient(circle, ${theme.text}cc 1px, transparent 1px)`,
+            backgroundSize: '24px 24px',
+          }}
+        />
+
+        {/* Corner Frame Accents */}
+        <div aria-hidden="true" className="hidden md:block absolute top-2 left-2 w-4 h-4 lg:w-5 lg:h-5 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }} />
+        <div aria-hidden="true" className="hidden md:block absolute top-2 right-2 w-4 h-4 lg:w-5 lg:h-5 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }} />
+        <div aria-hidden="true" className="hidden md:block absolute bottom-2 left-2 w-4 h-4 lg:w-5 lg:h-5 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }} />
+        <div aria-hidden="true" className="hidden md:block absolute bottom-2 right-2 w-4 h-4 lg:w-5 lg:h-5 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }} />
+
         <h2 id="footer-heading" className="sr-only">Site footer</h2>
-        <div className="max-w-6xl mx-auto py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span translate="no">PORTFOLIO.2026 — © Mario Camarena</span>
-          <div className="flex items-center gap-4">
-            <Link href="/admin" className="nav-link uppercase tracking-wider">
-              Admin
-            </Link>
-            <span className="flex items-center gap-1" translate="no" aria-hidden="true">
-              mario@portfolio:~$ logout
+
+        <div className="max-w-6xl mx-auto pt-5 pb-3 relative z-10 font-mono">
+          {/* Top row: sitemap + socials */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <nav aria-label="Footer sitemap" className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] tracking-wide uppercase">
+              {navigation.map((item) => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={(e) => {
+                    if (e.metaKey || e.ctrlKey || e.shiftKey) return
+                    e.preventDefault()
+                    scrollTo(item.id)
+                  }}
+                  className="nav-link"
+                >
+                  {item.name}
+                </a>
+              ))}
+              <Link href="/thesis" className="nav-link">Thesis</Link>
+            </nav>
+
+            <address className="not-italic flex items-center gap-3">
+              {[
+                { Icon: Github, href: "https://github.com/mariocamarena", label: "GitHub", external: true },
+                { Icon: Linkedin, href: "https://www.linkedin.com/in/marioacamarena/", label: "LinkedIn", external: true },
+                { Icon: Mail, href: "mailto:cs.mario.camarena@gmail.com", label: "Email", external: false },
+              ].map(({ Icon, href, label, external }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={external ? "_blank" : undefined}
+                  rel={external ? "noopener noreferrer" : undefined}
+                  aria-label={label}
+                  className="icon-link"
+                >
+                  <Icon className="w-3.5 h-3.5" aria-hidden="true" />
+                </a>
+              ))}
+            </address>
+          </div>
+
+          {/* Bottom strip */}
+          <div
+            className="mt-3 pt-3 border-t flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] tracking-wider"
+            style={{ borderColor: theme.border }}
+          >
+            <span translate="no" style={{ color: theme.textMuted }}>
+              PORTFOLIO.2026 — © Mario Camarena
             </span>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => {
+                  const prefersReduced = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+                  window.scrollTo({ top: 0, behavior: prefersReduced ? "auto" : "smooth" })
+                }}
+                className="nav-link inline-flex items-center gap-1 uppercase tracking-wider"
+                aria-label="Back to top"
+              >
+                <ArrowUp className="w-3 h-3" aria-hidden="true" />
+                <span>Top</span>
+              </button>
+              <Link href="/admin" className="nav-link uppercase tracking-wider">
+                Admin
+              </Link>
+              <span className="flex items-center gap-1" translate="no" aria-hidden="true" style={{ color: theme.textMuted }}>
+                mario@portfolio:~$
+                <motion.span
+                  className="ml-0.5 w-1.5 h-2.5 inline-block"
+                  style={{ backgroundColor: theme.text }}
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+                />
+              </span>
+            </div>
           </div>
         </div>
       </footer>

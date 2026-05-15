@@ -2,14 +2,8 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 import Image from "next/image"
-import dynamic from "next/dynamic"
 import { useTheme } from "@/lib/useTheme"
-
-// Lazy-load WebGL shader (heavy bundle); skip SSR to avoid canvas hydration mismatch
-const Dithering = dynamic(
-  () => import("@paper-design/shaders-react").then((m) => ({ default: m.Dithering })),
-  { ssr: false }
-)
+import { DitheredSurface } from "@/components/ui/dithered-surface"
 
 // Skills data - combined from languages, frameworks, tools
 const skills = [
@@ -37,28 +31,13 @@ export function AboutSection() {
 
   return (
     <section id="about" aria-labelledby="about-heading" className="min-h-screen py-20 sm:py-24 lg:py-28 px-6 sm:px-8 relative overflow-hidden scroll-mt-20" style={{ backgroundColor: theme.surface }}>
-      {/* Corner Frame Accents - softer on surface bg */}
+      <DitheredSurface />
+
+      {/* Corner Frame Accents */}
       <div aria-hidden="true" className="absolute top-2 left-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-t-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
       <div aria-hidden="true" className="absolute top-2 right-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-t-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
       <div aria-hidden="true" className="absolute bottom-2 left-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-b-2 border-l-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
       <div aria-hidden="true" className="absolute bottom-2 right-2 w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 border-b-2 border-r-2 z-20" style={{ borderColor: `${theme.text}40` }}></div>
-
-      {/* Subtle dithering background effect */}
-      <div aria-hidden="true" className="absolute inset-0 pointer-events-none" style={{ opacity: isDark ? 0.25 : 0.3 }}>
-        <Dithering
-          style={{ height: "100%", width: "100%" }}
-          colorBack={theme.bg}
-          colorFront={isDark ? "#4a4a4a" : "#8a8a8a"}
-          shape="simplex"
-          type="4x4"
-          pxSize={3}
-          offsetX={0}
-          offsetY={0}
-          scale={2}
-          rotation={0}
-          speed={shouldReduceMotion ? 0 : 0.05}
-        />
-      </div>
       <div className="container mx-auto max-w-5xl relative z-10">
         {/* Title with hero treatment */}
         <motion.div

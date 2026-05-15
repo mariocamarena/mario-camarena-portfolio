@@ -61,24 +61,47 @@ export function AsciiThemeToggle() {
       onClick={handleToggle}
       aria-label={`Switch theme — currently ${mode === "dark" ? "dark mode" : "light mode"}`}
       aria-pressed={isDark}
-      className="fixed z-50 font-mono text-[10px] leading-none cursor-pointer opacity-60 hover:opacity-100 transition duration-300 group py-[7px] px-[10px]"
+      title={isDark ? "Dark mode — click for light" : "Light mode — click for dark"}
+      className="fixed z-50 group cursor-pointer flex items-center gap-2 outline-none focus-visible:opacity-100"
       style={{
-        backgroundColor: `${theme.bg}99`,
-        backdropFilter: "blur(4px)",
-        border: `1px solid ${theme.borderDim}`,
         bottom: "max(1rem, env(safe-area-inset-bottom))",
         right: "max(1rem, env(safe-area-inset-right))",
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.borderColor = theme.text }}
-      onMouseLeave={(e) => { e.currentTarget.style.borderColor = theme.borderDim }}
     >
-      {/* Corner accents on hover */}
-      <span className="absolute -top-px -left-px w-1.5 h-1.5 border-t border-l opacity-0 group-hover:opacity-60 transition-opacity" style={{ borderColor: theme.text }} />
-      <span className="absolute -bottom-px -right-px w-1.5 h-1.5 border-b border-r opacity-0 group-hover:opacity-60 transition-opacity" style={{ borderColor: theme.text }} />
+      {/* Terminal-style label — always visible */}
+      <span
+        aria-hidden="true"
+        className="font-mono text-[9px] tracking-[0.15em] uppercase opacity-50 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200 whitespace-nowrap"
+        style={{ color: theme.textMuted }}
+      >
+        {isDark ? "drk" : "lht"}
+      </span>
 
-      <pre className="tracking-wide" style={{ color: theme.textSoft }}>
-        {isDark ? "[█░] DRK" : "[░█] LHT"}
-      </pre>
+      {/* Glyph — a half-filled circle inside corner ticks. Rotates 180° on toggle. */}
+      <span
+        aria-hidden="true"
+        className="relative block w-5 h-5 opacity-30 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200"
+      >
+        {/* Corner ticks */}
+        <span className="absolute top-0 left-0 w-[3px] h-px" style={{ backgroundColor: theme.text }} />
+        <span className="absolute top-0 left-0 h-[3px] w-px" style={{ backgroundColor: theme.text }} />
+        <span className="absolute top-0 right-0 w-[3px] h-px" style={{ backgroundColor: theme.text }} />
+        <span className="absolute top-0 right-0 h-[3px] w-px" style={{ backgroundColor: theme.text }} />
+        <span className="absolute bottom-0 left-0 w-[3px] h-px" style={{ backgroundColor: theme.text }} />
+        <span className="absolute bottom-0 left-0 h-[3px] w-px" style={{ backgroundColor: theme.text }} />
+        <span className="absolute bottom-0 right-0 w-[3px] h-px" style={{ backgroundColor: theme.text }} />
+        <span className="absolute bottom-0 right-0 h-[3px] w-px" style={{ backgroundColor: theme.text }} />
+
+        {/* Half-filled disc */}
+        <span
+          className="absolute top-1/2 left-1/2 w-[11px] h-[11px] rounded-full transition-transform duration-500 ease-out motion-reduce:transition-none"
+          style={{
+            background: `linear-gradient(90deg, ${theme.text} 0 50%, transparent 50% 100%)`,
+            border: `1px solid ${theme.text}`,
+            transform: `translate(-50%, -50%) rotate(${isDark ? 0 : 180}deg)`,
+          }}
+        />
+      </span>
     </button>
   )
 }

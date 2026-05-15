@@ -7,7 +7,7 @@ import { useTheme } from "@/lib/useTheme"
 import { portfolio } from "@/lib/constants"
 
 export function ProjectsSection() {
-  const { theme } = useTheme()
+  const { theme, isDark } = useTheme()
 
   return (
     <section
@@ -15,12 +15,12 @@ export function ProjectsSection() {
       className="py-20 sm:py-24 lg:py-28 relative overflow-hidden scroll-mt-20"
       style={{ backgroundColor: theme.bg }}
     >
-      {/* Dot grid overlay - matches mobile nav menu */}
+      {/* Dot grid overlay */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
-          opacity: 0.04,
+          opacity: isDark ? 0.04 : 0.14,
           backgroundImage: `radial-gradient(circle, ${theme.text}cc 1px, transparent 1px)`,
           backgroundSize: '24px 24px',
         }}
