@@ -1,6 +1,7 @@
 "use client"
 
-import { motion, useReducedMotion } from "framer-motion"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { motion, useInView, useReducedMotion } from "framer-motion"
 import Image from "next/image"
 import { useTheme } from "@/lib/useTheme"
 import { DitheredSurface } from "@/components/ui/dithered-surface"
@@ -16,6 +17,43 @@ const skills = [
 export function AboutSection() {
   const { theme, isDark } = useTheme()
   const shouldReduceMotion = useReducedMotion()
+  const [isAlt, setIsAlt] = useState(false)
+  const [rotation, setRotation] = useState(0)
+  const spinningRef = useRef(false)
+  const portraitRef = useRef<HTMLButtonElement>(null)
+  const portraitInView = useInView(portraitRef, { amount: 0.5 })
+
+  const triggerSpin = useCallback(() => {
+    if (spinningRef.current) return
+    spinningRef.current = true
+    setRotation((r) => r + 720)
+    window.setTimeout(() => setIsAlt((v) => !v), 300)
+    window.setTimeout(() => { spinningRef.current = false }, 700)
+  }, [])
+
+  const handlePortraitClick = () => {
+    if (shouldReduceMotion) {
+      setIsAlt((v) => !v)
+      return
+    }
+    triggerSpin()
+  }
+
+  // Auto-cycle while the portrait is in view — only if the user lingers.
+  useEffect(() => {
+    if (!portraitInView || shouldReduceMotion) return
+    let timer: number
+    const schedule = (delay: number) => {
+      timer = window.setTimeout(() => {
+        triggerSpin()
+        schedule(7000)
+      }, delay)
+    }
+    schedule(4000)
+    return () => window.clearTimeout(timer)
+  }, [portraitInView, shouldReduceMotion, triggerSpin])
+
+  const portraitSrc = isAlt ? "/profile-lego.png" : "/profile.png"
 
   // Terminal chrome styling - reacts to theme
   const terminalChrome = {
@@ -256,24 +294,35 @@ export function AboutSection() {
                     <span className="text-[10px] font-mono opacity-40 block mb-1.5" style={{ color: theme.text }}>
                       profile.png
                     </span>
-                    <div
-                      className="w-28 h-28 sm:w-32 sm:h-32 overflow-hidden border"
+                    <button
+                      ref={portraitRef}
+                      type="button"
+                      onClick={handlePortraitClick}
+                      aria-label="Toggle portrait style"
+                      className="w-28 h-28 sm:w-32 sm:h-32 overflow-hidden border p-0 cursor-pointer block"
                       style={{ borderColor: theme.border }}
                     >
-                      <Image
-                        src="/profile.png"
-                        alt="Mario Camarena"
-                        width={128}
-                        height={128}
-                        className="w-full h-full object-cover"
-                        style={{
-                          imageRendering: 'pixelated',
-                          filter: isDark
-                            ? 'grayscale(1) contrast(1.05) brightness(0.95)'
-                            : 'grayscale(1) contrast(1.05) brightness(1.02)',
-                        }}
-                      />
-                    </div>
+                      <motion.div
+                        className="w-full h-full"
+                        animate={{ rotate: rotation }}
+                        transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+                      >
+                        <Image
+                          src={portraitSrc}
+                          alt="Mario Camarena"
+                          width={128}
+                          height={128}
+                          className="w-full h-full object-cover select-none pointer-events-none"
+                          draggable={false}
+                          style={{
+                            imageRendering: 'pixelated',
+                            filter: isDark
+                              ? 'grayscale(1) contrast(1.05) brightness(0.95)'
+                              : 'grayscale(1) contrast(1.05) brightness(1.02)',
+                          }}
+                        />
+                      </motion.div>
+                    </button>
                   </div>
                   <div className="flex-1 min-w-0 overflow-hidden font-mono">
                     <div className="text-[15px] sm:text-[17px] leading-tight tracking-tight" style={{ color: theme.text }}>
