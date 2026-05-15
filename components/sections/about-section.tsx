@@ -70,7 +70,7 @@ export function AboutSection() {
         </motion.div>
 
         {/* Two-terminal grid - aligned pair */}
-        <div className="grid lg:grid-cols-[1.4fr_1fr] gap-6 lg:gap-10 items-start">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-start">
           {/* Left terminal - README */}
           <motion.div
             initial={{ opacity: 0, x: -14 }}
@@ -126,10 +126,10 @@ export function AboutSection() {
                     BACKGROUND
                   </h4>
                   <p className="text-sm leading-relaxed text-pretty" style={{ color: theme.textSoft }}>
-                    M.S. Computer Science @ UTRGV, expected May 2027. I started building systems through custom PCs, hardware repair, and small software projects. Over time, that turned into full-stack development, applied AI, and research work.
+                    M.S. Computer Science @ UTRGV. Started with custom PCs and hardware repair, which grew into full-stack development, applied AI, and research.
                   </p>
                   <p className="text-sm leading-relaxed text-pretty mt-2" style={{ color: theme.textSoft }}>
-                    This summer, I’ll be joining Textron Systems in Slidell, Louisiana as an IT Analyst Intern. The role sits at the intersection of software development, cybersecurity, infrastructure IT, and front-facing business support, which fits well with the way I’ve been building across both research and applied systems.
+                    Joining Textron Systems (Slidell, LA) this summer as an IT Analyst Intern — software, cybersecurity, and infrastructure IT.
                   </p>
                 </div>
 
@@ -139,13 +139,13 @@ export function AboutSection() {
                     RESEARCH
                   </h4>
                   <p className="text-sm leading-relaxed text-pretty" style={{ color: theme.textSoft }}>
-                    I’m an AI Research Assistant at UTRGV MECIS (NSF CREST), where I work on computer vision, transportation AI, and graph-based risk modeling.
+                    AI Research Assistant at UTRGV MECIS (NSF CREST) — computer vision, transportation AI, and graph-based risk modeling.
                   </p>
                   <p className="text-sm leading-relaxed text-pretty mt-2" style={{ color: theme.textSoft }}>
-                    I lead AD-SAM, a dual-encoder urban-scene segmentation model for autonomous-driving environments. The work focuses on improving segmentation with deformable decoding, hybrid losses, and stronger class-level performance across urban scenes.
+                    Lead on AD-SAM, a dual-encoder urban-scene segmentation model for autonomous driving, using deformable decoding and hybrid losses.
                   </p>
                   <p className="text-sm leading-relaxed text-pretty mt-2" style={{ color: theme.textSoft }}>
-                    My current M.S. thesis is NASA-funded and focuses on AAM flight security risk modeling. Right now, the project models aircraft interactions from OpenSky ADS-B data as dynamic graph events, using surrogate safety signals like proximity and encounter geometry to study risk in future airspace systems.
+                    NASA-funded M.S. thesis on AAM flight-security risk: aircraft interactions from OpenSky ADS-B modeled as dynamic graph events.
                   </p>
                 </div>
 
@@ -155,10 +155,10 @@ export function AboutSection() {
                     BUILDS
                   </h4>
                   <p className="text-sm leading-relaxed text-pretty" style={{ color: theme.textSoft }}>
-                    STABLES: project lead + lead developer for a parking management app covering 800+ parking spots across 3 lots. Built the Node.js/Express + PostgreSQL backend for live availability, reservations, spatial checks, and double-booking prevention.
+                    STABLES — lead developer on a parking-management app covering 800+ spots across 3 lots. Built the Node/Express + PostgreSQL backend for live availability, reservations, and spatial double-booking prevention.
                   </p>
                   <p className="text-sm leading-relaxed text-pretty mt-2" style={{ color: theme.textSoft }}>
-                    This portfolio: built with Next.js, TypeScript, Tailwind, Framer Motion, and PostgreSQL. Designed as a terminal-inspired personal system with ASCII visuals, responsive animations, a full-stack contact pipeline, and an admin dashboard.
+                    This portfolio — Next.js, TypeScript, Tailwind, Framer Motion, PostgreSQL. Terminal-inspired with a full-stack contact pipeline and admin dashboard.
                   </p>
                 </div>
 
@@ -203,7 +203,6 @@ export function AboutSection() {
 
           {/* Right terminal - Profile */}
           <motion.div
-            className="lg:sticky lg:top-24 lg:self-start"
             initial={{ opacity: 0, x: 14 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
@@ -249,42 +248,71 @@ export function AboutSection() {
               </div>
 
               {/* Terminal Content */}
-              <div className="p-6 space-y-5 relative">
+              <div className="p-6 sm:p-7 lg:p-8 space-y-6 relative">
                 <h3 className="sr-only">Profile</h3>
                 {/* Photo with file label */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-5">
                   <div>
-                    <span className="text-[9px] font-mono opacity-40 block mb-1" style={{ color: theme.text }}>
+                    <span className="text-[10px] font-mono opacity-40 block mb-1.5" style={{ color: theme.text }}>
                       profile.png
                     </span>
                     <div
-                      className="w-24 h-24 overflow-hidden border"
+                      className="w-28 h-28 sm:w-32 sm:h-32 overflow-hidden border"
                       style={{ borderColor: theme.border }}
                     >
                       <Image
-                        src="/mc.png"
+                        src="/profile.png"
                         alt="Mario Camarena"
-                        width={96}
-                        height={96}
+                        width={128}
+                        height={128}
                         className="w-full h-full object-cover"
+                        style={{
+                          imageRendering: 'pixelated',
+                          filter: isDark
+                            ? 'grayscale(1) contrast(1.05) brightness(0.95)'
+                            : 'grayscale(1) contrast(1.05) brightness(1.02)',
+                        }}
                       />
                     </div>
                   </div>
-                  <div className="flex-1 min-w-0 overflow-hidden">
-                    <pre
-                      aria-hidden="true"
-                      translate="no"
-                      className="font-mono text-[10px] sm:text-[11px] leading-[1.5] tracking-tight opacity-60"
-                      style={{ color: theme.text }}
-                    >{`$ identify profile.png
-≡ 96 × 96  srgb
-≡ png  8-bit  rgb
-≡ ~/assets/mc`}</pre>
+                  <div className="flex-1 min-w-0 overflow-hidden font-mono">
+                    <div className="text-[15px] sm:text-[17px] leading-tight tracking-tight" style={{ color: theme.text }}>
+                      Mario Camarena
+                    </div>
+                    <div className="text-[12px] mt-1" style={{ color: theme.textSoft }} translate="no">
+                      @mariocamarena
+                    </div>
+                    <div className="mt-2.5 flex items-start gap-1.5 text-[11px] leading-snug tracking-wider uppercase" style={{ color: theme.textSoft }}>
+                      <motion.span
+                        aria-hidden="true"
+                        className="w-1.5 h-1.5 rounded-full mt-[4px] shrink-0"
+                        style={{ backgroundColor: theme.terminalDots.green }}
+                        animate={shouldReduceMotion ? { opacity: 1 } : { opacity: [1, 0.4, 1] }}
+                        transition={shouldReduceMotion ? { duration: 0 } : { duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      />
+                      <span>
+                        <span style={{ color: theme.textMuted }}>Incoming · </span>
+                        Textron Systems
+                        <span className="block opacity-70" translate="no">IT Analyst Intern · Summer 2026</span>
+                      </span>
+                    </div>
+                    <dl className="mt-2.5 space-y-1 text-[11px] tracking-wider uppercase" style={{ color: theme.textMuted }}>
+                      <div className="flex items-center gap-1.5">
+                        <dt>M.S. CS</dt>
+                        <span aria-hidden="true" className="opacity-40">·</span>
+                        <dd translate="no">Spring 2027</dd>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <dt>B.S. CS</dt>
+                        <span aria-hidden="true" className="opacity-40">·</span>
+                        <dd translate="no">Spring 2025</dd>
+                      </div>
+                    </dl>
                   </div>
                 </div>
 
                 {/* Terminal-style metadata - aligned fields */}
-                <address className="not-italic font-mono text-[11px] sm:text-[12px] space-y-2">
+                <address className="not-italic font-mono text-[12px] sm:text-[13px] space-y-2.5">
                   <div className="flex">
                     <span className="w-20 opacity-40 shrink-0" style={{ color: theme.text }}>role:</span>
                     <span style={{ color: theme.textSoft }}>Graduate Research Assistant</span>
