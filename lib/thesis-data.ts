@@ -3,7 +3,7 @@ import { ThesisData } from './thesis-types'
 export const thesisData: ThesisData = {
   title: 'Dynamic Heterogeneous Flight Graphs for AAM Security',
   subtitle: 'A graph neural network approach to risk modeling and security analysis for Advanced Air Mobility (AAM) systems using heterogeneous flight data.',
-  lastUpdated: '2026-03-24',
+  lastUpdated: '2026-08-26',
   phases: [
     // ============================================================
     // FOUNDATIONAL RESEARCH (Pre-Jan 2026)
@@ -11,9 +11,9 @@ export const thesisData: ThesisData = {
     {
       id: 'foundational-research',
       title: 'Initial Research & Scoping',
-      dateRange: 'Nov 2025 – Jan 2026',
-      summary: 'Initial literature review, data source evaluation, model architecture design, and methodology decisions that shaped the project. Several decisions made here were later revised as the project evolved — superseded items are noted.',
-      outcome: 'Established the starting architecture and research foundation. Many specific decisions (update pattern, graph structure, training labels) were later revised through the timeline below.',
+      dateRange: 'Nov 2025 to Jan 2026',
+      summary: 'Early literature review, data source evaluation, and the first pass at architecture and methodology. Several decisions from this period were revised later; the superseded ones are marked where they appear.',
+      outcome: 'This phase set the starting architecture and research foundation. The update pattern, graph structure, and training labels all changed later, and the entries below track each change.',
       outcomeType: 'foundation',
       entries: [
         {
@@ -21,13 +21,13 @@ export const thesisData: ThesisData = {
           date: '2025-11-01',
           title: 'Data Source Evaluation',
           type: 'research',
-          summary: 'Surveyed available aircraft trajectory and accident/incident datasets. AAM-specific data is scarce (mostly simulators), so the approach uses conventional aircraft surveillance data.',
+          summary: 'Surveyed the available aircraft trajectory and accident/incident datasets. AAM-specific data barely exists outside simulators, so the project works with conventional aircraft surveillance data instead.',
           keyFindings: [
-            'Aircraft trajectory: OpenSky Trino (real, global, 2014-present) selected as primary — ADS-B/Mode-S with full state vectors',
+            'Aircraft trajectory: OpenSky Trino (real, global, 2014-present) selected as primary: ADS-B/Mode-S with full state vectors',
             'Other trajectory sources evaluated: adsb.lol, TrajAir (CMU), NASA ATom, UAM-SUMO (synthetic), BlueSky ATM (synthetic)',
             'Accident data: NTSB Aviation Database (US, 1962-present) selected as primary',
             'Other accident sources evaluated: TSB Canada, NASA ASRS',
-            'Key constraint: AAM-specific real-world data essentially does not exist yet',
+            'The binding constraint: real-world AAM-specific data essentially does not exist yet',
           ],
           ledTo: ['usable-data-definition', 'initial-architecture'],
           tags: ['data-sources', 'opensky', 'ntsb'],
@@ -35,15 +35,15 @@ export const thesisData: ThesisData = {
         {
           id: 'literature-review-patterns',
           date: '2025-11-15',
-          title: 'Literature Review — Dynamic GNN Patterns',
+          title: 'Literature Review: Dynamic GNN Patterns',
           type: 'research',
-          summary: 'Reviewed 30 papers across Dynamic GNNs, Temporal Knowledge Graphs, and dynamic heterogeneous graphs. Identified three recurring architectural patterns for handling temporal graph data.',
-          body: 'The review spanned 5 categories: surveys & taxonomies (6 papers), dynamic multi-relational/TKG methods (7), dynamic heterogeneous graph methods (6), general dynamic GNN methods (6), and aviation/transportation applications (5). Each paper was tagged by which pattern it follows and assessed for relevance to the flight graph problem.',
+          summary: 'Reviewed 30 papers across Dynamic GNNs, Temporal Knowledge Graphs, and dynamic heterogeneous graphs. Three architectural patterns for temporal graph data kept recurring across them.',
+          body: 'The review spanned 5 categories: surveys and taxonomies (6 papers), dynamic multi-relational/TKG methods (7), dynamic heterogeneous graph methods (6), general dynamic GNN methods (6), and aviation/transportation applications (5). Each paper was tagged by which pattern it follows and assessed for relevance to the flight graph problem.',
           keyFindings: [
-            'Pattern 1 — Snapshot-Based: Fixed-interval snapshots with static GNN per step. Initially flagged as too computationally expensive for irregular data (later chosen when ADS-B data cadence made it feasible)',
-            'Pattern 2 — Event-Driven / Continuous-Time: Graph as stream of timestamped events, updates only on events. Initially selected as backbone. Key references: Know-Evolve, TGN',
-            'Pattern 3 — Hybrid Structural + Temporal: GNN for spatial structure + RNN/attention for history. Initially selected as encoder strategy. Key references: RE-NET, HTGNN',
-            'Initial recommendation: Pattern 2 backbone + Pattern 3 encoder. This was later overruled in favor of Pattern 1 (see Graph Definition, Mar 20)',
+            'Pattern 1, Snapshot-Based: fixed-interval snapshots with a static GNN per step. Initially flagged as too computationally expensive for irregular data (later chosen once the ADS-B data cadence made it feasible)',
+            'Pattern 2, Event-Driven / Continuous-Time: the graph as a stream of timestamped events, updated only on events. Initially selected as backbone. Key references: Know-Evolve, TGN',
+            'Pattern 3, Hybrid Structural + Temporal: GNN for spatial structure plus RNN/attention for history. Initially selected as encoder strategy. Key references: RE-NET, HTGNN',
+            'Initial recommendation: Pattern 2 backbone + Pattern 3 encoder. This was later overruled in favor of Pattern 1 (see Graph Definition, Mar 30)',
             'Aviation-specific GNN work exists but focuses on trajectory prediction, not multi-relational risk from event streams',
             'Primary references: TGN (Rossi 2020), Know-Evolve (Trivedi 2017), HTGNN (Fan 2022), RE-NET (Jin 2020), GAT-LSTM (Zhu 2022)',
           ],
@@ -55,20 +55,21 @@ export const thesisData: ThesisData = {
           date: '2025-12-01',
           title: 'Initial Model Architecture & Methodology',
           type: 'decision',
-          summary: 'Designed the initial model architecture: a multi-stage pipeline from raw data through graph construction, GNN layers, to risk prediction. Established methodology decisions for the decoder, loss function, and GNN design.',
-          body: 'The initial architecture described a heterogeneous graph with multiple node types (aircraft, flight segments, airspace nodes, accident nodes) and multiple relation types. Several of these decisions have carried forward while others were revised. The graph structure, update pattern, and training labels were all significantly changed through later work.',
+          summary: 'First pass at the model architecture: a multi-stage pipeline running from raw data through graph construction and GNN layers to a risk output, plus the methodology calls on decoder, loss function, and GNN design.',
+          body: 'The initial architecture described a heterogeneous graph with multiple node types (aircraft, flight segments, airspace nodes, accident nodes) and multiple relation types. Some of these decisions carried forward and others were revised. The graph structure, update pattern, and training labels all changed significantly in later work.',
           keyFindings: [
             'Pipeline: Input → Encoder → Graph Construction → GNN Layers → Decoder → Risk Output',
-            'Decoder: DistMult (bilinear) — chosen over RESCAL, TransE, ComplEx. This decision carried forward',
-            'Loss: Logistic cross-entropy with negative sampling. This decision carried forward',
-            'GNN features: message passing, symmetric normalization, skip connections, mini-batch neighborhood sampling, inductive capability. All carried forward',
-            'SUPERSEDED — Graph structure: originally heterogeneous with multiple node types → now aircraft-only nodes with two-layer multigraph',
-            'SUPERSEDED — Update pattern: originally event-driven (Pattern 2) → now snapshot-based (Pattern 1)',
-            'SUPERSEDED — Training labels: originally NTSB accident labels → now surrogate safety measures (LoS, well-clear, NMAC, CPA)',
-            'SUPERSEDED — Node types: aircraft, flight segments, airspace nodes, accident nodes → now aircraft-only',
+            'Decoder: DistMult (bilinear), chosen over RESCAL, TransE, and ComplEx',
+            'Loss: logistic cross-entropy with negative sampling. This one carried forward',
+            'GNN features: message passing, symmetric normalization, skip connections, mini-batch neighborhood sampling, inductive capability',
+            'SUPERSEDED: Graph structure. Originally heterogeneous with multiple node types, now aircraft-only nodes in a two-layer multigraph',
+            'SUPERSEDED: Update pattern. Originally event-driven (Pattern 2), now snapshot-based (Pattern 1)',
+            'SUPERSEDED: Training labels. Originally NTSB accident labels, now surrogate safety measures (LoS, well-clear, NMAC, CPA)',
+            'SUPERSEDED: Node types. Originally aircraft, flight segments, airspace nodes, and accident nodes, now aircraft only',
+            'SUPERSEDED: The DistMult decoder and message-passing plan above did not carry forward. The final pipeline uses DyGLib\'s MLP link predictor over concatenated node representations; only the BCE + negative-sampling loss survived',
           ],
           figures: [
-            { src: '/materials/thesis/phase3/Model_overview.png', alt: 'Early Model Architecture', caption: 'Early model architecture diagram. Several components have since been revised — see timeline for Graph Definition (Mar 20) and Surrogate Pivot (Feb 27).', layout: 'full' },
+            { src: '/materials/thesis/phase3/Model_overview.png', alt: 'Early Model Architecture', caption: 'Early model architecture diagram. Several components have since been revised; see the timeline entries for Graph Definition (Mar 30) and Surrogate Pivot (Feb 27).', layout: 'full' },
           ],
           ledTo: ['usable-data-definition'],
           motivatedBy: ['data-source-evaluation', 'literature-review-patterns'],
@@ -79,7 +80,7 @@ export const thesisData: ThesisData = {
           date: '2025-12-15',
           title: 'Raw Data Schema Definition',
           type: 'report',
-          summary: 'Documented the field-level schema for OpenSky state vectors, NTSB event records, and NTSB aircraft records. These definitions remained stable throughout the project.',
+          summary: 'Documented the field-level schema for OpenSky state vectors, NTSB event records, and NTSB aircraft records. These definitions stayed stable for the rest of the project.',
           keyFindings: [
             'OpenSky state vectors: time, icao24, lat/lon, velocity, heading, vertrate, callsign, onground, geoaltitude, baroaltitude',
             'NTSB events: ev_id, ntsb_no, ev_date/time, location fields, ev_highest_injury, nearest airport',
@@ -93,14 +94,14 @@ export const thesisData: ThesisData = {
     },
 
     // ============================================================
-    // PHASE 1: Synthetic Data (Jan 14 – Feb 16, 2026)
+    // PHASE 1: Synthetic Data (Jan 14 to Feb 16, 2026)
     // ============================================================
     {
       id: 'synthetic-data',
       title: 'Synthetic Data Approach',
-      dateRange: 'Jan 14 – Feb 16, 2026',
-      summary: 'Attempted to build training data by matching NTSB accidents to OpenSky trajectories, then generating synthetic collisions for missing aircraft. Built a pipeline that matched 370 accident-trajectory pairs and generated 20 synthetic collision encounters.',
-      outcome: 'Dropped — most incidents had only one aircraft\'s ADS-B data, synthetic collisions were unrealistic, and no near-miss data could be generated.',
+      dateRange: 'Jan 14 to Feb 16, 2026',
+      summary: 'Attempted to build training data by matching NTSB accidents to OpenSky trajectories, then generating synthetic collisions for the missing aircraft. The pipeline matched 370 accident-trajectory pairs and generated 20 synthetic collision encounters.',
+      outcome: 'Dropped. Most incidents had only one aircraft\'s ADS-B data, the synthetic collisions were unrealistic, and no near-miss data could be generated.',
       outcomeType: 'failure',
       entries: [
         {
@@ -108,11 +109,11 @@ export const thesisData: ThesisData = {
           date: '2026-01-14',
           title: 'Data Quality Requirements',
           type: 'decision',
-          summary: 'Defined what constitutes a "usable" accident-trajectory pair. Formalized trajectory requirements (minimum points, time alignment, etc.) into a spec enforced by pipeline code.',
+          summary: 'Defined what counts as a "usable" accident-trajectory pair. The trajectory requirements (minimum points, time alignment, etc.) were written up as a spec that the pipeline code enforces.',
           keyFindings: [
-            'Established minimum trajectory point threshold for usable data',
+            'Set a minimum trajectory point threshold for usable data',
             'Defined time alignment requirements between NTSB records and OpenSky data',
-            'Created quality tiers: gold, silver, bronze based on data completeness',
+            'Set up gold, silver, and bronze quality tiers based on data completeness',
           ],
           reports: [
             {
@@ -130,10 +131,10 @@ export const thesisData: ThesisData = {
           date: '2026-01-14',
           title: 'Airport Proximity Baseline Analysis',
           type: 'report',
-          summary: 'Baseline analysis of proximity metrics near busy airports during normal operations. Sampled major US airports to understand what "normal close" looks like so proximity alone isn\'t treated as risk.',
+          summary: 'Baseline analysis of proximity metrics near busy airports during normal operations. Sampled major US airports to learn what "normal close" looks like, so proximity alone would not be mistaken for risk.',
           keyFindings: [
-            'Aircraft routinely come within small distances near airports — proximity alone is not a risk signal',
-            'Need filtering logic to distinguish routine airport proximity from genuine risk',
+            'Aircraft routinely come within small distances near airports, so proximity alone is not a risk signal',
+            'Filtering logic is needed to separate routine airport proximity from genuine risk',
             'This insight carried forward into the surrogate audit filtering (3 nmi + 1,500 ft buffer)',
           ],
           reports: [
@@ -152,11 +153,11 @@ export const thesisData: ThesisData = {
           date: '2026-01-14',
           title: 'Trajectory Pattern Mining',
           type: 'report',
-          summary: 'Pattern mining from trajectory features — extracting repeatable kinematic patterns to understand normal flight behavior and identify anomalies.',
+          summary: 'Tried mining repeatable kinematic patterns from trajectory features, hoping to characterize normal flight behavior and spot anomalies.',
           keyFindings: [
             'Attempted to identify distinct kinematic regimes (ground ops, climb, cruise, etc.)',
             'Results showed 0 ground-ops samples and limited pattern diversity',
-            'Insufficient pattern variation to serve as a useful feature for the model',
+            'Not enough pattern variation to serve as a useful feature for the model',
           ],
           reports: [
             {
@@ -173,12 +174,12 @@ export const thesisData: ThesisData = {
           date: '2026-01-16',
           title: 'Synthetic Pipeline Implementation',
           type: 'report',
-          summary: 'Built the end-to-end synthetic data pipeline. Matched 370 NTSB accident-trajectory pairs and tiered them by quality: 212 gold, 38 silver, 22 bronze.',
+          summary: 'Built the end-to-end synthetic data pipeline. Matched 370 NTSB accident-trajectory pairs and tiered them by quality: 212 gold, 38 silver, 22 bronze, 98 rejected.',
           keyFindings: [
             '370 total NTSB accidents matched to OpenSky trajectories',
-            'Quality tiering: 212 gold / 38 silver / 22 bronze pairs',
-            'Pipeline operational but data quality insufficient for GNN training',
-            'OpenSky-NTSB match rate ~40% — small GA aircraft often lack ADS-B transponders',
+            'Quality tiering: 212 gold / 38 silver / 22 bronze / 98 rejected pairs',
+            'Pipeline operational, but data quality insufficient for GNN training',
+            'OpenSky-NTSB match rate: ~40% initially, ~90%+ after prioritizing Part 121 airlines; small GA aircraft often lack ADS-B transponders',
             'N-number to ICAO24 conversion via icao-nnumber-converter-us package',
           ],
           figures: [
@@ -206,7 +207,7 @@ export const thesisData: ThesisData = {
           date: '2026-01-29',
           title: 'Incident Classification & Narrowing',
           type: 'report',
-          summary: 'Classified the 41 usable incidents into multi-aircraft conflicts (15), runway incursions (11), and wrong surface/runway events (15). Narrowed to the 8 airborne multi-aircraft conflicts with trajectory data.',
+          summary: 'Classified the 41 usable incidents into multi-aircraft conflicts (15), runway incursions (11), and wrong surface/runway events (15). Narrowed the list to the 8 airborne multi-aircraft conflicts that have trajectory data.',
           keyFindings: [
             '41 usable incidents classified into 3 categories',
             '15 multi-aircraft conflicts, 11 runway incursions, 15 wrong surface/runway',
@@ -243,7 +244,7 @@ export const thesisData: ThesisData = {
           date: '2026-02-04',
           title: 'Canonical Schema & Synthetic Generation Plan',
           type: 'decision',
-          summary: 'Designed a canonical data schema to standardize real and synthetic data formats. Step 5 tackled synthetic collision generation to fill the missing-aircraft gap — 7 of 8 incidents had only 1 aircraft\'s trajectory.',
+          summary: 'Designed a canonical data schema to standardize real and synthetic data formats. Step 5 tackled synthetic collision generation to fill the missing-aircraft gap: 7 of 8 incidents had only 1 aircraft\'s trajectory.',
           body: 'The canonical approach mapped OpenSky columns to a unified schema and defined the transform pipeline. The core problem was stark: 7 of 8 real airborne multi-aircraft conflicts had only one aircraft\'s ADS-B data, and the single incident with both aircraft had data from the wrong time window. Synthetic generation was the proposed solution.',
           reports: [
             {
@@ -266,15 +267,15 @@ export const thesisData: ThesisData = {
         {
           id: 'canonical-report',
           date: '2026-02-06',
-          title: 'Synthetic Pipeline Results — Limitations Found',
+          title: 'Synthetic Pipeline Results: Limitations Found',
           type: 'failure',
-          summary: 'Generated 20 synthetic collision encounters, but only collisions (y=1) — no near-misses. Revealed fundamental limitations: dead-reckoned positions, rotation distortion, perfect 0.0m collision separation. This was the inflection point that led to the surrogate pivot.',
+          summary: 'Generated 20 synthetic collision encounters, but only collisions (y=1), no near-misses. The limitations were fundamental: dead-reckoned positions, rotation distortion, and a perfect 0.0m separation at every collision. This was the inflection point that led to the surrogate pivot.',
           keyFindings: [
             'Pipeline produced 20 synthetic collisions end-to-end',
-            'Only collisions generated — no near-miss encounters (the "near-miss gap")',
+            'Only collisions generated, no near-miss encounters (the "near-miss gap")',
             'Known fidelity issues: dead-reckoned positions, rotation distortion',
-            'All synthetic collisions had perfect 0.0m separation — unrealistic',
-            'This failure was the direct trigger for exploring surrogate safety measures',
+            'All synthetic collisions had a perfect 0.0m separation, which is unrealistic',
+            'This failure directly triggered the search for surrogate safety measures',
           ],
           figures: [
             { src: '/materials/thesis/phase1/synthetic_1_summary.png', alt: 'Synthetic Data Summary', caption: 'Overview of the 20 generated synthetic collision encounters.', layout: 'full' },
@@ -299,10 +300,10 @@ export const thesisData: ThesisData = {
         {
           id: 'last-synthetic-efforts',
           date: '2026-02-16',
-          title: 'Final Synthetic Data Attempts — Approach Dropped',
+          title: 'Final Synthetic Data Attempts: Approach Dropped',
           type: 'failure',
-          summary: 'Last attempts to salvage the synthetic approach: an updated classification (v2) and a hybrid simulator proposal for near-miss generation. Both were ultimately dropped — the simulator was too complex for thesis scope, and the underlying data gap couldn\'t be solved synthetically.',
-          body: 'The simulator proposal identified the "near-miss gap" — the synthetic pipeline could only produce collisions, but the model needs close-but-safe encounters to learn discrimination. While technically promising, the hybrid simulator would have required building a full flight dynamics model, which was beyond thesis scope. The surrogate pivot offered a cleaner path.',
+          summary: 'Last attempts to salvage the synthetic approach: an updated classification (v2) and a hybrid simulator proposal for near-miss generation. Both were dropped in the end. The simulator was too complex for thesis scope, and the underlying data gap could not be solved synthetically.',
+          body: 'The simulator proposal named the "near-miss gap": the synthetic pipeline could only produce collisions, but the model needs close-but-safe encounters to learn discrimination. The hybrid simulator was technically promising, but it would have required building a full flight dynamics model, which was beyond thesis scope. The surrogate pivot offered a cleaner path.',
           reports: [
             {
               filename: 'classification_v2.md',
@@ -325,25 +326,25 @@ export const thesisData: ThesisData = {
     },
 
     // ============================================================
-    // PHASE 2: The Surrogate Pivot (Feb 19 – Mar 6, 2026)
+    // PHASE 2: The Surrogate Pivot (Feb 19 to Mar 6, 2026)
     // ============================================================
     {
       id: 'surrogate-pivot',
       title: 'The Surrogate Pivot',
-      dateRange: 'Feb 19 – Mar 6, 2026',
-      summary: 'Literature review revealed surrogate safety measures (LoS, well-clear, NMAC, CPA) as well-established alternatives to direct accident labels. Empirical validation on real LA Basin data confirmed these signals are dense enough for training after airport filtering.',
-      outcome: 'Validated — surrogate signals provide dense, computable training labels while preserving the core architecture.',
+      dateRange: 'Feb 19 to Mar 6, 2026',
+      summary: 'A literature review surfaced surrogate safety measures (LoS, well-clear, NMAC, CPA) as well-established alternatives to direct accident labels. An empirical validation on real LA Basin data confirmed these signals are dense enough for training after airport filtering.',
+      outcome: 'Validated. Surrogate signals provide dense, computable training labels while preserving the core architecture.',
       outcomeType: 'success',
       entries: [
         {
           id: 'deep-research',
           date: '2026-02-19',
-          title: 'Literature Review — Surrogate Safety Measures',
+          title: 'Literature Review: Surrogate Safety Measures',
           type: 'report',
-          summary: 'Deep research report on surrogate safety measures for airspace collision risk modeling. Reviewed aviation safety literature on surrogates, mapping them to thesis architecture constraints: computable at event time, dense enough for learning, supports encounter-to-accident interpretation.',
+          summary: 'Deep research report on surrogate safety measures for airspace collision risk modeling. Mapped the aviation safety literature onto the thesis architecture constraints: computable at event time, dense enough for learning, and compatible with an encounter-to-accident interpretation.',
           keyFindings: [
             'Surrogate safety measures are well-established in aviation safety research',
-            'Key surrogates identified: LoS (Loss of Separation), well-clear, NMAC (Near Mid-Air Collision), CPA (Closest Point of Approach)',
+            'Surrogates identified: LoS (Loss of Separation), well-clear, NMAC (Near Mid-Air Collision), CPA (Closest Point of Approach)',
             'Surrogates must be computable from ADS-B data at event time',
             'Signal density must be sufficient for GNN training (hundreds+ events per hour)',
             'Architecture constraints from full_amm_context.md shaped which surrogates were viable',
@@ -363,18 +364,19 @@ export const thesisData: ThesisData = {
         {
           id: 'pivot-decision',
           date: '2026-02-27',
-          title: 'The Pivotal Decision — Surrogate Labels',
+          title: 'The Pivotal Decision: Surrogate Labels',
           type: 'pivot',
-          summary: 'The defining document for the project\'s current direction. Established that the thesis architecture stays the same but training labels change from accidents to surrogate safety measures. Defines severity tiers, published thresholds, and the MVP training plan.',
-          body: 'This was the pivotal moment: rather than trying to find or generate accident data (which proved intractable), we use established aviation safety metrics that are abundantly computable from the same ADS-B data we already collect. The model learns to predict proximity risk using surrogate signals as training labels, with severity tiers mapping to different safety thresholds.',
+          summary: 'The defining document for the project\'s current direction. The thesis architecture stays the same, but the training labels change from accidents to surrogate safety measures. Defines severity tiers, published thresholds, and the MVP training plan.',
+          body: 'This was the turning point: rather than trying to find or generate accident data (which proved intractable), we use established aviation safety metrics that are abundantly computable from the same ADS-B data we already collect. The model learns to predict proximity risk using surrogate signals as training labels, with severity tiers mapping to different safety thresholds.',
           keyFindings: [
-            'Core architecture preserved — only the training labels changed',
+            'Core architecture preserved; only the training labels changed',
             'Surrogate severity tiers defined with published FAA/ICAO thresholds',
             'LoS: categorical separation violation indicator',
             'Well-clear: categorical safety boundary with published thresholds',
             'NMAC: categorical near mid-air collision indicator',
-            'CPA (Closest Point of Approach): continuous metric — identified as strongest signal',
+            'CPA (Closest Point of Approach): continuous metric, identified as the strongest signal',
             'MVP training plan established for initial model validation',
+            'SUPERSEDED (2026-05-01): severity-tier labeling was rejected at the event-definition lock-down. Surrogates became features, not labels. See the May 1 entry',
           ],
           reports: [
             {
@@ -393,21 +395,21 @@ export const thesisData: ThesisData = {
           date: '2026-03-06',
           title: 'LA Basin Empirical Validation',
           type: 'result',
-          summary: 'Empirical audit of surrogate safety signals on 4 hours of LA Basin ADS-B data. Confirmed surrogates are viable after airport filtering.',
+          summary: 'Empirical audit of surrogate safety signals on 4 hours of LA Basin ADS-B data. Confirmed the surrogates are viable once airport noise is filtered out.',
           keyFindings: [
             'Raw surrogate flags dominated by airport noise: 98% of NMAC, 88% of well-clear flags',
             'Airport filtering (3 nmi + 1,500 ft buffer) dramatically reduces noise',
             'After filtering, LoS remains viable with ~6,300 events per 4 hours',
             'CPA distance is the strongest continuous signal: 26,600+ non-airport pairs within 5 km',
-            'Surrogate signals are dense enough for GNN training — orders of magnitude more than accident labels',
-            'Filtering approach informed by earlier proximity baseline analysis',
+            'Surrogate signals are dense enough for GNN training, orders of magnitude denser than accident labels',
+            'Filtering approach informed by the earlier proximity baseline analysis',
           ],
           figures: [
-            { src: '/materials/thesis/phase2/audit_01_filter_impact.png', alt: 'Airport Filter Impact', caption: 'Impact of airport proximity filtering on surrogate flag counts. 3 nmi + 1,500 ft buffer removes 98% of NMAC noise.', layout: 'full' },
-            { src: '/materials/thesis/phase2/audit_02_cpa_distribution.png', alt: 'CPA Distribution', caption: 'Distribution of Closest Point of Approach distances — the strongest continuous training signal.', layout: 'half' },
+            { src: '/materials/thesis/phase2/audit_01_filter_impact.png', alt: 'Airport Filter Impact', caption: 'Impact of airport proximity filtering on surrogate flag counts. The 3 nmi + 1,500 ft buffer removes 98% of NMAC noise.', layout: 'full' },
+            { src: '/materials/thesis/phase2/audit_02_cpa_distribution.png', alt: 'CPA Distribution', caption: 'Distribution of Closest Point of Approach distances, the strongest continuous training signal.', layout: 'half' },
             { src: '/materials/thesis/phase2/audit_03_spatial_heatmap.png', alt: 'Spatial Heatmap', caption: 'Geographic heatmap of surrogate safety events in the LA Basin.', layout: 'half' },
             { src: '/materials/thesis/phase2/audit_04_altitude_breakdown.png', alt: 'Altitude Breakdown', caption: 'Altitude distribution of surrogate safety events.', layout: 'half' },
-            { src: '/materials/thesis/phase2/audit_05_cpa_threshold_curve.png', alt: 'CPA Threshold Curve', caption: 'CPA event count as a function of distance threshold — shows rapid increase in events at larger thresholds.', layout: 'half' },
+            { src: '/materials/thesis/phase2/audit_05_cpa_threshold_curve.png', alt: 'CPA Threshold Curve', caption: 'CPA event count as a function of distance threshold, showing the rapid increase in events at larger thresholds.', layout: 'half' },
             { src: '/materials/thesis/phase2/audit_06_time_of_day.png', alt: 'Time of Day Analysis', caption: 'Temporal distribution of surrogate events across the 4-hour observation window.', layout: 'full' },
           ],
           reports: [
@@ -426,29 +428,29 @@ export const thesisData: ThesisData = {
     },
 
     // ============================================================
-    // PHASE 3: Graph & Pipeline Build-Out (Mar 12 – present)
+    // PHASE 3: Graph & Pipeline Build-Out (Mar 12 to Mar 30, 2026)
     // ============================================================
     {
       id: 'graph-build-out',
       title: 'Graph & Pipeline Build-Out',
-      dateRange: 'Mar 12, 2026 – present',
+      dateRange: 'Mar 12 to Mar 30, 2026',
       summary: 'With the surrogate approach validated, work shifted to defining the formal graph schema, evaluating update strategies, and scaling data collection to the top 5 US airports by passenger traffic.',
-      outcome: 'In progress — graph schema finalized, data collection scaling to national airports.',
-      outcomeType: 'ongoing',
+      outcome: 'Complete. The graph schema was finalized at the end of March and data collection scaled to national airports; the work then moved into model selection and training.',
+      outcomeType: 'success',
       entries: [
         {
           id: 'graph-update-strategy',
           date: '2026-03-13',
           title: 'Graph Update Strategy Evaluation',
           type: 'decision',
-          summary: 'Evaluated three graph update patterns: event-only, periodic (constant-interval snapshots), and hybrid. Initially recommended Pattern 2 (event-driven) as backbone with Pattern 3 (hybrid) as encoder, but this was later overruled in favor of Pattern 1 (snapshot-based) in the graph definition report.',
+          summary: 'Evaluated three graph update patterns: event-only, periodic (constant-interval snapshots), and hybrid. This report recommended Pattern 2 (event-driven) as backbone with Pattern 3 (hybrid) as encoder. The late-March meeting overruled it in favor of Pattern 1 (snapshot-based).',
           keyFindings: [
             'Three update patterns evaluated: event-only, periodic, hybrid',
             'This report initially recommended Pattern 2 (event-driven) + Pattern 3 (hybrid encoder)',
             'Identified that event-only risks stale node states during quiet periods',
             'Later decision (graph_definition_report): Pattern 1 (snapshot-based) chosen instead',
             'Rationale: ADS-B data arrives at ~1s intervals, making fixed snapshots simpler and natural',
-            'Early concern about Pattern 1 computational cost resolved — snapshots match data cadence',
+            'Early concern about Pattern 1 computational cost resolved: snapshots match the data cadence',
           ],
           reports: [
             {
@@ -463,19 +465,20 @@ export const thesisData: ThesisData = {
         },
         {
           id: 'graph-definition',
-          date: '2026-03-20',
+          date: '2026-03-30',
           title: 'Definitive Graph Schema',
           type: 'decision',
-          summary: 'The definitive graph schema document. Defines a two-layer multigraph with aircraft nodes and directed proximity edges carrying raw separation distance. Uses Pattern 1 (snapshot-based) updates — the graph is rebuilt at fixed intervals, replacing the earlier event-driven design.',
-          body: 'The graph uses a two-layer multigraph architecture: Layer 1 for proximity relationships and Layer 2 for encounter geometry. A planned Layer 3 (shared-corridor) was dropped as unnecessary. Aircraft are the only node type, with directed proximity edges storing raw separation distance — letting the model learn which distances matter rather than imposing hard thresholds. Surrogate safety measures (LoS, well-clear, NMAC, CPA) are mapped to edge attributes. Key architectural shift: Pattern 1 (snapshot-based) was chosen over Pattern 2 (event-driven) for updates. ADS-B state vectors arrive at ~1-second intervals, so fixed-interval snapshots match the natural data cadence and avoid the complexity of asynchronous event handling.',
+          summary: 'Settled the graph schema in the graph definition report, finalized at the late-March meeting: a two-layer multigraph with aircraft nodes and directed proximity edges carrying raw separation distance. Pattern 1 (snapshot-based) updates were chosen at that meeting, reversing the Mar-13 recommendation of Pattern 2 + Pattern 3.',
+          body: 'The graph uses a two-layer multigraph architecture: Layer 1 for proximity relationships and Layer 2 for encounter geometry. A planned Layer 3 (shared-corridor) was dropped as unnecessary. Aircraft are the only node type, with directed proximity edges storing raw separation distance, letting the model learn which distances matter rather than imposing hard thresholds. Surrogate safety measures (LoS, well-clear, NMAC, CPA) are mapped to edge attributes. Key architectural shift: Pattern 1 (snapshot-based) was chosen over Pattern 2 (event-driven) for updates at the late-March meeting, reversing the Mar-13 report\'s Pattern 2 + Pattern 3 recommendation. ADS-B state vectors arrive at ~1-second intervals, so fixed-interval snapshots match the natural data cadence and avoid the complexity of asynchronous event handling.',
           keyFindings: [
             'Two-layer multigraph: proximity + encounter geometry (Layer 3 shared-corridor dropped)',
             'Aircraft-only nodes with directed proximity edges',
-            'Proximity edges store raw separation distance — model learns thresholds',
+            'Proximity edges store raw separation distance; the model learns the thresholds',
             'Surrogate definitions mapped to edge attributes with validated event counts',
-            'Pattern 1 (snapshot-based) chosen for updates — graph rebuilt at fixed intervals (~1s)',
-            'Replaces earlier Pattern 2 (event-driven) design — snapshots match ADS-B data cadence',
+            'Pattern 1 (snapshot-based) chosen at the late-March meeting: graph rebuilt at fixed intervals (~1s)',
+            'Reverses the Mar-13 Pattern 2 + Pattern 3 recommendation; snapshots match the ADS-B data cadence',
             'Computational concern from early work addressed: snapshots are feasible because ADS-B data is already ~1s resolution',
+            'Data collection scaled to the top-5 US airports with a Class-C-dimension airport filter (10 nmi / 4,000 ft)',
           ],
           reports: [
             {
@@ -485,16 +488,16 @@ export const thesisData: ThesisData = {
               status: 'current',
             },
           ],
-          motivatedBy: ['surrogate-audit', 'graph-update-strategy'],
-          ledTo: ['scaled-data-collection'],
+          motivatedBy: ['surrogate-audit', 'graph-update-strategy', 'scaled-data-collection'],
+          ledTo: ['model-selection'],
           tags: ['graph', 'schema', 'multigraph', 'surrogates'],
         },
         {
           id: 'scaled-data-collection',
           date: '2026-03-24',
-          title: 'Scaled Data Collection — Top 5 US Airports',
+          title: 'Scaled Data Collection: Top 5 US Airports',
           type: 'data-collection',
-          summary: 'Scaled the 4-hour LA Basin pilot to a representative national dataset. Defines study scope: top 5 US airports by passenger traffic (KATL, KDFW, KDEN, KORD, KLAX), 24-hour ADS-B query windows.',
+          summary: 'Scaled the 4-hour LA Basin pilot to a representative national dataset. Defines the study scope: top 5 US airports by passenger traffic (KATL, KDFW, KDEN, KORD, KLAX), with 24-hour ADS-B query windows.',
           keyFindings: [
             'Study scope: top 5 US airports by passenger traffic',
             'KATL (Atlanta), KDFW (Dallas-Fort Worth), KDEN (Denver), KORD (Chicago O\'Hare), KLAX (Los Angeles)',
@@ -516,8 +519,297 @@ export const thesisData: ThesisData = {
               status: 'current',
             },
           ],
-          motivatedBy: ['surrogate-audit', 'graph-definition'],
+          motivatedBy: ['surrogate-audit'],
+          ledTo: ['graph-definition'],
           tags: ['data-collection', 'airports', 'scaling', 'opensky'],
+        },
+      ],
+    },
+
+    // ============================================================
+    // PHASE 4: Model Training & the Leakage Saga (Apr 7 to Jun 15, 2026)
+    // ============================================================
+    {
+      id: 'model-training',
+      title: 'Model Training & the Leakage Saga',
+      dateRange: 'Apr 7 to Jun 15, 2026',
+      summary: 'Model selection, the move into DyGLib, and the first real training runs. A too-good first AUROC turned into a week of leak hunting, which ended with encounter aggregation as permanent methodology and a defensible canonical result.',
+      outcome: 'DyGFormer selected and validated through the leakage scare. Encounter aggregation, the LA-only scope, and threshold Class B were all locked in as methodology.',
+      outcomeType: 'success',
+      entries: [
+        {
+          id: 'model-selection',
+          date: '2026-04-07',
+          title: 'Model Selection: DyGFormer + TGN',
+          type: 'decision',
+          summary: 'Scored 16 dynamic-GNN architectures against six criteria. DyGFormer came out as the primary model, with TGN kept as the baseline, both run through the DyGLib benchmark library.',
+          keyFindings: [
+            '16 dynamic-GNN architectures scored against six criteria',
+            'DyGFormer selected as primary; TGN kept as baseline',
+            'Both models run through DyGLib',
+            'The old "Pattern 1 snapshot" selection criterion quietly dissolved into continuous-time event streams',
+          ],
+          reports: [
+            {
+              filename: 'model_search_report.md',
+              title: 'Model Search Report',
+              questionAnswered: 'Which dynamic-GNN architecture should the thesis actually train?',
+              status: 'current',
+            },
+          ],
+          motivatedBy: ['graph-definition'],
+          ledTo: ['dyglib-integration'],
+          tags: ['model-selection', 'dygformer', 'tgn', 'dyglib'],
+        },
+        {
+          id: 'dyglib-integration',
+          date: '2026-04-23',
+          title: 'DyGLib Integration',
+          type: 'report',
+          summary: 'First DyGLib integration. Wrote to_dyglib.py to convert the encounter data, chose per-second edge semantics over per-encounter edges to preserve intra-encounter trajectory, and assigned z-node IDs with pd.factorize on ICAO24.',
+          keyFindings: [
+            'to_dyglib.py converter written for the DyGLib data format',
+            'Per-second edge semantics chosen over per-encounter, to preserve intra-encounter trajectory',
+            'z-node IDs assigned via pd.factorize on ICAO24',
+            'The DyGLib CHANGELOG starts with this entry',
+          ],
+          motivatedBy: ['model-selection'],
+          ledTo: ['first-training'],
+          tags: ['dyglib', 'pipeline', 'data-format'],
+        },
+        {
+          id: 'first-training',
+          date: '2026-04-24',
+          title: 'First DyGFormer Training: 0.9972 AUROC',
+          type: 'result',
+          summary: 'First DyGFormer training run scored 0.9972 AUROC, which initially read as a success. Two code blockers were fixed along the way, and a sigmoid saturation problem was traced to the edge features and fixed with z-scoring.',
+          keyFindings: [
+            '0.9972 AUROC on the first run, initially read as success',
+            'Two code blockers fixed: dataset whitelist, and Python 3.11 random.sample failing on a set',
+            'Sigmoid saturation diagnosed from quarter-integer BCE losses; fixed by z-scoring the edge features',
+            'EdgeBank ablation: 0.985 with random negatives vs 0.537 with historical negatives',
+            'Leakage confirmed through the 30 km coarse prefilter',
+          ],
+          motivatedBy: ['dyglib-integration'],
+          ledTo: ['leakage-reversal'],
+          tags: ['dygformer', 'training', 'auroc', 'leakage'],
+        },
+        {
+          id: 'leakage-reversal',
+          date: '2026-04-25',
+          title: 'Self-Reversal: Within-Encounter Leakage',
+          type: 'failure',
+          summary: 'Reassessed the previous day\'s result and withdrew it: within-encounter redundancy is itself a leakage channel, so the "genuine learning confirmed" conclusion did not hold. Scaling paused until encounters could be aggregated.',
+          keyFindings: [
+            'The "genuine learning confirmed" conclusion withdrawn one day after it was recorded',
+            'Within-encounter redundancy identified as a leakage channel',
+            'Decision: pause scaling and aggregate to one row per encounter',
+          ],
+          motivatedBy: ['first-training'],
+          ledTo: ['encounter-aggregation'],
+          tags: ['leakage', 'failure', 'methodology'],
+        },
+        {
+          id: 'encounter-aggregation',
+          date: '2026-04-29',
+          title: 'Encounter Aggregation',
+          type: 'result',
+          summary: 'Aggregated per-second edges into one row per encounter (gap_threshold_s=60). EdgeBank collapsed to 0.516 while DyGFormer held 0.877 ± 0.003, which is the real signal. Encounter aggregation became permanent methodology.',
+          keyFindings: [
+            'gap_threshold_s=60 defines the encounter boundaries',
+            'EdgeBank collapses to 0.516 once encounters are aggregated',
+            'DyGFormer holds 0.877 ± 0.003 after aggregation',
+            'Aggregation adopted as permanent methodology',
+          ],
+          motivatedBy: ['leakage-reversal'],
+          ledTo: ['five-airport-scaling'],
+          tags: ['methodology', 'aggregation', 'dygformer'],
+        },
+        {
+          id: 'five-airport-scaling',
+          date: '2026-04-30',
+          title: 'Five-Airport Scale-Up',
+          type: 'failure',
+          summary: 'Scaled up to all five airports (OpenSky_5ap_enc, 145,709 encounters). The historical-negative score collapsed from 0.944 to 0.620, hypothesized at the time as cross-airport pollution.',
+          keyFindings: [
+            'OpenSky_5ap_enc built: 145,709 encounters across the five airports',
+            'Historical-negative score fell from 0.944 to 0.620 at five-airport scale',
+            'Working hypothesis: cross-airport pollution (later disproved, see May 8)',
+          ],
+          motivatedBy: ['encounter-aggregation'],
+          ledTo: ['event-definition'],
+          tags: ['scaling', 'failure', 'dataset'],
+        },
+        {
+          id: 'event-definition',
+          date: '2026-05-01',
+          title: 'Event Definition Lock-Down',
+          type: 'decision',
+          summary: 'Locked the event definition: an event is an observed encounter, an exposure opportunity. Surrogates are features, not labels, and severity-tier labeling was explicitly rejected. LA rebuilt at 24 hours (44,566 encounters).',
+          keyFindings: [
+            'Event = observed encounter = exposure opportunity',
+            'Surrogates are features, not labels',
+            'Severity-tier labeling rejected; the intermediate state_label = any_flag build was reverted',
+            'LA rebuilt at 24 hours: 44,566 encounters',
+            'This supersedes the labeling scheme in the Feb 27 pivot entry',
+          ],
+          motivatedBy: ['five-airport-scaling', 'pivot-decision'],
+          ledTo: ['seven-day-la'],
+          tags: ['methodology', 'event-definition', 'labels'],
+        },
+        {
+          id: 'seven-day-la',
+          date: '2026-05-08',
+          title: 'Seven-Day Canonical LA Dataset',
+          type: 'result',
+          summary: 'Extended LA from 1 day to 7 consecutive days (2024-06-15 to 2024-06-21, 254,243 encounters). Adopted the canonical headline result of 0.8219 ± 0.0036, disproved the cross-airport-pollution hypothesis, and decided to scope the thesis to LA only.',
+          keyFindings: [
+            '7 consecutive days: 2024-06-15 through 2024-06-21, 254,243 encounters',
+            'Canonical headline: 0.8219 ± 0.0036',
+            'Cross-airport pollution disproved; the historical-negative drop is scale-driven',
+            'LA-only scope decision; the five-airport dataset parked as future work',
+          ],
+          motivatedBy: ['event-definition'],
+          ledTo: ['class-b-correction'],
+          tags: ['dataset', 'la-basin', 'results'],
+        },
+        {
+          id: 'class-b-correction',
+          date: '2026-05-14',
+          title: 'Class B Dataset, Built Twice in One Day',
+          type: 'result',
+          summary: 'Built the Class B Only dataset twice in one day. v1 kept all 161,029 terminal encounters (0.8227), which turned out to be a framing error. v2 added --require-safety-flag any, leaving 11,804 encounters at 0.7576, the cost of asking the harder question.',
+          keyFindings: [
+            'v1: all 161,029 terminal encounters, 0.8227 (a framing error)',
+            'v2: --require-safety-flag any cuts the set to 11,804 encounters, 0.7576',
+            'Safety-filtering distinguished from severity-labeling',
+            'Surfaced a bug: the "Class-B-excluded" canonical dataset was actually all-airspace (near_airport was never filtered)',
+          ],
+          motivatedBy: ['seven-day-la'],
+          ledTo: ['repo-cleanup-may'],
+          tags: ['dataset', 'class-b', 'safety-filter'],
+        },
+        {
+          id: 'repo-cleanup-may',
+          date: '2026-05-15',
+          title: 'Repository Cleanup and Master Docs',
+          type: 'report',
+          summary: 'Cleanup day. Dropped methods were archived under _archives/, the _final script pair was promoted, and three master context docs were written: PROJECT_TIMELINE, PROJECT_DICTIONARY, and AAM_Data_Pipeline_Summary.',
+          keyFindings: [
+            'Dropped methods moved to _archives/',
+            '_final script pair promoted to the canonical pipeline',
+            'Master docs written: PROJECT_TIMELINE, PROJECT_DICTIONARY, AAM_Data_Pipeline_Summary',
+            'Caveat: those docs are structurally correct but numerically stale',
+          ],
+          motivatedBy: ['class-b-correction'],
+          ledTo: ['threshold-classes'],
+          tags: ['repo', 'documentation'],
+        },
+        {
+          id: 'threshold-classes',
+          date: '2026-05-17',
+          title: 'Sparsity Audit and Threshold Classes',
+          type: 'report',
+          summary: 'A sparsity and frequency audit turned up the 12:00 to 12:00 UTC file-window convention in the OpenSky data. Defined threshold classes A, B, and C by reclassifying existing data offline, roughly 1000x faster than re-querying OpenSky.',
+          keyFindings: [
+            'OpenSky files use 12:00 to 12:00 UTC windows, discovered during the audit',
+            'Class A: literature default, LoS 5 NM / 1,000 ft',
+            'Class B: terminal-tightened, LoS 3 NM',
+            'Class C: strict near-miss, LoS 1 NM / 500 ft',
+            'Offline reclassification is ~1000x faster than re-querying OpenSky',
+          ],
+          motivatedBy: ['repo-cleanup-may'],
+          ledTo: ['threshold-sweep'],
+          tags: ['thresholds', 'audit', 'dataset'],
+        },
+        {
+          id: 'threshold-sweep',
+          date: '2026-05-25',
+          title: 'Threshold Sweep and the 100-Epoch Correction',
+          type: 'result',
+          summary: 'Trained all three threshold classes. The 10-epoch results (0.7959 / 0.7763 / 0.6440) suggested a small-data ceiling for Class C, but the 100-epoch follow-up corrected that reading: 0.8508 / 0.8281 / 0.7514. The instability was under-training, and Class B was locked as the recommended operational filter.',
+          keyFindings: [
+            '10-epoch results: 0.7959 / 0.7763 / 0.6440 for classes A / B / C',
+            'Class C looked unstable (σ = 0.042) and was initially read as a small-data ceiling',
+            '100-epoch correction: 0.8508 / 0.8281 / 0.7514, so all three classes are defensible',
+            'Dataset naming moved to two-axis form (OpenSky_LA_ClassB_thrA_enc)',
+            'Protocol changed from 5 to 10 epochs and batch 200 to 64; the historical-negative metric and --load_best_configs were dropped',
+            'Class B locked as the recommended operational filter',
+          ],
+          reports: [
+            {
+              filename: 'threshold_class_report_v2.md',
+              title: 'Threshold Class Report v2',
+              questionAnswered: 'How sensitive is the model to the surrogate threshold bundle, and which class should be the operational filter?',
+              status: 'current',
+            },
+          ],
+          motivatedBy: ['threshold-classes'],
+          ledTo: ['node-id-audit'],
+          tags: ['thresholds', 'training', 'results'],
+        },
+        {
+          id: 'node-id-audit',
+          date: '2026-06-15',
+          title: 'Node Identity Audit',
+          type: 'report',
+          summary: 'Answered Dr. Noruz\'s question on node identity: one persistent node per ICAO24, so aircraft-as-airframe is confirmed. The flight-instance alternative was framed as a rebuild-scale decision.',
+          keyFindings: [
+            'One persistent node per ICAO24 across the dataset',
+            'Aircraft-as-airframe confirmed as the current semantics',
+            'Flight-instance nodes would require a rebuild-scale change',
+            'Question raised by Dr. Noruz (advisor)',
+          ],
+          motivatedBy: ['threshold-sweep'],
+          ledTo: ['forecast-head-meeting'],
+          tags: ['graph', 'node-identity', 'audit'],
+        },
+      ],
+    },
+
+    // ============================================================
+    // PHASE 5: Forecast-Head Extension (Jul 8, 2026 to present)
+    // ============================================================
+    {
+      id: 'forecast-head',
+      title: 'Forecast-Head Extension',
+      dateRange: 'Jul 8, 2026 to present',
+      summary: 'The active phase: extending DyGFormer from event-conditional link scoring to state-conditional event forecasting. The design direction is agreed with the advisor and a head design is proposed, awaiting approval; implementation has not started.',
+      outcome: 'In progress. The forecast-head design is proposed and awaiting advisor approval; no code has been written yet.',
+      outcomeType: 'ongoing',
+      entries: [
+        {
+          id: 'forecast-head-meeting',
+          date: '2026-07-08',
+          title: 'Advisor Meeting: Forecast-Head Phase Opens',
+          type: 'decision',
+          summary: 'The advisor meeting opened the forecast-head phase: extend DyGFormer from event-conditional link scoring to a state-conditional forecast, P(surrogate-flag event in (t, t+δ] | history < t). Options ranked B (frozen encoder + MLP probe), then C (δ-conditioned sequence head, the novelty claim), then A (fine-tune).',
+          keyFindings: [
+            'Target: P(surrogate-flag event in (t, t+δ] | history strictly before t)',
+            'Option B: frozen encoder + MLP probe (ranked first)',
+            'Option C: δ-conditioned sequence head, the novelty claim (ranked second)',
+            'Option A: fine-tune (ranked third)',
+            'Leak-free label spec written; literature gap confirmed (only TPP models: Know-Evolve, DyRep, EasyDGL)',
+            'Advisor explicitly deprioritized the flight-instance node question: "not a priority"',
+          ],
+          motivatedBy: ['node-id-audit'],
+          ledTo: ['advisor-email'],
+          tags: ['advisor', 'forecast-head', 'dygformer'],
+        },
+        {
+          id: 'advisor-email',
+          date: '2026-08-21',
+          title: 'Forecast-Head Design Proposed',
+          type: 'report',
+          summary: 'The forecast-head design proposal is registered as the phase\'s reference spec, awaiting advisor approval, with the head option not yet settled. The proposal conditions the head on δ and evaluates several horizons, from tens of seconds to a few minutes, with history fixed at the DyGLib default of the last 32 encounters. No code has been written.',
+          keyFindings: [
+            'Forecast head conditioned on δ, evaluated over several horizons (tens of seconds to a few minutes)',
+            'History: the DyGLib default of the last 32 encounters',
+            'Proposal registered as the phase\'s reference spec; head option not yet settled',
+            'Status: awaiting advisor approval, no code written',
+          ],
+          motivatedBy: ['forecast-head-meeting'],
+          tags: ['forecast-head', 'design'],
         },
       ],
     },
@@ -553,7 +845,7 @@ export const airportData = [
       { src: '/materials/thesis/phase3/airports/dfw/01_airport_filter_impact.png', alt: 'Filter Impact', caption: 'Airport proximity filter effectiveness at KDFW.' },
       { src: '/materials/thesis/phase3/airports/dfw/03_spatial_heatmap.png', alt: 'Spatial Heatmap', caption: 'Spatial heatmap of proximity events near KDFW.' },
       { src: '/materials/thesis/phase3/airports/dfw/3d_trajectories.png', alt: '3D Trajectories', caption: '3D trajectory visualization in KDFW airspace.' },
-      { src: '/materials/thesis/phase3/airports/dfw/aircraft_overview.png', alt: 'Aircraft Overview', caption: 'Aircraft statistics for KDFW.' },
+      { src: '/materials/thesis/phase3/airports/dfw/aircraft_overview.png', alt: 'Aircraft statistics for KDFW.' },
     ],
   },
   {

@@ -1,4 +1,4 @@
-export type PhaseId = 'foundational-research' | 'synthetic-data' | 'surrogate-pivot' | 'graph-build-out'
+export type PhaseId = 'foundational-research' | 'synthetic-data' | 'surrogate-pivot' | 'graph-build-out' | 'model-training' | 'forecast-head'
 export type EntryType = 'decision' | 'report' | 'pivot' | 'result' | 'failure' | 'data-collection' | 'research'
 export type FigureLayout = 'full' | 'half' | 'grid-2' | 'grid-4'
 
